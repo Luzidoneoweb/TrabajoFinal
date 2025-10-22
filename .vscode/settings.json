@@ -1,0 +1,8 @@
+{
+  "docwriter.progress.trackFunctions": true,
+  "docwriter.progress.trackMethods": true,
+  "docwriter.progress.trackClasses": true,
+  "docwriter.style": "Javadoc",
+  "docwriter.language": "English",
+  "docwriter.progress.trackTypes": true
+}
