@@ -1,0 +1,46 @@
+0000000000000000000000000000000000000000 b83a67e187811621f5c7e8325d1a919584662b89 Luz <Luz@idoneoweb.es> 1760116699 +0200	commit (initial): Inicio limpio de login
+b83a67e187811621f5c7e8325d1a919584662b89 b83a67e187811621f5c7e8325d1a919584662b89 Luz <Luz@idoneoweb.es> 1760116700 +0200	Branch: renamed refs/heads/temp_branch to refs/heads/login
+b83a67e187811621f5c7e8325d1a919584662b89 88a98c45c57c0ab943771e185681fbb20555aa6f Luz <Luz@idoneoweb.es> 1760116841 +0200	commit: Inicio completamente limpio
+88a98c45c57c0ab943771e185681fbb20555aa6f 1b80ee195a64797f4c06cb2fc4b59a41731222f0 Luz <Luz@idoneoweb.es> 1760258519 +0200	reset: moving to master
+1b80ee195a64797f4c06cb2fc4b59a41731222f0 ee9a4c8f1b4f3e228e42463d93940b4e77772da3 Luz <Luz@idoneoweb.es> 1760262224 +0200	merge main: Fast-forward
+ee9a4c8f1b4f3e228e42463d93940b4e77772da3 9cb613069968406fe3c28f1ffdd5e5725f8c52f4 Luz <Luz@idoneoweb.es> 1760268112 +0200	commit: 0.1
+9cb613069968406fe3c28f1ffdd5e5725f8c52f4 9b3e2f79c7d4ede051d7e9ce5da4e7a2b3f20c65 Luz <Luz@idoneoweb.es> 1760268336 +0200	reset: moving to main
+9b3e2f79c7d4ede051d7e9ce5da4e7a2b3f20c65 e600fd2387fa57e3fcb71fa7d06b60d3cb71d84a Luz <Luz@idoneoweb.es> 1760268480 +0200	commit: limpioestrutua 0.3
+e600fd2387fa57e3fcb71fa7d06b60d3cb71d84a 0273277f104875572d6a7f57aeb66ea55f2d3ce6 Luz <Luz@idoneoweb.es> 1760270064 +0200	commit: login adm-1
+0273277f104875572d6a7f57aeb66ea55f2d3ce6 d3c6031e33d91944faa55d8f83423c1db806611e Luz <Luz@idoneoweb.es> 1760276173 +0200	commit: moral_1
+d3c6031e33d91944faa55d8f83423c1db806611e 85e1914eaca46147128f3ad17a973a126ab51b33 Luz <Luz@idoneoweb.es> 1760277266 +0200	commit: moral2
+85e1914eaca46147128f3ad17a973a126ab51b33 e03f60e0e4679b287e9842eee7f754166ff6b7c0 Luz <Luz@idoneoweb.es> 1760307487 +0200	commit: errore
+e03f60e0e4679b287e9842eee7f754166ff6b7c0 85e1914eaca46147128f3ad17a973a126ab51b33 Luz <Luz@idoneoweb.es> 1760307565 +0200	reset: moving to 85e1914
+85e1914eaca46147128f3ad17a973a126ab51b33 08b9373aa3f3a8890986b6a26c2d24ccdd7f6543 Luz <Luz@idoneoweb.es> 1760373349 +0200	commit: 13-10
+08b9373aa3f3a8890986b6a26c2d24ccdd7f6543 76642d1fbacd3d2dd7b7cf79f8bb073861c4ec71 Luz <Luz@idoneoweb.es> 1760381937 +0200	commit: 13-10moral
+76642d1fbacd3d2dd7b7cf79f8bb073861c4ec71 6b6699529174f9c56ad6d0bde405561c0d964b62 Luz <Luz@idoneoweb.es> 1760385264 +0200	commit: login funcionando
+6b6699529174f9c56ad6d0bde405561c0d964b62 02996d4a94a62978ec34da07adb7a635c22b8960 Luz <Luz@idoneoweb.es> 1760547541 +0200	commit: 15 ojo
+02996d4a94a62978ec34da07adb7a635c22b8960 20726570ce503d37bf4c79ac842a387358c3db04 Luz <Luz@idoneoweb.es> 1760551109 +0200	commit: 15 ojo-1
+20726570ce503d37bf4c79ac842a387358c3db04 3ffc0ce396b4bf5d2ce95f22a127e9e8cb22e5b4 Luz <Luz@idoneoweb.es> 1760551394 +0200	commit: 15 ojo-2
+3ffc0ce396b4bf5d2ce95f22a127e9e8cb22e5b4 3d70e49778f80fee06075c1b8ad4fa58dc5caf46 Luz <Luz@idoneoweb.es> 1760552608 +0200	commit: 15 ojo-3
+3d70e49778f80fee06075c1b8ad4fa58dc5caf46 0ae596406dc9c4f16dd4748d93f05de8844b76ed Luz <Luz@idoneoweb.es> 1760553273 +0200	commit: 15 userlogin-4
+0ae596406dc9c4f16dd4748d93f05de8844b76ed 6c7400a03f28ca9981ed70276fb170f090590ae6 Luz <Luz@idoneoweb.es> 1760556002 +0200	commit: 15 recordar-5
+6c7400a03f28ca9981ed70276fb170f090590ae6 a00a74efd9a289939b35cf8e83528641cedb9481 Luz <Luz@idoneoweb.es> 1760556868 +0200	commit: 15 administracion-6
+a00a74efd9a289939b35cf8e83528641cedb9481 29d47a9d7d998cf5890624dd79722b16138f330c Luz <Luz@idoneoweb.es> 1760638618 +0200	commit: jueves 1 16/10
+29d47a9d7d998cf5890624dd79722b16138f330c c232c1c37bf4a03f58174cbc4d99818355fe6e89 Luz <Luz@idoneoweb.es> 1760639435 +0200	commit: jueves login 2 16/10
+c232c1c37bf4a03f58174cbc4d99818355fe6e89 16170cd214fe6359e57344ee22237a98ef01126f Luz <Luz@idoneoweb.es> 1760725340 +0200	commit: 17-11 login 1 pestañas
+16170cd214fe6359e57344ee22237a98ef01126f 616fd603d0bea7107567e1aaa04abab0410c0310 Luz <Luz@idoneoweb.es> 1760780922 +0200	commit: plantilla diseño finalstrutura
+616fd603d0bea7107567e1aaa04abab0410c0310 d7fc140e54495e833fbaaaf9b84001fca7cfb553 Luz <Luz@idoneoweb.es> 1760783236 +0200	commit: txt
+d7fc140e54495e833fbaaaf9b84001fca7cfb553 01174cc9ef2e5129f54f25c61b7b4112fabf797b Luz <Luz@idoneoweb.es> 1760786482 +0200	commit: txt
+01174cc9ef2e5129f54f25c61b7b4112fabf797b e3e7cb4c91538ff4f23bf42410e8cdb7e48b33a1 Luz <Luz@idoneoweb.es> 1760872764 +0200	commit: Eliminar archivo de logs del control de versiones
+e3e7cb4c91538ff4f23bf42410e8cdb7e48b33a1 f37ca12285d9940ed7b303a2ba85bec8f4065fcd Luz <Luz@idoneoweb.es> 1760873846 +0200	commit: login-pestañas
+f37ca12285d9940ed7b303a2ba85bec8f4065fcd a4f5d80953fadb5e51505b1cf1b2a7c34d66751f Luz <Luz@idoneoweb.es> 1760875543 +0200	commit: login-pestañas-1
+a4f5d80953fadb5e51505b1cf1b2a7c34d66751f 353620db597db82fe4995ad4dd7038e675596216 Luz <Luz@idoneoweb.es> 1760875727 +0200	commit: login-pestañas-2
+353620db597db82fe4995ad4dd7038e675596216 a4f5d80953fadb5e51505b1cf1b2a7c34d66751f Luz <Luz@idoneoweb.es> 1760877063 +0200	reset: moving to a4f5d80
+a4f5d80953fadb5e51505b1cf1b2a7c34d66751f e3e7cb4c91538ff4f23bf42410e8cdb7e48b33a1 Luz <Luz@idoneoweb.es> 1760877251 +0200	reset: moving to e3e7cb4c91538ff4f23bf42410e8cdb7e48b33a1
+e3e7cb4c91538ff4f23bf42410e8cdb7e48b33a1 f37ca12285d9940ed7b303a2ba85bec8f4065fcd Luz <Luz@idoneoweb.es> 1760878626 +0200	reset: moving to f37ca12
+f37ca12285d9940ed7b303a2ba85bec8f4065fcd 353620db597db82fe4995ad4dd7038e675596216 Luz <Luz@idoneoweb.es> 1760881916 +0200	pull: Fast-forward
+353620db597db82fe4995ad4dd7038e675596216 16170cd214fe6359e57344ee22237a98ef01126f Luz <Luz@idoneoweb.es> 1760903699 +0200	reset: moving to 16170cd
+16170cd214fe6359e57344ee22237a98ef01126f 56e8ce240186ac44eafa805e11ccdb67844eb2ea Luz <Luz@idoneoweb.es> 1760905429 +0200	reset: moving to v4.0
+56e8ce240186ac44eafa805e11ccdb67844eb2ea daae2eababa2f1d2a99bab1b406ec8968adda84c Luz <Luz@idoneoweb.es> 1760906582 +0200	merge pestana: Merge made by the 'ort' strategy.
+daae2eababa2f1d2a99bab1b406ec8968adda84c 1e1cabfdfae4583b2c0596094f73daf59bab0cf8 Luz <Luz@idoneoweb.es> 1760906711 +0200	commit: fusion login pestaña ??
+1e1cabfdfae4583b2c0596094f73daf59bab0cf8 56e8ce240186ac44eafa805e11ccdb67844eb2ea Luz <Luz@idoneoweb.es> 1760906841 +0200	reset: moving to 56e8ce2
+56e8ce240186ac44eafa805e11ccdb67844eb2ea 3cd07d4675cd9d918dc22d75b746daf44f477cde Luz <Luz@idoneoweb.es> 1760908286 +0200	commit: login primero sin log
+3cd07d4675cd9d918dc22d75b746daf44f477cde 4265b9a7d38aaf0d866ab70f905f0ddf0e5262ab Luz <Luz@idoneoweb.es> 1760909080 +0200	commit: archivos pestañas
+4265b9a7d38aaf0d866ab70f905f0ddf0e5262ab 1d3f11788b9116852902d1014b8194fbcb6b4e0a Luz <Luz@idoneoweb.es> 1760909255 +0200	commit: archivos pestañas1
+1d3f11788b9116852902d1014b8194fbcb6b4e0a dfbbae380d9f4c3fcee1a8169a67288b3e2d0644 Luz <Luz@idoneoweb.es> 1760912756 +0200	commit: loginPestañasMovil+-

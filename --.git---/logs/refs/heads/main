@@ -1,0 +1,11 @@
+0000000000000000000000000000000000000000 1b80ee195a64797f4c06cb2fc4b59a41731222f0 Luz <Luz@idoneoweb.es> 1760259862 +0200	branch: Created from origin/main
+1b80ee195a64797f4c06cb2fc4b59a41731222f0 ee9a4c8f1b4f3e228e42463d93940b4e77772da3 Luz <Luz@idoneoweb.es> 1760261918 +0200	commit: structura
+ee9a4c8f1b4f3e228e42463d93940b4e77772da3 9b3e2f79c7d4ede051d7e9ce5da4e7a2b3f20c65 Luz <Luz@idoneoweb.es> 1760267266 +0200	commit: limpio-v1.2
+9b3e2f79c7d4ede051d7e9ce5da4e7a2b3f20c65 16170cd214fe6359e57344ee22237a98ef01126f Luz <Luz@idoneoweb.es> 1760783413 +0200	pull origin login: Fast-forward
+16170cd214fe6359e57344ee22237a98ef01126f 3d7a06f9e5a6cd12a277b3853c73f46cc3c553fe Luz <Luz@idoneoweb.es> 1760815954 +0200	commit: Eliminar intentos_login.txt definitivamente
+3d7a06f9e5a6cd12a277b3853c73f46cc3c553fe c371c56dbf2c837ce0f9dae1b87e6b0cd084e06f Luz <Luz@idoneoweb.es> 1760817081 +0200	commit: main con login.progeso
+c371c56dbf2c837ce0f9dae1b87e6b0cd084e06f 76a442d7646bcf2888805eb77a802669e7797e94 Luz <Luz@idoneoweb.es> 1760866454 +0200	commit: limpio structura
+76a442d7646bcf2888805eb77a802669e7797e94 35d25fe506de6188ffb3c337cc8bc8bac7b7217f Luz <Luz@idoneoweb.es> 1760871663 +0200	commit: Ignorar carpeta de logs
+35d25fe506de6188ffb3c337cc8bc8bac7b7217f 16170cd214fe6359e57344ee22237a98ef01126f Luz <Luz@idoneoweb.es> 1760903310 +0200	reset: moving to 16170cd
+16170cd214fe6359e57344ee22237a98ef01126f 56e8ce240186ac44eafa805e11ccdb67844eb2ea Luz <Luz@idoneoweb.es> 1760905216 +0200	reset: moving to v4.0
+56e8ce240186ac44eafa805e11ccdb67844eb2ea b3a303ed157edd9f7991dde3b789b73fdba948e1 Luz <Luz@idoneoweb.es> 1761050664 +0200	branch: Reset to v5.2

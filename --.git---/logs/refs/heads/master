@@ -1,0 +1,15 @@
+0000000000000000000000000000000000000000 39c6f27bc1d711caa113643b12dc5fe20cc33d7d Luz <Luz@idoneoweb.es> 1760117454 +0200	commit (initial): Inicio limpio final
+39c6f27bc1d711caa113643b12dc5fe20cc33d7d 39c6f27bc1d711caa113643b12dc5fe20cc33d7d Luz <Luz@idoneoweb.es> 1760117454 +0200	Branch: renamed refs/heads/temp_branch to refs/heads/master
+39c6f27bc1d711caa113643b12dc5fe20cc33d7d 1b80ee195a64797f4c06cb2fc4b59a41731222f0 Luz <Luz@idoneoweb.es> 1760258436 +0200	reset: moving to origin/master
+1b80ee195a64797f4c06cb2fc4b59a41731222f0 032ba1a945bf83c03543d35b8992800cc0e26540 Luz <Luz@idoneoweb.es> 1760726935 +0200	commit: primero diseño
+032ba1a945bf83c03543d35b8992800cc0e26540 b8ef0fc693d06e5ac47b756e0147ef8aae9e5a6b Luz <Luz@idoneoweb.es> 1760728378 +0200	commit: arreglos
+b8ef0fc693d06e5ac47b756e0147ef8aae9e5a6b 9b3e2f79c7d4ede051d7e9ce5da4e7a2b3f20c65 Luz <Luz@idoneoweb.es> 1760728958 +0200	reset: moving to main
+9b3e2f79c7d4ede051d7e9ce5da4e7a2b3f20c65 223dd15358ceba58f36141d32b9b69dab468d50c Luz <Luz@idoneoweb.es> 1760813573 +0200	commit: commit uno liv1
+223dd15358ceba58f36141d32b9b69dab468d50c 40ba36b3ef4cac59b84800b6a53cdeda40f79b14 Luz <Luz@idoneoweb.es> 1760813947 +0200	commit: Fusionar cambios finales de login en master sin historial
+40ba36b3ef4cac59b84800b6a53cdeda40f79b14 7b31ad263c8920536c521ec403a2e81f04c5e95d Luz <Luz@idoneoweb.es> 1760814395 +0200	commit: Fusionar cambios finales de petana en master sin historial
+7b31ad263c8920536c521ec403a2e81f04c5e95d b120b66c6419c99a50e63b162b97b71b785d86b2 Luz <Luz@idoneoweb.es> 1760814838 +0200	commit (merge): Ignorar intentos_login.txt permanentemente
+b120b66c6419c99a50e63b162b97b71b785d86b2 f574a09bac91a62a705ac20d23ecf73f108f5885 Luz <Luz@idoneoweb.es> 1760815196 +0200	commit: arreglos
+f574a09bac91a62a705ac20d23ecf73f108f5885 c371c56dbf2c837ce0f9dae1b87e6b0cd084e06f Luz <Luz@idoneoweb.es> 1760817332 +0200	reset: moving to main
+c371c56dbf2c837ce0f9dae1b87e6b0cd084e06f a4726a9c859fdb8f987af0f5278d84bbed3b59a1 Luz <Luz@idoneoweb.es> 1760817418 +0200	commit: master con login.progeso
+a4726a9c859fdb8f987af0f5278d84bbed3b59a1 d04ed3513a1e89121342b1b4b388ebe0208d2aa0 Luz <Luz@idoneoweb.es> 1760817588 +0200	commit: Eliminar intentos_login.txt permanentemente
+d04ed3513a1e89121342b1b4b388ebe0208d2aa0 d18e358340ac3abaf0a1a22dca740e44a314fe23 Luz <Luz@idoneoweb.es> 1760819236 +0200	merge Pestana: Merge made by the 'recursive' strategy.

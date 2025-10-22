@@ -1,0 +1,35 @@
+:root {
+  /* Colores principales */
+  --color-primario: #ff8a00;
+  --color-secundario: #457B9D;
+  --color-acento: #c57c29fc;
+
+  /* Fondos */
+  --fondo-principal: #ffffff;
+  --fondo-secundario: #f9fafb;
+  --fondo-oscuro: #1f2937;
+  --modo-oscuro-fondo: #111827;
+
+  /* Texto */
+  --texto-principal: #333333;
+  --texto-secundario: #6b7280;
+  --texto-oscuro-titulos: #1f2937;
+
+  /* Bordes y separadores */
+  --borde-general: #e5e7eb;
+
+  /* Éxito */
+  --exito-fondo: #457B9D;
+  --exito-borde: #1d5f89;
+
+  /* Error */
+  --error-boton: #ef4444;
+  --error-boton-hover: #dc2626;
+  --error-fondo: #fef2f2;
+  --error-borde: #fca5a5;
+
+  /* Gris interactivo */
+  --gris-hover-fondo: #f3f4f6;
+  --gris-borde: #d1d5db;
+  --gris-inactivo: #9ca3af;
+}
