@@ -23,7 +23,7 @@ if (isset($_SESSION['user_id'])) {
       $host = "localhost";
       $user = "root";
       $pass = "";
-      $dbname = "traductor_app";
+      $dbname = "proyecto";
     $mysqli = new mysqli($host, $user, $pass, $dbname);
     if (!$mysqli->connect_errno) {
         $mysqli->set_charset('utf8mb4');
