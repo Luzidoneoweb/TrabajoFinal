@@ -15,15 +15,15 @@ if (isset($_SESSION['user_id'])) {
     
     // Obtener el nombre de usuario de la base de datos
     // Usar configuración de producción
-    $host = "sql206.infinityfree.com";
-    $user = "if0_39209868";
-    $pass = "xRe9fa3aAy";
-    $dbname = "if0_39209868_proyecto";
+    // $host = "sql206.infinityfree.com";
+    // $user = "if0_39209868";
+    // $pass = "xRe9fa3aAy";
+    // $dbname = "if0_39209868_proyecto";
     //   // Obtener el nombre de usuario de la base de datos
-    //   $host = "localhost";
-    //   $user = "root";
-    //   $pass = "";
-    //   $dbname = "proyecto";
+      $host = "localhost";
+      $user = "root";
+      $pass = "";
+      $dbname = "traductor_app";
     $mysqli = new mysqli($host, $user, $pass, $dbname);
     if (!$mysqli->connect_errno) {
         $mysqli->set_charset('utf8mb4');
