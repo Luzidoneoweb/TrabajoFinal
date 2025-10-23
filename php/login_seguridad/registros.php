@@ -3,14 +3,14 @@
 require_once 'seguridad.php';
 header('Content-Type: application/json; charset=utf-8');
 
-// $host = "localhost";
-// $user = "root";
-// $pass = "";
-// $dbname = "proyecto";
-$host = "sql206.infinityfree.com";
-    $user = "if0_39209868";
-    $pass = "xRe9fa3aAy";
-    $dbname = "if0_39209868_proyecto";
+$host = "localhost";
+$user = "root";
+$pass = "";
+$dbname = "proyecto";
+// $host = "sql206.infinityfree.com";
+//     $user = "if0_39209868";
+//     $pass = "xRe9fa3aAy";
+//     $dbname = "if0_39209868_proyecto";
 if($_SERVER['REQUEST_METHOD'] !== 'POST'){
     echo json_encode(['success'=>false,'message'=>'Método no permitido']); 
     exit;
