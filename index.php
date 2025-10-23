@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MiApp - Aprende idiomas leyendo</title>
-    <link rel="stylesheet" href="css/estilo.css">
-    <link rel="stylesheet" href="css/modal.css">
-    <link rel="stylesheet" href="css/colores.css">
-    <link rel="stylesheet" href="php/pestanas/css/pestanas.css" />
+    <link rel="stylesheet" href="css/global_estilos.css">
+    <link rel="stylesheet" href="php/pestanas/css/global_pestanas.css" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>

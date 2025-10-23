@@ -6,7 +6,7 @@
                     <h2>Mi Progreso</h2>
                 </div>
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/proyecto/php/pestanas/progreso.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajofinal/php/pestanas/progreso.php'; ?>
                 </div>
             </div>
 
@@ -17,7 +17,7 @@
                     <button class="boton-agregar">Agregar Texto</button>
                 </div>
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/proyecto/php/pestanas/textos.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajofinal/php/pestanas/textos.php'; ?>
                 </div>
             </div>
 
@@ -28,7 +28,7 @@
                     <button class="boton-practicar">Practicar</button>
                 </div>
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/proyecto/php/pestanas/palabras.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajofinal/php/pestanas/palabras.php'; ?>
                 </div>
             </div>
 
@@ -39,7 +39,7 @@
                     <button class="boton-practicar">Iniciar Práctica</button>
                 </div>
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/proyecto/php/pestanas/practicas.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajofinal/php/pestanas/practicas.php'; ?>
                 </div>
             </div>
 
@@ -50,7 +50,7 @@
                     <input type="search" placeholder="Buscar textos..." class="buscador-biblioteca">
                 </div>
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/proyecto/php/pestanas/biblioteca.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajofinal/php/pestanas/biblioteca.php'; ?>
                 </div>
             </div>
 
