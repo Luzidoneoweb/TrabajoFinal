@@ -14,7 +14,10 @@
             <div class="panel-pestana" id="panelTextos">
                 <div class="encabezado gi-panel">
                     <h2>Mis Textos</h2>
-                    <button class="boton-agregar">Agregar Texto</button>
+                    <button class="boton-subir-texto">
+                        <span class="texto-ingles">Upload text</span>
+                        <span class="texto-espanol">Subir texto</span>
+                    </button>
                 </div>
                 <div class="contenido-panel">
                     <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajofinal/php/pestanas/textos.php'; ?>

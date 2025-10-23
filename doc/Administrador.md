@@ -126,7 +126,7 @@ php/login_seguridad/logs/
 php/login_seguridad/logs/intentos_login.txt
 
 # Git Remote URLs
-origin: https://github.com/Luzidoneoweb/proyecto.git
+origin: https://github.com/Luzidoneoweb/trabajoFinal.git
 
 # Context Window Usage
 0 / 1048,576K tokens used (0%)
