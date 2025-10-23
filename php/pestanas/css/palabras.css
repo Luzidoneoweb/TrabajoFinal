@@ -1,0 +1,276 @@
+/* Estilos generales para el contenedor de palabras */
+.contenedor-palabras {
+    padding: 2rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Encabezado principal de la sección de palabras */
+.encabezado-palabras {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.contador-palabras {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--texto-principal);
+}
+
+/* Estilos para el botón de acción en lote */
+.acciones-lote {
+    position: relative;
+    display: inline-block;
+}
+
+.acciones-lote .btn-desplegable {
+    background-color: var(--fondo-principal);
+    border: 1px solid var(--borde-general);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: var(--texto-principal);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.acciones-lote .btn-desplegable:hover {
+    background-color: var(--gris-hover-fondo);
+    border-color: var(--gris-borde);
+}
+
+.acciones-lote .contenido-desplegable {
+    display: none;
+    position: absolute;
+    background-color: var(--fondo-principal);
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    top: 100%;
+    right: 0; /* Alineado a la derecha */
+    margin-top: 0.5rem;
+}
+
+.acciones-lote .contenido-desplegable a {
+    color: var(--texto-principal);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.9rem;
+}
+
+.acciones-lote .contenido-desplegable a:hover {
+    background-color: var(--gris-hover-fondo);
+}
+
+.acciones-lote:hover .contenido-desplegable {
+    display: block;
+}
+
+/* Estilos para la lista de categorías de palabras */
+.lista-categorias-palabras {
+    background-color: var(--fondo-principal);
+    border: 1px solid var(--borde-general);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.categoria-palabras {
+    border-bottom: 1px solid var(--borde-general);
+}
+
+.categoria-palabras:last-child {
+    border-bottom: none;
+}
+
+.encabezado-categoria {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background-color: #f9fafb; /* Fondo ligeramente gris para el encabezado de categoría */
+    border-bottom: 1px solid var(--borde-general);
+}
+
+.encabezado-categoria .chk-categoria {
+    margin-right: 1rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    accent-color: var(--color-primario);
+}
+
+.encabezado-categoria .titulo-categoria {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--texto-principal);
+    flex-grow: 1;
+}
+
+.encabezado-categoria .num-palabras {
+    font-size: 0.9rem;
+    color: var(--texto-secundario);
+    margin-left: 0.5rem;
+}
+
+.contenido-categoria {
+    padding: 0.5rem 1.5rem;
+}
+
+/* Estilos para cada palabra individual */
+.item-palabra {
+    display: flex;
+    align-items: flex-start; /* Alineación al inicio para el contexto */
+    padding: 0.75rem 0;
+    border-bottom: 1px dashed var(--borde-general); /* Línea discontinua */
+}
+
+.item-palabra:last-child {
+    border-bottom: none;
+}
+
+.item-palabra .chk-palabra {
+    margin-right: 1rem;
+    margin-top: 0.25rem; /* Ajuste para alinear con el texto */
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: var(--color-primario);
+}
+
+.item-palabra .info-palabra {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.item-palabra .palabra-original {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--texto-principal);
+}
+
+.item-palabra .traduccion-palabra {
+    font-weight: 400;
+    color: var(--color-primario); /* Naranja para la traducción */
+}
+
+.item-palabra .contexto-palabra {
+    font-size: 0.9rem;
+    color: var(--texto-secundario);
+    margin-top: 0.25rem;
+    line-height: 1.4;
+}
+
+.item-palabra .traduccion-contexto {
+    font-size: 0.9rem;
+    color: var(--texto-secundario);
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.item-palabra .fecha-subida {
+    font-size: 0.8rem;
+    color: var(--texto-secundario);
+    margin-left: 1rem;
+    white-space: nowrap; /* Evitar que la fecha se rompa */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .encabezado-palabras {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .acciones-lote {
+        width: 100%;
+    }
+
+    .acciones-lote .contenido-desplegable {
+        right: auto;
+        left: 0;
+        width: 100%;
+    }
+
+    .encabezado-categoria {
+        padding: 0.75rem 1rem;
+    }
+
+    .encabezado-categoria .chk-categoria {
+        margin-right: 0.5rem;
+    }
+
+    .encabezado-categoria .titulo-categoria {
+        font-size: 1rem;
+    }
+
+    .encabezado-categoria .num-palabras {
+        font-size: 0.8rem;
+    }
+
+    .contenido-categoria {
+        padding: 0.5rem 1rem;
+    }
+
+    .item-palabra {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+
+    .item-palabra .chk-palabra {
+        margin-right: 0.5rem;
+        margin-top: 0;
+    }
+
+    .item-palabra .info-palabra {
+        flex-basis: 100%;
+        order: -1; /* Mover la palabra y traducción arriba */
+    }
+
+    .item-palabra .fecha-subida {
+        margin-left: 0;
+        margin-top: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .contenedor-palabras {
+        padding: 1rem 0.5rem;
+    }
+
+    .contador-palabras {
+        font-size: 1rem;
+    }
+
+    .acciones-lote .btn-desplegable {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    .encabezado-categoria .titulo-categoria {
+        font-size: 0.9rem;
+    }
+
+    .item-palabra .palabra-original {
+        font-size: 0.9rem;
+    }
+
+    .item-palabra .contexto-palabra,
+    .item-palabra .traduccion-contexto {
+        font-size: 0.8rem;
+    }
+
+    .item-palabra .fecha-subida {
+        font-size: 0.7rem;
+    }
+}

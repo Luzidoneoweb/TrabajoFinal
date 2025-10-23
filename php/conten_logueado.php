@@ -21,14 +21,14 @@
                 </div>
             </div>
 
-            <!-- Pestaña: Vocabulario -->
-            <div class="panel-pestana" id="panelVocabulario">
+            <!-- Pestaña: Palabras -->
+            <div class="panel-pestana" id="panelPalabras">
                 <div class="encabezado-panel">
-                    <h2>Mi Vocabulario</h2>
+                    <h2>Palabras</h2>
                     <button class="boton-practicar">Practicar</button>
                 </div>
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/proyecto/php/pestanas/vocabulario.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/proyecto/php/pestanas/palabras.php'; ?>
                 </div>
             </div>
 
