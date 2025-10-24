@@ -50,10 +50,6 @@
 
             <!-- Pestaña: Prácticas -->
             <div class="panel-pestana" id="panelPracticas">
-                <div class="encabezado-panel">
-                    <h2>Prácticas</h2>
-                    <button class="boton-practicar">Iniciar Práctica</button>
-                </div>
                 <div class="contenido-panel">
                     <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajofinal/php/pestanas/practicas.php'; ?>
                 </div>
