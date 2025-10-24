@@ -6,6 +6,7 @@
                     <button class="pestana" data-pestana="palabras">Palabras</button>
                     <button class="pestana" data-pestana="biblioteca">Biblioteca</button>
                     <button class="pestana" data-pestana="practicas">Practicar</button>
+                    <button class="pestana" data-pestana="subirTexto">⬆Subir </button>
                 </div>
                 <div class="info-usuario">
                     <span class="nombre-usuario">Usuario</span>

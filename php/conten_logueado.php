@@ -54,6 +54,15 @@
                     <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajofinal/php/pestanas/practicas.php'; ?>
                 </div>
             </div>
+
+            <!-- Pestaña: Subir Texto -->
+            <div class="panel-pestana" id="panelSubirTexto">
+                <div class="encabezado-panel">
+                    <h2>Subir Texto</h2>
+                </div>
+                <div class="contenido-panel">
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajofinal/php/pestanas/subir_texto.php'; ?>
+                </div>
             </div>
         </section>
     </main>

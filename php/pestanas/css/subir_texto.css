@@ -1,0 +1,112 @@
+.contenedor-subir-texto {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: var(--color-fondo-claro); /* Usar variable de color */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.contenedor-subir-texto h2 {
+    color: var(--color-texto-oscuro); /* Usar variable de color */
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.formulario-subir {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap; /* Permite que las columnas se envuelvan en pantallas pequeñas */
+}
+
+.columna-izquierda {
+    flex: 2; /* Ocupa más espacio */
+    min-width: 300px; /* Ancho mínimo para la columna izquierda */
+}
+
+.columna-derecha {
+    flex: 1; /* Ocupa menos espacio */
+    min-width: 200px; /* Ancho mínimo para la columna derecha */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.campo {
+    margin-bottom: 15px;
+}
+
+.campo label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: var(--color-texto-oscuro);
+}
+
+.campo input[type="text"],
+.campo textarea,
+.campo select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--color-borde); /* Usar variable de color */
+    border-radius: 4px;
+    box-sizing: border-box; /* Incluye padding y borde en el ancho total */
+    background-color: var(--color-fondo-input); /* Usar variable de color */
+    color: var(--color-texto-input);
+}
+
+.campo textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.ayuda-texto {
+    font-size: 0.85em;
+    color: var(--color-texto-secundario); /* Usar variable de color */
+    margin-top: 5px;
+}
+
+.campo-checkbox {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.campo-checkbox input[type="checkbox"] {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    accent-color: var(--color-primario); /* Color de acento para el checkbox */
+}
+
+.campo-checkbox label {
+    color: var(--color-texto-oscuro);
+    font-weight: normal;
+}
+
+.anuncio {
+    background-color: var(--color-fondo-anuncio); /* Usar variable de color */
+    border: 1px dashed var(--color-borde-anuncio); /* Usar variable de color */
+    padding: 20px;
+    text-align: center;
+    color: var(--color-texto-anuncio); /* Usar variable de color */
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+/* Media queries para responsividad */
+@media (max-width: 768px) {
+    .formulario-subir {
+        flex-direction: column;
+    }
+    .columna-izquierda,
+    .columna-derecha {
+        min-width: unset;
+        width: 100%;
+    }
+}
