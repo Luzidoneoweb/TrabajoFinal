@@ -5,7 +5,7 @@
                 <button class="pestana" data-pestana="textos">Mis Textos</button>
                     <button class="pestana" data-pestana="palabras">Palabras</button>
                     <button class="pestana" data-pestana="biblioteca">Biblioteca</button>
-                    <button class="pestana" data-pestana="configuracion">Configuración</button>
+                    <button class="pestana" data-pestana="practicas">Practicar</button>
                 </div>
                 <div class="info-usuario">
                     <span class="nombre-usuario">Usuario</span>
