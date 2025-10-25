@@ -6,7 +6,7 @@
                     <h2>Mi Progreso</h2>
                 </div>
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajofinal/php/pestanas/progreso.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/php/pestanas/progreso.php'; ?>
                 </div>
             </div>
 
@@ -20,7 +20,7 @@
                     </button>
                 </div>
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajofinal/php/pestanas/textos.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/php/pestanas/textos.php'; ?>
                 </div>
             </div>
 
@@ -31,7 +31,7 @@
                     <button class="boton-practicar">Practicar</button>
                 </div>
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajofinal/php/pestanas/palabras.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/php/pestanas/palabras.php'; ?>
                 </div>
             </div>
 
@@ -44,14 +44,14 @@
                     <input type="search" placeholder="Buscar textos..." class="buscador-biblioteca">
                 </div>
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajofinal/php/pestanas/biblioteca.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/php/pestanas/biblioteca.php'; ?>
                 </div>
             </div>
 
             <!-- Pestaña: Prácticas -->
             <div class="panel-pestana" id="panelPracticas">
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajofinal/php/pestanas/practicas.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/php/pestanas/practicas.php'; ?>
                 </div>
             </div>
 
@@ -61,7 +61,7 @@
                     <h2>Subir Texto</h2>
                 </div>
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajofinal/php/pestanas/subir_texto.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/php/pestanas/subir_texto.php'; ?>
                 </div>
             </div>
         </section>
