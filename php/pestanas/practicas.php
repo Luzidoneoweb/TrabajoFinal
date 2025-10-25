@@ -1,9 +1,5 @@
 <div class="contenedor-principal-practicas">
-    <div class="encabezado-practicas">
-        <h1 class="titulo-seccion-practicas">Prácticas</h1>
-        <button class="boton-iniciar-practica">Iniciar Práctica</button>
-    </div>
-
+    
     <div class="tarjeta-practicar-vocabulario">
         <h2 class="titulo-practicar-vocabulario">Practicar Vocabulario</h2>
 

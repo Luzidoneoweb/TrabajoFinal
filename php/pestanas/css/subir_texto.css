@@ -9,11 +9,6 @@
     margin: 20px auto;
 }
 
-.contenedor-subir-texto h2 {
-    color: var(--color-texto-oscuro); /* Usar variable de color */
-    margin-bottom: 20px;
-    text-align: center;
-}
 
 .formulario-subir {
     display: flex;

@@ -5,76 +5,6 @@
     margin: 0 auto;
 }
 
-/* Encabezado de la sección de la biblioteca */
-.encabezado-biblioteca {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.contador-textos-biblioteca {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--texto-principal);
-}
-
-/* Botón desplegable de categorías */
-.desplegable-categorias {
-    position: relative;
-    display: inline-block;
-}
-
-.desplegable-categorias .btn-desplegable-categorias {
-    background-color: var(--fondo-principal);
-    border: 1px solid var(--borde-general);
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    font-size: 0.9rem;
-    cursor: pointer;
-    color: var(--texto-principal);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.2s ease;
-}
-
-.desplegable-categorias .btn-desplegable-categorias:hover {
-    background-color: var(--gris-hover-fondo);
-    border-color: var(--gris-borde);
-}
-
-.desplegable-categorias .contenido-desplegable-categorias {
-    display: none;
-    position: absolute;
-    background-color: var(--fondo-principal);
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    border-radius: 8px;
-    overflow: hidden;
-    top: 100%;
-    left: 0;
-    margin-top: 0.5rem;
-}
-
-.desplegable-categorias .contenido-desplegable-categorias a {
-    color: var(--texto-principal);
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    font-size: 0.9rem;
-}
-
-.desplegable-categorias .contenido-desplegable-categorias a:hover {
-    background-color: var(--gris-hover-fondo);
-}
-
-.desplegable-categorias:hover .contenido-desplegable-categorias {
-    display: block;
-}
 
 /* Lista de textos de la biblioteca */
 .lista-textos-biblioteca {
@@ -162,21 +92,6 @@
 @media (max-width: 480px) {
     .contenedor-biblioteca {
         padding: 1rem 0.5rem;
-    }
-
-    .encabezado-biblioteca {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .desplegable-categorias {
-        width: 100%;
-    }
-
-    .desplegable-categorias .contenido-desplegable-categorias {
-        width: 100%;
-        left: 0;
-        right: 0;
     }
 
     .item-texto-biblioteca {

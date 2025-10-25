@@ -9,15 +9,6 @@
     margin-top: 2rem; /* Espacio superior para separarlo del menú */
 }
 
-.encabezado-practicas {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #e5e7eb;
-    margin-bottom: 2rem;
-}
-
 .titulo-seccion-practicas {
     font-size: 2rem;
     font-weight: 700;
