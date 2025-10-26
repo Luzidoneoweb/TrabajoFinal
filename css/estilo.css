@@ -738,7 +738,6 @@ body {
     }
     
     .navegacion-usuario {
-        /* Mantener estas reglas para el comportamiento de ocultar/mostrar */
         position: absolute;
         top: 100%;
         left: 0;
@@ -751,42 +750,44 @@ body {
         opacity: 0;
         visibility: hidden;
         transition: all 0.3s ease;
-        /* Asegurar que las pestañas se apilen correctamente */
-        align-items: stretch; /* Para que los elementos hijos se estiren a lo ancho */
-        gap: 1rem; /* Espacio entre los elementos del menú */
+        align-items: stretch;
+        gap: 1rem;
     }
 
     .navegacion-usuario.menu-abierto {
         transform: translateY(0);
         opacity: 1;
         visibility: visible;
-        /* Asegurar que el menú ocupe el espacio necesario */
         height: auto;
-        max-height: 80vh; /* Limitar la altura para evitar desbordamiento */
-        overflow-y: auto; /* Permitir desplazamiento si el contenido es muy largo */
-        display: flex; /* Asegurar que el contenedor principal del menú se muestre como flex */
+        max-height: 80vh;
+        overflow-y: auto;
+        display: flex;
     }
     
     .pestanas-aplicacion {
-        flex-direction: column; /* Apilar las pestañas verticalmente */
+        flex-direction: column;
         flex-wrap: wrap;
         justify-content: center;
-        width: 100%; /* Asegurar que ocupe todo el ancho disponible */
-        display: flex; /* Asegurar que el contenedor de las pestañas se muestre como flex */
+        width: 100%;
+        display: flex;
+        gap: 0.5rem; /* Añadido para el espacio entre los elementos del menú */
     }
 
     .pestana {
-        width: 100%; /* Hacer que cada pestaña ocupe todo el ancho */
+        width: 100%;
         text-align: center;
         padding: 1rem;
-        display: block; /* Asegurar que cada botón de pestaña se muestre como bloque */
+        display: block;
+        background-color: #f9fafb; /* Fondo claro */
+        border: 1px solid #e5e7eb; /* Borde */
+        border-radius: 8px; /* Bordes redondeados */
+        color: #374151; /* Color del texto */
+        font-weight: 500;
+        transition: all 0.2s ease;
     }
 
-    .info-usuario {
-        flex-direction: column; /* Apilar la información del usuario verticalmente */
-        align-items: stretch;
-        width: 100%;
-    }
+    .pestana:hover {
+        background-color: #e5e7eb; /* Cambio de color al pasar el ratón */
 
     .boton-cerrar-sesion {
         width: 100%;

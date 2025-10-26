@@ -20,10 +20,10 @@
         if (botonCerrarSesion) {
             botonCerrarSesion.addEventListener('click', cerrarSesion);
         }
-        
-        // Función para verificar el estado de la sesión
-        async function verificarEstadoSesion() {
-            try {
+
+        const botonCerrarSesionMovil = document.querySelector('.boton-cerrar-sesion-movil');
+        if (botonCerrarSesionMovil) {
+            botonCerrarSesionMovil.addEventListener('click', (e) => {
                 const response = await fetch('php/login_seguridad/verificar_sesion.php');
                 const data = await response.json();
                 
