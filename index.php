@@ -16,8 +16,13 @@
             <!-- Logo de la aplicación -->
             <div class="logo ">
                 <img src="img/aprenderIngles.png" alt="Logo MiApp" class="imagen-logo">
-                <span class="texto-logo">MiProyeo</span>
+                <span class="texto-logo">MiProyecto</span>
             </div>
+
+            <div class="info-usuario">
+                    <span class="nombre-usuario">Usuario</span>
+                    <button class="boton-cerrar-sesion" id="botonCerrarSesion">Cerrar Sesión</button>
+                </div>
             
             <!--  Navegación principal - visible cuando no está logueado -->
             <nav class="navegacion-principal oculto" id="navegacionPrincipal">
@@ -30,7 +35,7 @@
                 </ul>
                 <button class="boton-login" id="botonLogin">Iniciar Sesión</button>
             </nav>
-             <?php include 'php/menu_logueado.php'; ?>
+             
              <?php include 'php/menuMovil.php'; ?>
 
           
@@ -158,7 +163,7 @@
                 </div>
             </section>
         </section>
-
+        <!-- Contenido de usuario logueado Pestañas-->
         <section id="contenidoLogueado" class="oculto">
             <?php include 'php/conten_logueado.php'; ?>
         </section>

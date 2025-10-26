@@ -1,39 +1,3 @@
-:root {
-  /* Colores principales */
-  --color-primario: #ff8a00;
-  --color-secundario: #457B9D;
-  --color-acento: #c57c29fc;
-
-  /* Fondos */
-  --fondo-principal: #ffffff;
-  --fondo-secundario: #f9fafb;
-  --fondo-oscuro: #1f2937;
-  --modo-oscuro-fondo: #111827;
-
-  /* Texto */
-  --texto-principal: #333333;
-  --texto-secundario: #6b7280;
-  --texto-oscuro-titulos: #1f2937;
-
-  /* Bordes y separadores */
-  --borde-general: #e5e7eb;
-
-  /* Éxito */
-  --exito-fondo: #457B9D;
-  --exito-borde: #1d5f89;
-
-  /* Error */
-  --error-boton: #ef4444;
-  --error-boton-hover: #dc2626;
-  --error-fondo: #fef2f2;
-  --error-borde: #fca5a5;
-
-  /* Gris interactivo */
-  --gris-hover-fondo: #f3f4f6;
-  --gris-borde: #d1d5db;
-  --gris-inactivo: #9ca3af;
-}
-
 /* Ejemplo de aplicación */
 body {
   background-color: var(--fondo-principal);
@@ -172,41 +136,6 @@ body {
     transform: translateY(-1px);
 }
 
-/* ===== NAVEGACIÓN DE USUARIO (PESTAÑAS) ===== */
-.navegacion-usuario {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 800px;
-}
-
-.pestanas-aplicacion {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.pestana {
-    background: transparent;
-    border: none;
-    padding: 0.75rem 1rem;
-    border-radius: 6px;
-    font-weight: 500;
-    color: #6b7280;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-}
-
-.pestana:hover {
-    background-color: #f3f4f6;
-    color: #374151;
-}
-
-.pestana.activa {
-    background-color:var(--color-primario);
-    color: white;
-}
 
 .info-usuario {
     display: flex;
@@ -1076,4 +1005,3 @@ body {
         background: #111827;
     }
 }
-

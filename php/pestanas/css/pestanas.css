@@ -1,355 +1,42 @@
-
-/* Estilos para el contenedor de estadísticas */
-.contenedor-estadisticas {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Ajuste para 5 columnas o menos en pantallas pequeñas */
-    gap: 1.5rem; /* Espacio entre las tarjetas */
-    padding: 2rem 0;
-    justify-content: center; /* Centrar las tarjetas si hay menos de 5 */
-}
-
-/* Estilos para cada tarjeta de estadística */
-.tarjeta-estadistica {
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
+/* ===== NAVEGACIÓN DE USUARIO (PESTAÑAS) ===== */
+.navegacion-usuario {
+     display: flex;
     align-items: center;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    transition: all 0.2s ease;
-}
-
-.tarjeta-estadistica:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-/* Estilos para los iconos */
-.icono-estadistica {
-    font-size: 2.5rem; /* Tamaño del icono */
-    margin-bottom: 0.75rem;
-    line-height: 1; /* Asegurar que el icono no tenga espacio extra */
-}
-
-/* Estilos para el valor numérico/porcentaje */
-.valor-estadistica {
-    font-size: 2.5rem; /* Tamaño del número */
-    font-weight: 700;
-    color: #f97316; /* Color naranja similar al de la imagen */
-    margin-bottom: 0.5rem;
-    line-height: 1;
-}
-
-/* Estilos para el nombre de la estadística */
-.nombre-estadistica {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #6b7280;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-/* Responsive Design para pantallas más pequeñas */
-@media (max-width: 768px) {
-    .contenedor-estadisticas {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* 2 o 3 columnas en tablets */
-        gap: 1rem;
-    }
-
-    .tarjeta-estadistica {
-        padding: 1rem;
-    }
-
-    .icono-estadistica {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .valor-estadistica {
-        font-size: 2rem;
-    }
-
-    .nombre-estadistica {
-        font-size: 0.8rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .contenedor-estadisticas {
-        grid-template-columns: 1fr; /* Una columna en móviles */
-        gap: 1rem;
-    }
-}
-
-/* Estilos para la sección de historial de actividad */
-.seccion-historial-actividad {
-    padding: 2rem 0;
-    background-color: #f9fafb; /* Fondo ligeramente gris para la sección */
-    border-top: 1px solid #e5e7eb;
-}
-
-.titulo-historial {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin-bottom: 2rem;
-    text-align: center;
-}
-
-.contenedor-historial {
-    display: grid;
-    grid-template-columns: 1.3fr 1.2fr; /* Calendario a la izquierda, progreso a la derecha */
-    gap: 2rem;
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 1rem;
-    align-items: start; /* Alinear elementos al inicio */
-}
+    padding: 0 1rem;}
 
-/* Estilos para el calendario de actividad */
-.calendario-actividad {
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-}
-
-.calendario-encabezado {
+.navegacion-usuario .pestanas-aplicacion {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
+    gap: 0;
+    margin-left: 1rem;
 }
 
-.calendario-encabezado .flecha-navegacion {
-    background: none;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    padding: 0.5rem 0.75rem;
-    font-size: 1rem;
-    cursor: pointer;
-    color: #374151;
-    transition: all 0.2s ease;
-}
-
-.calendario-encabezado .flecha-navegacion:hover {
-    background-color: #f3f4f6;
-    border-color: #9ca3af;
-}
-
-.calendario-encabezado .mes-anio {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1f2937;
-}
-
-.calendario-encabezado .boton-recargar-calendario {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--color-primario);
-    transition: transform 0.2s ease;
-}
-
-.calendario-encabezado .boton-recargar-calendario:hover {
-    transform: rotate(30deg);
-}
-
-.dias-semana {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    text-align: center;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: #6b7280;
-    font-size: 0.85rem;
-}
-
-.grid-dias-calendario {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 0.5rem;
-}
-
-.dia-calendario {
-    background-color: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 70px; /* Altura mínima para las celdas */
-    font-size: 0.9rem;
-    color: #374151;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.dia-calendario:hover {
-    background-color: #eff6ff;
-    border-color: #93c5fd;
-}
-
-.dia-calendario.inactivo {
-    background-color: #f3f4f6;
-    color: #9ca3af;
-    cursor: default;
-    border-color: #e5e7eb;
-}
-
-.dia-calendario.inactivo:hover {
-    background-color: #f3f4f6;
-    border-color: #e5e7eb;
-}
-
-.dia-calendario.sin-actividad {
-    background-color: #ff880047;
-    border-color: #fca5a5;
-    color: var(--color-primario);
-}
-
-.dia-calendario.activo {
-    background-color: #5097de4c;
-    border-color: #457B9D;
-    color: #457B9D;
-    font-weight: 600;
-}
-
-.dia-calendario .numero-dia {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
-}
-
-.dia-calendario .minutos-actividad {
-    font-size: 0.75rem;
-    color: #6b7280;
-}
-
-.dia-calendario.activo .minutos-actividad {
-    color: var(--fondo-oscuro);
-}
-
-/* Estilos para el progreso por modo */
-.progreso-por-modo {
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-}
-
-.titulo-progreso-modo {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 1.5rem;
-}
-
-.tarjeta-progreso-modo {
-    border-bottom: 1px solid #f3f4f6;
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
-}
-
-.tarjeta-progreso-modo:last-child {
+.navegacion-usuario .pestanas-aplicacion .pestana {
+    background: var(--fondo-secundario);
+    border: 1px solid var(--borde-general);
     border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
+    padding: 0.75rem 1.25rem;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    font-weight: 500;
+    color: var(--texto-secundario);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  
 }
 
-.tarjeta-progreso-modo .info-modo {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 0.5rem;
+.navegacion-usuario .pestanas-aplicacion .pestana:hover {
+    background-color: var(--gris-hover-fondo);
+    color: var(--texto-principal);
 }
 
-.tarjeta-progreso-modo .icono-modo {
-    font-size: 1.5rem;
-    line-height: 1;
+
+.navegacion-usuario .pestanas-aplicacion .pestana:hover {
+    background-color: var(--gris-hover-fondo);
+    color: var(--texto-principal);
 }
 
-.tarjeta-progreso-modo .nombre-modo {
-    font-weight: 600;
-    color: #374151;
-}
 
-.tarjeta-progreso-modo .estadisticas-modo {
-    display: flex;
-    gap: 1rem;
-    font-size: 0.85rem;
-    color: #6b7280;
-    margin-bottom: 0.75rem;
-}
-
-.barra-progreso {
-    background-color: #e5e7eb;
-    border-radius: 9999px;
-    height: 8px;
-    width: 100%;
-    overflow: hidden;
-    margin-bottom: 0.5rem;
-}
-
-.progreso-relleno {
-    background-color: var(--exito-fondo);
-    height: 100%;
-    border-radius: 9999px;
-    transition: width 0.3s ease-in-out;
-}
-
-.precision-modo {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--color-primario);
-}
-
-/* Responsive para la sección de historial */
-@media (max-width: 992px) {
-    .contenedor-historial {
-        grid-template-columns: 1fr; /* Una columna en pantallas medianas */
-    }
-}
-
-@media (max-width: 480px) {
-    .titulo-historial {
-        font-size: 1.5rem;
-    }
-
-    .calendario-actividad {
-        padding: 1rem;
-    }
-
-    .calendario-encabezado .mes-anio {
-        font-size: 1.2rem;
-    }
-
-    .dias-semana {
-        font-size: 0.75rem;
-    }
-
-    .dia-calendario {
-        min-height: 60px;
-        padding: 0.3rem;
-    }
-
-    .dia-calendario .numero-dia {
-        font-size: 1rem;
-    }
-
-    .progreso-por-modo {
-        padding: 1rem;
-    }
-
-    .titulo-progreso-modo {
-        font-size: 1.1rem;
-    }
-}
