@@ -4,7 +4,7 @@
 
 <div class="contenedor-subir-texto">
     <!-- Incluir el archivo JavaScript -->
-    <script src="js/subir_texto.js"></script>
+    <script src="php/pestanas/js/subir_texto.js"></script>
     <h2>Subir nuevo texto</h2>
 
     <div class="formulario-subir">
@@ -32,6 +32,8 @@
                     <!-- Las opciones de categoría se cargarán aquí -->
                 </select>
             </div>
+
+            <button type="button" id="btn_subir_texto">Subir</button>
         </div>
 
         <div class="columna-derecha">
