@@ -38,6 +38,8 @@
              
              <?php include 'php/menuMovil.php'; ?>
 
+             <?php include 'php/menu_logueado.php'; ?>
+
           
             
            

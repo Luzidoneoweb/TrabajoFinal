@@ -63,6 +63,12 @@ body {
     height: 70px;
 }
 
+/* Asegura que los menús desplegables se posicionen respecto al encabezado
+   para que aparezcan pegados al botón hamburguesa en móvil */
+.encabezado-principal .contenedor-encabezado {
+    position: relative;
+}
+
 /* ===== LOGO ===== */
 .logo {
     display: flex;
@@ -788,7 +794,7 @@ body {
 
     .pestana:hover {
         background-color: #e5e7eb; /* Cambio de color al pasar el ratón */
-
+    }
     .boton-cerrar-sesion {
         width: 100%;
     }

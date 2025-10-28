@@ -21,39 +21,9 @@
             botonCerrarSesion.addEventListener('click', cerrarSesion);
         }
 
-        const botonCerrarSesionMovil = document.querySelector('.boton-cerrar-sesion-movil');
+        const botonCerrarSesionMovil = document.getElementById('botonCerrarSesionMovil');
         if (botonCerrarSesionMovil) {
-            botonCerrarSesionMovil.addEventListener('click', (e) => {
-                const response = await fetch('php/login_seguridad/verificar_sesion.php');
-                const data = await response.json();
-                
-                if (data.logged_in) {
-                    usuarioLogueado = true;
-                    mostrarInterfazLogueada();
-                if (data.username) {
-                    document.querySelector('.nombre-usuario').textContent = data.username;
-                }
-                // Activar la pestaña de Progreso al iniciar sesión
-                cambiarPestana('progreso');
-            } else {
-                    // Si no hay sesión activa, intentar obtener el identificador recordado
-                    const autoLoginResponse = await fetch('php/login_seguridad/auto_login.php');
-                    const autoLoginData = await autoLoginResponse.json();
-
-                    if (autoLoginData.remembered_identifier) {
-                        rememberedIdentifier = autoLoginData.remembered_identifier;
-                        console.log('Identificador recordado:', rememberedIdentifier);
-                    } else {
-                        rememberedIdentifier = null;
-                    }
-                    usuarioLogueado = false;
-                    mostrarInterfazNoLogueada();
-                }
-            } catch (error) {
-                console.error('Error verificando sesión o auto-login:', error);
-                usuarioLogueado = false;
-                mostrarInterfazNoLogueada();
-            }
+            botonCerrarSesionMovil.addEventListener('click', cerrarSesion);
         }
         
         // Función para mostrar interfaz de usuario logueado

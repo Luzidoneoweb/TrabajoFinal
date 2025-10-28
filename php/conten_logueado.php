@@ -1,6 +1,5 @@
  <!-- Contenido de la aplicación - visible cuando está logueado -->
         <section class="contenido-aplicacion" id="contenidoAplicacion">
-            <?php include 'php/menu_logueado.php'; ?>
             <!-- Pestaña: Progreso -->
             <div class="panel-pestana activo" id="panelProgreso">
               
