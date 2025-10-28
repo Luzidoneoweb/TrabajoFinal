@@ -38,7 +38,7 @@
              
              <?php include 'php/menuMovil.php'; ?>
 
-             <?php include 'php/menu_logueado.php'; ?>
+             
 
           
             
@@ -46,6 +46,7 @@
     </header>
 
     <!-- Contenido principal de la aplicación -->
+     <?php include 'php/menu_logueado.php'; ?>
     <main class="contenido-principal">
         <!-- Página de inicio - visible cuando no está logueado -->
         <section class="pagina-inicio oculto" id="paginaInicio">

@@ -564,11 +564,8 @@ body {
 }
 
 .contenido-panel {
-    background: #ffffff24;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e5e7eb;
+    background: #457b9d0f;
+    padding: 1.5rem 1rem;
     min-height: 400px;
 }
 
@@ -963,10 +960,7 @@ body {
     }
 }
 
-.panel-pestana.activo {
-    animation: fadeIn 0.3s ease;
-        background: #f7fafa;
-}
+
 
 /* ===== MEJORAS DE ACCESIBILIDAD ===== */
 @media (prefers-reduced-motion: reduce) {

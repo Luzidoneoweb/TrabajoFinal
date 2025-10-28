@@ -1,0 +1,209 @@
+/* Estilos generales para la sección de prácticas */
+.contenedor-principal-practicas {
+    padding: 2rem 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-top: 2rem; /* Espacio superior para separarlo del menú */
+}
+
+.encabezado-practicas {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 2rem;
+}
+
+.titulo-seccion-practicas {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.boton-iniciar-practica {
+    background-color: #f97316; /* Color naranja */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.boton-iniciar-practica:hover {
+    background-color: #ea580c; /* Naranja más oscuro al pasar el ratón */
+    transform: translateY(-1px);
+}
+
+.tarjeta-practicar-vocabulario {
+    background-color: #ffffff; /* Fondo blanco para la tarjeta interna */
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+}
+
+.titulo-practicar-vocabulario {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+}
+
+/* Grupo de botones de modo de práctica */
+.grupo-botones-modo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.boton-modo {
+    background-color: #f97316; /* Color naranja */
+    color: #ffffff;
+    border: none;
+    border-radius: 6px; /* Bordes más pequeños */
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.boton-modo:hover {
+    background-color: #ea580c;
+    transform: translateY(-1px);
+}
+
+/* Subtítulo "Elige un texto..." */
+.subtitulo-elegir-texto {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #374151;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Selector de texto */
+.selector-texto-practica {
+    margin-bottom: 2rem;
+}
+
+.select-estilizado {
+    width: 100%;
+    max-width: 400px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #374151;
+    background-color: #ffffff;
+    appearance: none; /* Eliminar estilos nativos del select */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236B7280%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13.2-6.4H18.6c-5%200-9.3%201.8-13.2%206.4-3.9%204.6-6.4%2010.2-6.4%2016.4%200%206.2%202.5%2011.8%206.4%2016.4l127.9%20127.9c3.9%203.9%209.2%206.4%2016.4%206.4s12.5-2.5%2016.4-6.4L287%20102.2c3.9-4.6%206.4-10.2%206.4-16.4.1-6.2-2.4-11.8-6.3-16.4z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 0.8em;
+    cursor: pointer;
+    text-align: left;
+}
+
+.select-estilizado:focus {
+    border-color: #f97316;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
+}
+
+/* Información de textos */
+.info-textos-practica {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    text-align: left;
+    color: #4b5563;
+    font-size: 0.95rem;
+}
+
+.info-textos-practica p {
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .titulo-seccion-practicas {
+        font-size: 1.8rem;
+    }
+
+    .boton-iniciar-practica {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .titulo-practicar-vocabulario {
+        font-size: 1.8rem;
+    }
+
+    .subtitulo-elegir-texto {
+        font-size: 1.1rem;
+    }
+
+    .boton-modo {
+        width: 100%;
+        justify-content: center;
+        padding: 0.7rem 1rem;
+        font-size: 0.95rem;
+    }
+
+    .select-estilizado {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .contenedor-principal-practicas {
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+
+    .encabezado-practicas {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .titulo-seccion-practicas {
+        font-size: 1.5rem;
+    }
+
+    .boton-iniciar-practica {
+        width: 100%;
+    }
+
+    .tarjeta-practicar-vocabulario {
+        padding: 1.5rem;
+    }
+
+    .titulo-practicar-vocabulario {
+        font-size: 1.6rem;
+    }
+
+    .subtitulo-elegir-texto {
+        font-size: 1rem;
+    }
+
+    .info-textos-practica {
+        font-size: 0.85rem;
+    }
+}

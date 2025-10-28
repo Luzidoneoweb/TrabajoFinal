@@ -1,9 +1,10 @@
-/* Estilos para el contenedor de progreso */
+
+/* Estilos para el contenedor de estadísticas */
 .contenedor-estadisticas {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(10px, 05fr));
-    gap: 0.5rem;
-    padding-bottom: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Ajuste para 5 columnas o menos en pantallas pequeñas */
+    gap: 1.5rem; /* Espacio entre las tarjetas */
+    padding: 2rem 0;
     justify-content: center; /* Centrar las tarjetas si hay menos de 5 */
 }
 
@@ -12,7 +13,7 @@
     background-color: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
-    padding: 1rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
