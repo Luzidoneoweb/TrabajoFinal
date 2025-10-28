@@ -42,7 +42,7 @@
             <div class="panel-pestana" id="panelSubirTexto">
                 <div class="contenido-panel">
                     <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/php/pestanas/subir_texto.php'; ?>
-gi                </div>
+                </div>
             </div>
         </section>
     </main>

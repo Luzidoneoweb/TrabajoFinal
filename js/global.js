@@ -60,6 +60,17 @@
             navegacionUsuario.classList.remove('oculto');
             paginaInicio.classList.add('oculto');
             contenidoAplicacion.classList.remove('oculto');
+		// Activar por defecto la pestaña Progreso
+		const pestañaProgreso = document.querySelector('.pestana[data-pestana="progreso"]');
+		if (pestañaProgreso) {
+			// Limpiar estados previos
+			document.querySelectorAll('.pestana').forEach(p => p.classList.remove('activa'));
+			document.querySelectorAll('.panel-pestana').forEach(panel => panel.classList.remove('activo'));
+			// Activar progreso
+			pestañaProgreso.classList.add('activa');
+			const panelProgreso = document.getElementById('panelProgreso');
+			if (panelProgreso) panelProgreso.classList.add('activo');
+		}
         }
         
         // Función para mostrar interfaz de usuario no logueado

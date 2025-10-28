@@ -46,11 +46,9 @@ body {
 /* ===== ENCABEZADO PRINCIPAL ===== */
 .encabezado-principal {
     background: #ffffff;
-    border-bottom: 1px solid #e5e7eb;
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .contenedor-encabezado {
@@ -531,7 +529,7 @@ body {
 
 /* ===== CONTENIDO DE LA APLICACIÓN ===== */
 .contenido-aplicacion {
-    padding: 2rem 0;
+   
     min-height: calc(100vh - 140px);
 }
 
@@ -951,9 +949,7 @@ body {
     }
 }
 
-.panel-pestana.activo {
-    animation: fadeIn 0.3s ease;
-}
+
 
 /* ===== ANIMACIONES Y TRANSICIONES ===== */
 @keyframes fadeIn {
@@ -969,6 +965,7 @@ body {
 
 .panel-pestana.activo {
     animation: fadeIn 0.3s ease;
+        background: #f7fafa;
 }
 
 /* ===== MEJORAS DE ACCESIBILIDAD ===== */

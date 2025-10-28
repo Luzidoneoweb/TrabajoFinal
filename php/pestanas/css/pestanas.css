@@ -10,7 +10,7 @@
 .navegacion-usuario .pestanas-aplicacion {
     display: flex;
     gap: 0;
-    margin-left: 1rem;
+    margin-left: -1rem;
 }
 
 .navegacion-usuario .pestanas-aplicacion .pestana {
@@ -34,9 +34,28 @@
 }
 
 
-.navegacion-usuario .pestanas-aplicacion .pestana:hover {
-    background-color: var(--gris-hover-fondo);
+/* Estado activo: misma sensación de pestaña con el panel */
+.navegacion-usuario .pestanas-aplicacion .pestana.activa {
+    background-color: #ff8a0014;
     color: var(--texto-principal);
+    border-color: var(--borde-general);
 }
+
+/* Panel activo con mismo fondo para continuidad visual */
+.panel-pestana.activo {
+    display: block;
+    background-color: #ff8a0014;
+    border: 1px solid var(--borde-general);
+    border-top: none; /* se une con la pestaña */
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    padding: 1rem;
+}
+
+/* Asegurar que los paneles no activos estén ocultos */
+.panel-pestana { display: none; }
+
+
+
 
 
