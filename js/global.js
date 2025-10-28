@@ -1,6 +1,34 @@
         // Variables globales
         let usuarioLogueado = false;
         let rememberedIdentifier = null; // Variable para almacenar el identificador recordado
+
+	// Función global para verificar el estado de sesión y actualizar la UI
+	window.verificarEstadoSesion = async function verificarEstadoSesion() {
+		try {
+			const response = await fetch('php/login_seguridad/verificar_sesion.php', { credentials: 'same-origin' });
+			const data = await response.json();
+
+			usuarioLogueado = !!data.logged_in;
+			// Exponer el identificador recordado para el modal (si llega username del backend)
+			window.rememberedIdentifier = data.username || null;
+
+			// Actualizar nombre visible si existe el elemento
+			const nombreUsuarioEl = document.querySelector('.nombre-usuario');
+			if (nombreUsuarioEl && data.username) {
+				nombreUsuarioEl.textContent = data.username;
+			}
+
+			if (usuarioLogueado) {
+				mostrarInterfazLogueada();
+			} else {
+				mostrarInterfazNoLogueada();
+			}
+		} catch (error) {
+			console.error('Error verificando sesión:', error);
+			usuarioLogueado = false;
+			mostrarInterfazNoLogueada();
+		}
+	};
         
         // Verificar estado de sesión al cargar la página
         document.addEventListener('DOMContentLoaded', function() {

@@ -8,5 +8,6 @@
                     <button class="pestana" data-pestana="practicas">Practicar</button>
                     <button class="pestana" data-pestana="subirTexto">⬆Subir </button>
                 </div>
-                <button class="boton-cerrar-sesion boton-cerrar-sesion-movil" id="botonCerrarSesionMovil">Cerrar Sesión</button>
-            </nav>
+           <div class="cerrarMovil">    <button class="boton-cerrar-sesion boton-cerrar-sesion-movil" id="botonCerrarSesionMovil">Cerrar Sesión</button>
+        </div>   
+        </nav>

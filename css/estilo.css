@@ -697,7 +697,9 @@ body {
 .enlaces-pie a:hover {
     color: white;
 }
-
+ .cerrarMovil {
+        display: none;
+    }
 /* ===== RESPONSIVE DESIGN ===== */
 
 /* Tablets */
@@ -811,10 +813,15 @@ body {
         padding: 1rem;
     }
     
-    .boton-menu-movil {
-        display: flex;
+    .info-usuario {
+    display: none;
+ align-items: center;
+    gap: 1rem;
     }
-    
+    .cerrarMovil {
+        display: block;
+    }
+
     .contenedor-hero {
         grid-template-columns: 1fr;
         text-align: center;
