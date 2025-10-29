@@ -177,7 +177,7 @@
 .toggle-password {
     position: absolute;
     right: 0.75rem;
-    top: 50%;
+    top: 68%;
     transform: translateY(-50%); /* Ajusta la posición vertical */
     background: none;
     border: none;
@@ -193,6 +193,7 @@
     z-index: 10; /* Asegura que el botón esté por encima del input */
     /* Asegura que el texto del icono no se muestre, solo el glifo */
     font-size: 0; 
+    
 }
 
 .toggle-password .visibility-icon {

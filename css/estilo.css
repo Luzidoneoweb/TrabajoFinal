@@ -5,8 +5,18 @@ body {
 }
 
 button {
-  background-color: var(--color-primario);
-  color: var(--fondo-principal);
+    background-color: #f97316;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s 
+ease, transform 0.2s 
+ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 button:hover {
@@ -33,6 +43,9 @@ body {
 }
 
 /* ===== UTILIDADES GENERALES ===== */
+   .cerrarsesionmovil {
+  display: none;
+}
 .oculto {
     display: none !important;
 }
@@ -96,6 +109,16 @@ body {
 
 
 /* ===== NAVEGACIÓN PRINCIPAL ===== */
+#contenedorBotonCerrarSesion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .info-usuario {
+    font-weight: bold;
+    font-size: 16px;
+  }
 .navegacion-principal {
     display: flex;
     align-items: center;
@@ -141,11 +164,7 @@ body {
 }
 
 
-.info-usuario {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
+
 
 .nombre-usuario {
     font-weight: 600;
@@ -702,6 +721,8 @@ body {
     .contenedor-encabezado {
         padding: 0 0.5rem;
     }
+ .cerrarsesionmovil {
+  display: block; }
     
     .navegacion-principal {
         position: absolute;
@@ -730,11 +751,9 @@ body {
         width: 100%;
     }
     
-    .enlace-menu {
-        display: block;
-        text-align: center;
-        padding: 1rem;
-    }
+    
+ 
+
     
     .boton-menu-movil {
         display: flex;
@@ -765,6 +784,7 @@ body {
         max-height: 80vh;
         overflow-y: auto;
         display: flex;
+        margin-top: -65%;
     }
     
     .pestanas-aplicacion {
@@ -803,15 +823,27 @@ body {
     }
     
     .enlace-menu {
-        display: block;
+               width: 100%;
         text-align: center;
-        padding: 1rem;
+      padding: 0.75rem 1.25rem;
+        display: block;
+        background-color: #ebedf0;
+        border: 1px solid #bfc7d5;
+        border-radius: 8px;
+        color: #374151;
+        font-weight: 500;
+        transition: all 0.2s 
+ease;
+    
     }
     
     .info-usuario {
     display: none;
  align-items: center;
     gap: 1rem;
+    }
+    #contenedorBotonCerrarSesion {
+        display: none;
     }
     .cerrarMovil {
         display: block;
@@ -867,6 +899,9 @@ body {
 
 /* Móviles */
 @media (max-width: 480px) {
+      .cerrarsesionmovil {
+  display: block; 
+}
     .contenedor-encabezado {
         height: 60px;
     }

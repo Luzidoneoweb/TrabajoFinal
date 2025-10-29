@@ -19,11 +19,13 @@
                 <span class="texto-logo">MiProyecto</span>
             </div>
 
-            <div class="info-usuario">
-                    <span class="nombre-usuario">Usuario</span>
-                    <button class="boton-cerrar-sesion" id="botonCerrarSesion">Cerrar Sesión</button>
-                </div>
             
+            <div id="contenedorBotonCerrarSesion" class="oculto">
+            <div class="info-usuario">
+                    <span class="nombre-usuario"></span>
+                </div>
+                <button class="boton-cerrar-sesion" id="botonCerrarSesion">Cerrar Sesión</button>
+            </div>
             <!--  Navegación principal - visible cuando no está logueado -->
             <nav class="navegacion-principal oculto" id="navegacionPrincipal">
                 <ul class="lista-menu">

@@ -38,21 +38,17 @@
         // Elementos del DOM
         const botonLogin = document.getElementById('botonLogin');
         const botonCerrarSesion = document.getElementById('botonCerrarSesion');
+        const contenedorBotonCerrarSesion = document.getElementById('contenedorBotonCerrarSesion'); // Nuevo elemento
         const navegacionPrincipal = document.getElementById('navegacionPrincipal');
         const navegacionUsuario = document.getElementById('navegacionUsuario');
         const paginaInicio = document.getElementById('paginaInicio');
         const contenidoAplicacion = document.getElementById('contenidoLogueado'); // Apunta al nuevo contenedor
         const botonMenuMovil = document.getElementById('botonMenuMovil');
 
-        // Event listener para el botón de cerrar sesión
-        if (botonCerrarSesion) {
-            botonCerrarSesion.addEventListener('click', cerrarSesion);
-        }
-
-        const botonCerrarSesionMovil = document.getElementById('botonCerrarSesionMovil');
-        if (botonCerrarSesionMovil) {
-            botonCerrarSesionMovil.addEventListener('click', cerrarSesion);
-        }
+        // Event listeners para todos los botones de cerrar sesión (menú y encabezado)
+        document.querySelectorAll('.boton-cerrar-sesion').forEach(function(btn) {
+            btn.addEventListener('click', cerrarSesion);
+        });
         
         // Función para mostrar interfaz de usuario logueado
         function mostrarInterfazLogueada() {
@@ -60,6 +56,9 @@
             navegacionUsuario.classList.remove('oculto');
             paginaInicio.classList.add('oculto');
             contenidoAplicacion.classList.remove('oculto');
+            if (contenedorBotonCerrarSesion) { // Mostrar el botón de cerrar sesión en el encabezado
+                contenedorBotonCerrarSesion.classList.remove('oculto');
+            }
 		// Activar por defecto la pestaña Progreso
 		const pestañaProgreso = document.querySelector('.pestana[data-pestana="progreso"]');
 		if (pestañaProgreso) {
@@ -79,6 +78,9 @@
             navegacionUsuario.classList.add('oculto');
             paginaInicio.classList.remove('oculto');
             contenidoAplicacion.classList.add('oculto');
+            if (contenedorBotonCerrarSesion) { // Ocultar el botón de cerrar sesión en el encabezado
+                contenedorBotonCerrarSesion.classList.add('oculto');
+            }
         }
         
         // Función para cerrar sesión

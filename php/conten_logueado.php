@@ -1,6 +1,8 @@
  <!-- Contenido de la aplicación - visible cuando está logueado -->
+  
         <section class="contenido-aplicacion" id="contenidoAplicacion">
-            <!-- Pestaña: Progreso -->
+             
+        <!-- Pestaña: Progreso -->
             <div class="panel-pestana activo" id="panelProgreso">
               
                 <div class="contenido-panel">
