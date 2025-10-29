@@ -20,25 +20,6 @@
   justify-content: space-between;
 }
 
-.boton-subir-texto {
-    background-color: var(--color-primario); /* Color de fondo naranja */
-    color: var(--fondo-principal); /* Texto blanco */
-    border: none;
-    border-radius: 8px;
-    padding: 0.75rem 1.25rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    display: flex;
-    float: right;
-    flex-direction: column; /* Apila los textos */
-    align-items: center;
-    justify-content: center;
-    line-height: 1.2; /* Espaciado entre líneas */
-}
-
-.boton-subir-texto:hover {
-    background-color: var(--color-acento); /* Naranja más oscuro al pasar el ratón */
-}
 
 .boton-subir-texto .texto-ingles {
     font-size: 1.1rem; /* Texto en inglés más grande */

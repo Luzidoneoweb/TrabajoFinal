@@ -4,21 +4,6 @@ body {
   color: var(--texto-principal);
 }
 
-button {
-    background-color: #f97316;
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s 
-ease, transform 0.2s 
-ease;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-}
-
 button:hover {
   background-color: --;
 }
@@ -43,7 +28,23 @@ body {
 }
 
 /* ===== UTILIDADES GENERALES ===== */
-   .cerrarsesionmovil {
+button {
+      background-color: #f97316; /* Color naranja */
+    color: #ffffff;
+    border: none;
+    border-radius: 6px; /* Bordes más pequeños */
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+button:hover {
+    background-color: var(--color-secundario);
+}
+
+.cerrarsesionmovil {
   display: none;
 }
 .oculto {
@@ -58,16 +59,16 @@ body {
 
 /* ===== ENCABEZADO PRINCIPAL ===== */
 .encabezado-principal {
-    background: #ffffff;
+    background: #457B9D;
     position: sticky;
     top: 0;
     z-index: 1000;
 }
 
 .contenedor-encabezado {
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0 3rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -147,39 +148,13 @@ body {
     background-color: #f0fdf4;
 }
 
-.boton-login {
-    background: var(--color-primario);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
 .boton-login:hover {
     background: var(--exito-fondo);
     transform: translateY(-1px);
 }
-
-
-
-
 .nombre-usuario {
     font-weight: 600;
     color: #374151;
-}
-
-.boton-cerrar-sesion {
-    background:var(--color-primario);
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
 }
 
 .boton-cerrar-sesion:hover {
@@ -256,18 +231,6 @@ body {
     font-size: 1.25rem;
     margin-bottom: 2rem;
     opacity: 0.9;
-}
-
-.boton-comenzar {
-    background: var(--color-primario);
-    color: white;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
 }
 
 .boton-comenzar:hover {
@@ -510,18 +473,6 @@ body {
     border-bottom: none;
 }
 
-.boton-plan {
-    background: var(--color-acento);
-    color: white;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-    transition: all 0.2s ease;
-}
-
 .boton-plan:hover {
     background: var(--color-acento);
     transform: translateY(-2px);
@@ -564,17 +515,6 @@ body {
 }
 
 
-.boton-agregar,
-.boton-practicar {
-    background: var(--color-acento);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
 
 .boton-agregar:hover,
 .boton-practicar:hover {
@@ -583,7 +523,7 @@ body {
 }
 
 .contenido-panel {
-    background: #457b9d0f;
+    background: #f6f6f6;
     padding: 1.5rem 1rem;
     min-height: 400px;
 }
@@ -596,6 +536,7 @@ body {
     width: 300px;
     transition: all 0.2s ease;
 }
+
 
 .buscador-biblioteca:focus {
     outline: none;
@@ -761,7 +702,6 @@ body {
     
     .navegacion-usuario {
         position: absolute;
-        top: 100%;
         left: 0;
         right: 0;
         background: white;
@@ -784,7 +724,6 @@ body {
         max-height: 80vh;
         overflow-y: auto;
         display: flex;
-        margin-top: -65%;
     }
     
     .pestanas-aplicacion {

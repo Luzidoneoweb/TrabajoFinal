@@ -1,43 +1,34 @@
 /* ===== NAVEGACIÓN DE USUARIO (PESTAÑAS) ===== */
 .navegacion-usuario {
-     display: flex;
-    align-items: center;
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;}
-
+    background: #457B9D;
+}
+   
 .navegacion-usuario .pestanas-aplicacion {
     display: flex;
-    gap: 0;
-    margin-left: -1rem;
+   justify-content: center;
 }
 
 .navegacion-usuario .pestanas-aplicacion .pestana {
-    background: var(--fondo-secundario);
-    border: 1px solid var(--borde-general);
+    background: #c2d3e4;
+    border: 1px solid #e5e7eb00;
     border-bottom: none;
     padding: 0.75rem 1.25rem;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
     font-weight: 500;
     color: var(--texto-secundario);
     cursor: pointer;
-    transition: all 0.2s ease;
-    white-space: nowrap;
+    transition: all 0.2s 
+ease;
+    margin-left: 5px;
+    border-radius: 4px 4px 0px 0px;
   
 }
 
-.navegacion-usuario .pestanas-aplicacion .pestana:hover {
-    background-color: var(--gris-hover-fondo);
-    color: var(--texto-principal);
-}
-
-
 /* Estado activo: misma sensación de pestaña con el panel */
 .navegacion-usuario .pestanas-aplicacion .pestana.activa {
-    background-color: #457b9d1a;
+    background-color: #f6f6f6;
     color: var(--texto-principal);
+    box-shadow: none;
 }
 
 /* Panel activo con mismo fondo para continuidad visual */
