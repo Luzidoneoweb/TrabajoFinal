@@ -1,27 +1,19 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/db/conexion.php'; // Ruta absoluta corregida
+require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/db/conexion.php';
 
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 
-$response = ['success' => false, 'categories' => []];
+$response = ['success' => false, 'categories' => [], 'error' => ''];
 
 try {
-    $stmt = $conn->prepare("SELECT id, name FROM categories ORDER BY name ASC");
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    $categories = [];
-    while ($row = $result->fetch_assoc()) {
-        $categories[] = $row;
-    }
+    $stmt = $pdo->query('SELECT id, name FROM categories ORDER BY name ASC');
+    $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $response['success'] = true;
     $response['categories'] = $categories;
-
-} catch (Exception $e) {
-    $response['error'] = $e->getMessage();
-} finally {
-    $conn->close();
+} catch (PDOException $e) {
+    http_response_code(500);
+    $response['error'] = 'Error al obtener categorías: ' . $e->getMessage();
 }
 
 echo json_encode($response);

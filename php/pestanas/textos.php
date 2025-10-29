@@ -17,36 +17,11 @@
     </div>
 
     <div class="lista-textos">
-        <!-- Ejemplo de un texto individual -->
-        <div class="item-texto">
-            <input type="checkbox" class="chk-texto">
-            <div class="info-texto">
-                <p class="titulo-texto">In summary PHP</p>
-                <p class="traduccion-texto">Los adjetivos son palabras</p>
-            </div>
-            <p class="palabras-texto">380 palabras</p>
-            <span class="estado-leido">Leído</span>
-            <button class="btn-estado-publico">PÚBLICO</button>
-        </div>
-        <div class="item-texto">
-            <input type="checkbox" class="chk-texto">
-            <div class="info-texto">
-                <p class="titulo-texto">Adjectives are words</p>
-                <p class="traduccion-texto">Los adjetivos son palabras</p>
-            </div>
-            <p class="palabras-texto">262 palabras</p>
-            <span class="estado-leido">Leído</span>
-            <button class="btn-estado-publico">PÚBLICO</button>
-        </div>
-        <div class="item-texto">
-            <input type="checkbox" class="chk-texto">
-            <div class="info-texto">
-                <p class="titulo-texto">Personal pronouns are</p>
-                <p class="traduccion-texto">Los pronombres personales son</p>
-            </div>
-            <p class="palabras-texto">198 palabras</p>
-            <span class="estado-leido">Leído</span>
-            <button class="btn-estado-publico">PÚBLICO</button>
-        </div>
+    </div>
+
+    <div class="visor-texto">
+        <!-- Aquí se mostrará el contenido del texto seleccionado -->
     </div>
 </div>
+
+<script src="php/pestanas/js/texto.js"></script>
