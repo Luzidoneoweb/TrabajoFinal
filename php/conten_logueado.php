@@ -6,21 +6,21 @@
             <div class="panel-pestana activo" id="panelProgreso">
               
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/php/pestanas/progreso.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/pestanas/progreso.php'; ?>
                 </div>
             </div>
 
             <!-- Pestaña: Mis Textos -->
             <div class="panel-pestana" id="panelTextos">
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/php/pestanas/textos.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/pestanas/textos.php'; ?>
                 </div>
             </div>
 
             <!-- Pestaña: Palabras -->
             <div class="panel-pestana" id="panelPalabras">
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/php/pestanas/palabras.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/pestanas/palabras.php'; ?>
                 </div>
             </div>
 
@@ -29,21 +29,21 @@
             <!-- Pestaña: Biblioteca -->
             <div class="panel-pestana" id="panelBiblioteca">
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/php/pestanas/biblioteca.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/pestanas/biblioteca.php'; ?>
                 </div>
             </div>
 
             <!-- Pestaña: Prácticas -->
             <div class="panel-pestana" id="panelPracticas">
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/php/pestanas/practicas.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/pestanas/practicas.php'; ?>
                 </div>
             </div>
 
             <!-- Pestaña: Subir Texto -->
             <div class="panel-pestana" id="panelSubirTexto">
                 <div class="contenido-panel">
-                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/php/pestanas/subir_texto.php'; ?>
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/pestanas/subir_texto.php'; ?>
                 </div>
             </div>
         </section>

@@ -24,4 +24,4 @@
     </div>
 </div>
 
-<script src="php/pestanas/js/texto.js"></script>
+<script src="pestanas/js/texto.js"></script>

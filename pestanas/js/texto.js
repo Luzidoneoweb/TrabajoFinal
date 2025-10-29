@@ -1,7 +1,7 @@
 // Función para cargar textos
 function cargarTextos() {
     console.log('Cargando textos...');
-    fetch('php/pestanas/php/get_textos.php', { credentials: 'include' })
+    fetch('pestanas/php/get_textos.php', { credentials: 'include' })
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
