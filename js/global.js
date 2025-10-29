@@ -107,8 +107,8 @@
             }
         }
         
-        // Función para cambiar entre pestañas
-        function cambiarPestana(nombrePestana) {
+        // Función para cambiar entre pestañas (disponible globalmente)
+        window.cambiarPestana = function cambiarPestana(nombrePestana) {
             // Remover clase activa de todas las pestañas
             document.querySelectorAll('.pestana').forEach(pestana => {
                 pestana.classList.remove('activa');
