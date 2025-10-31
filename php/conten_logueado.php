@@ -46,5 +46,12 @@
                     <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/pestanas/subir_texto.php'; ?>
                 </div>
             </div>
+
+            <!-- Pestaña: Lectura -->
+            <div class="panel-pestana" id="panelLectura">
+                <div class="contenido-panel">
+                    <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/pestanas/lectura.php'; ?>
+                </div>
+            </div>
         </section>
     </main>

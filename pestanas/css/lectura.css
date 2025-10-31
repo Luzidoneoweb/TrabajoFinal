@@ -1,0 +1,191 @@
+/* Estilos del lector: claros, descriptivos y optimizados */
+/* Revisado para la carga inicial de contenido */
+
+.lectura {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 5.5rem; /* espacio inferior para controles */
+    position: relative;
+}
+
+/* Caja única para todo el contenido de lectura para evitar cortes visuales */
+.contenedor-lectura {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, .06);
+    border-radius: 14px;
+    padding: 1rem 1.25rem 3.5rem; /* extra espacio para paginación */
+}
+
+.encabezado-lectura {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.titulo-lectura {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0;
+    color: #0f172a;
+}
+
+.progreso-lectura {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    min-width: 220px;
+}
+
+.barra-progreso {
+    width: 180px;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.barra-progreso .progreso {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, #60a5fa, #2563eb);
+}
+
+.porcentaje { font-size: .875rem; color: #475569; }
+
+.zona-frases { display: grid; gap: .75rem; }
+
+.frase {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+}
+
+.frase-original p {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #0f172a;
+}
+
+/* Traducción resaltada (inicialmente vacía) */
+.frase-traduccion {
+    background: #fff7ed; /* naranja muy suave */
+    border-color: #fed7aa; /* borde naranja suave */
+}
+
+.frase-traduccion .texto-traduccion {
+    margin: 0;
+    color: #d97706; /* texto naranja medio */
+    min-height: 1.6em; /* reserva espacio aunque esté vacía */
+}
+
+/* Acciones laterales (aparecen a la derecha y se despliegan hacia la izquierda) */
+.acciones-laterales {
+    position: fixed;
+    right: 12px;
+    top: 40%;
+    display: grid;
+    gap: .5rem;
+    z-index: 20;
+}
+
+.accion-lateral {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    background: #334155;
+    color: #fff;
+    border: none;
+    border-radius: 999px 0 0 999px;
+    padding: .6rem .8rem;
+    cursor: pointer;
+    transform: translateX(56%);
+    transition: transform .25s ease, background .2s ease;
+}
+
+.accion-lateral .icono { font-size: 1rem; }
+.accion-lateral .etiqueta { font-size: .9rem; white-space: nowrap; }
+
+.accion-lateral:hover { transform: translateX(0); background: #1f2937; }
+
+/* Controles inferiores */
+.controles-lectura {
+    position: fixed;
+    left: 0; right: 0; bottom: 16px;
+    display: grid;
+    place-items: center;
+    pointer-events: none; /* los hijos activan pointer */
+}
+
+.paginacion {
+    background: rgba(248, 250, 252, .9);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 6px 24px rgba(15, 23, 42, .08);
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .5rem .9rem;
+    pointer-events: auto;
+}
+
+.btn-pagina {
+    border: none;
+    background: #e2e8f0;
+    color: #0f172a;
+    padding: .4rem .7rem;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.btn-pagina:hover { background: #cbd5e1; }
+
+.estado-pagina { font-size: .9rem; color: #334155; }
+
+/* Botón play/stop en esquina inferior derecha */
+.btn-play {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    width: 54px;
+    height: 54px;
+    border: none;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #34d399, #10b981);
+    box-shadow: 0 10px 30px rgba(16, 185, 129, .35);
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.btn-play::before {
+    content: '';
+    display: block;
+    width: 0; height: 0;
+    border-left: 14px solid #fff;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    margin: 0 auto;
+}
+
+/* Botón volver visualmente discreto */
+.btn-volver {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transform: translateY(120%);
+    background: transparent;
+    border: none;
+    color: #2563eb;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .lectura { padding: 1rem 0.5rem 6.5rem; }
+    .acciones-laterales { top: auto; bottom: 120px; }
+}

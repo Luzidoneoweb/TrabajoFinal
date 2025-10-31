@@ -69,27 +69,19 @@ function cargarTextos() {
                         <button class="btn-estado-publico">${texto.is_public ? 'PÚBLICO' : 'PRIVADO'}</button>
                     `;
                     // Mostrar contenido al hacer clic (excepto en checkbox y botón)
+                    // Añadir evento de clic para cargar el texto en la pestaña de lectura
                     itemTexto.addEventListener('click', (e) => {
                         const target = e.target;
+                        // Evitar que el clic en el checkbox o botón active la carga del texto
                         if (target && target.classList && (target.classList.contains('chk-texto') || target.classList.contains('btn-estado-publico'))) {
                             return;
                         }
-                        if (visor) {
-                            visor.innerHTML = `
-                                <div class="tarjeta-visor">
-                                    <h3 class="visor-titulo">${texto.title}</h3>
-                                    <div class="visor-contenido">
-                                        <div class="visor-columna">
-                                            <h4>Original</h4>
-                                            <p>${(texto.content || '').replace(/\n/g, '<br>')}</p>
-                                        </div>
-                                        <div class="visor-columna">
-                                            <h4>Traducción</h4>
-                                            <p>${(texto.content_translation || 'Sin traducción').replace(/\n/g, '<br>')}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
+                        // Guardar el ID del texto en localStorage y cambiar a la pestaña de lectura
+                        localStorage.setItem('currentTextId', texto.id);
+                        if (typeof window.cambiarPestana === 'function') {
+                            window.cambiarPestana('lectura');
+                        } else {
+                            console.error('La función cambiarPestana no está definida.');
                         }
                     });
                     listaTextos.appendChild(itemTexto);

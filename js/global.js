@@ -120,10 +120,20 @@
             });
             
             // Activar la pestaña seleccionada
-            document.querySelector(`[data-pestana="${nombrePestana}"]`).classList.add('activa');
+            const pestanaElemento = document.querySelector(`[data-pestana="${nombrePestana}"]`);
+            if (pestanaElemento) {
+                pestanaElemento.classList.add('activa');
+            } else {
+                console.warn(`Elemento de pestaña con data-pestana="${nombrePestana}" no encontrado.`);
+            }
             
             // Mostrar el panel correspondiente
-            document.getElementById(`panel${nombrePestana.charAt(0).toUpperCase() + nombrePestana.slice(1)}`).classList.add('activo');
+            const panelElemento = document.getElementById(`panel${nombrePestana.charAt(0).toUpperCase() + nombrePestana.slice(1)}`);
+            if (panelElemento) {
+                panelElemento.classList.add('activo');
+            } else {
+                console.warn(`Panel de pestaña con ID "panel${nombrePestana.charAt(0).toUpperCase() + nombrePestana.slice(1)}" no encontrado.`);
+            }
 
             // Cerrar el menú móvil después de seleccionar una pestaña si está abierto
             if (navegacionUsuario && navegacionUsuario.classList.contains('menu-abierto')) {
