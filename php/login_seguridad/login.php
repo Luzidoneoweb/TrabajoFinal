@@ -1,6 +1,7 @@
 <?php
 // login.php
 require_once 'seguridad.php';
+ob_start(); // Iniciar el búfer de salida
 header('Content-Type: application/json; charset=utf-8');
 
 $host = "localhost";
@@ -13,6 +14,7 @@ $dbname = "proyecto";
 //     $dbname = "if0_39209868_proyecto";
 
 if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+    ob_end_clean(); // Limpiar el búfer antes de enviar JSON
     echo json_encode(['success'=>false,'message'=>'Método no permitido']); 
     exit;
 }
@@ -22,6 +24,7 @@ $password = limpiar_input($_POST['password'] ?? ''); // Aplicar limpiar_input a 
 
 // Validar entrada
 if(empty($identifier) || empty($password)){
+    ob_end_clean(); // Limpiar el búfer antes de enviar JSON
     echo json_encode(['success'=>false,'message'=>'Credenciales inválidas']); 
     exit;
 }
@@ -29,6 +32,7 @@ if(empty($identifier) || empty($password)){
 
 $mysqli = new mysqli($host, $user, $pass, $dbname);
 if($mysqli->connect_errno){ 
+    ob_end_clean(); // Limpiar el búfer antes de enviar JSON
     echo json_encode(['success'=>false,'message'=>'Error de conexión a la base de datos']); 
     exit; 
 }
@@ -53,7 +57,7 @@ if($row = $res->fetch_assoc()){
         if ($remember_me) {
             $token_pair = generate_remember_token_pair();
             $selector = $token_pair['selector'];
-            $validator = $token_pair['validator'];
+            $validator = bin2hex(random_bytes(24)); // 48 caracteres hexadecimales
             $hashed_validator = hash_validator($validator);
             $expires_at = date('Y-m-d H:i:s', strtotime('+30 days')); // Token válido por 30 días
 
@@ -72,7 +76,7 @@ if($row = $res->fetch_assoc()){
             // Establecer la cookie de "recordarme"
             set_remember_cookie($selector, $validator, $expires_at);
         }
-        
+        ob_end_clean(); // Limpiar el búfer antes de enviar JSON
         echo json_encode([
             'success' => true,
             'message' => 'Login correcto',
@@ -80,10 +84,12 @@ if($row = $res->fetch_assoc()){
         ]);
     } else {
         // Contraseña incorrecta
+        ob_end_clean(); // Limpiar el búfer antes de enviar JSON
         echo json_encode(['success'=>false,'message'=>'Contraseña incorrecta']);
     }
 } else {
     // Usuario no encontrado
+    ob_end_clean(); // Limpiar el búfer antes de enviar JSON
     echo json_encode(['success'=>false,'message'=>'Usuario no encontrado']);
 }
 
