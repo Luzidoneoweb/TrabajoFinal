@@ -58,6 +58,7 @@ function cargarTextos() {
                 data.data.forEach(texto => {
                     const itemTexto = document.createElement('div');
                     itemTexto.classList.add('item-texto');
+                    itemTexto.dataset.id = texto.id; // Añadir el ID del texto como data-id
                     itemTexto.innerHTML = `
                         <input type="checkbox" class="chk-texto">
                         <div class="info-texto">
@@ -128,4 +129,62 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         observer.observe(panelTextos, { attributes: true });
     }
+
+    // Manejo del botón de eliminar textos
+    const btnEliminarTextos = document.getElementById('btn-eliminar-textos');
+    if (btnEliminarTextos) {
+        btnEliminarTextos.addEventListener('click', function(e) {
+            e.preventDefault(); // Evitar que el enlace navegue
+            manejarEliminacionTextos();
+        });
+    }
 });
+
+// Función para manejar la eliminación de textos
+function manejarEliminacionTextos() {
+    const checkboxesSeleccionados = document.querySelectorAll('.chk-texto:checked');
+    const idsTextosAEliminar = Array.from(checkboxesSeleccionados).map(checkbox => {
+        // Asumiendo que el ID del texto se puede obtener de un atributo data-id en el item-texto padre
+        // o que el checkbox tiene un atributo data-id
+        const itemTexto = checkbox.closest('.item-texto');
+        return itemTexto ? itemTexto.dataset.id : null;
+    }).filter(id => id !== null);
+
+    if (idsTextosAEliminar.length === 0) {
+        mostrarNotificacion('Por favor, selecciona al menos un texto para eliminar.', 'error');
+        return;
+    }
+
+    if (!confirm(`¿Estás seguro de que quieres eliminar ${idsTextosAEliminar.length} texto(s) seleccionado(s)?`)) {
+        return; // El usuario canceló la eliminación
+    }
+
+    // Realizar la llamada fetch para eliminar los textos
+    fetch('pestanas/php/eliminar_textos.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ids: idsTextosAEliminar }),
+        credentials: 'include'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            mostrarNotificacion(data.message, 'exito');
+            cargarTextos(); // Recargar la lista de textos para actualizar la UI
+        } else {
+            // Si data.error no está definido, proporcionar un mensaje genérico
+            mostrarNotificacion('Error al eliminar textos: ' + (data.error || 'Error desconocido en el servidor.'), 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error en la petición fetch para eliminar textos:', error);
+        mostrarNotificacion('Error de conexión al intentar eliminar textos: ' + error.message, 'error');
+    });
+}

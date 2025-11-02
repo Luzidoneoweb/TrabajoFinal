@@ -1,4 +1,7 @@
 <div class="contenedor-textos">
+    <div id="notificacion-flotante" class="notificacion-flotante">
+        <p id="notificacion-mensaje"></p>
+    </div>
     <div class="encabezado-textos">
         <p class="contador-textos">7 textos encontrados</p>
         <div class="acciones-grupo">
@@ -9,7 +12,7 @@
                     <a href="#">Marcar como no leído</a>
                     <a href="#">Hacer público</a>
                     <a href="#">Hacer privado</a>
-                    <a href="#">Eliminar</a>
+                    <a href="#" id="btn-eliminar-textos">Eliminar</a>
                 </div>
             </div>
             <button class="btn-publicos">Textos públicos</button>
@@ -21,7 +24,8 @@
 
     <div class="visor-texto">
         <!-- Aquí se mostrará el contenido del texto seleccionado -->
-    </div>
+    </div>gi
 </div>
 
+<script src="pestanas/js/global.js"></script>
 <script src="pestanas/js/texto.js"></script>

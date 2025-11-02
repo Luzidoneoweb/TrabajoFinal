@@ -1,20 +1,29 @@
 /* Estilos del lector: claros, descriptivos y optimizados */
-/* Revisado para la carga inicial de contenido */
+/* Modificado para comportamiento tipo Readlang - adaptación dinámica al tamaño de pantalla */
 
 .lectura {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 1.5rem 1rem 5.5rem; /* espacio inferior para controles */
-    position: relative;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
-/* Caja única para todo el contenido de lectura para evitar cortes visuales */
+/* Caja única para todo el contenido de lectura */
 .contenedor-lectura {
     background: #ffffff;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 10px 30px rgba(15, 23, 42, .06);
-    border-radius: 14px;
-    padding: 1rem 1.25rem 3.5rem; /* extra espacio para paginación */
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    width: 100%;
 }
 
 .encabezado-lectura {
@@ -22,7 +31,10 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    margin-bottom: 1rem;
+    padding: 1rem 1.5rem;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    flex-shrink: 0;
 }
 
 .titulo-lectura {
@@ -53,37 +65,80 @@
     background: linear-gradient(90deg, #60a5fa, #2563eb);
 }
 
-.porcentaje { font-size: .875rem; color: #475569; }
+.porcentaje { 
+    font-size: .875rem; 
+    color: #475569; 
+}
 
-.zona-frases { display: grid; gap: .75rem; }
+/* Zona de frases - ocupa todo el espacio disponible */
+.zona-frases { 
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+}
 
 .frase {
     background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 1rem 1.25rem;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    flex: 1;
+    overflow-y: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+}
+
+.frase-original {
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.frase-original .contenido-texto {
+    width: 100%;
+    max-width: 900px;
+    padding: 3vh 5vw;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .frase-original p {
     margin: 0;
-    font-size: 1.05rem;
-    line-height: 1.6;
+    font-size: clamp(1.2rem, 3vh, 3.5rem);
+    line-height: 1.7;
     color: #0f172a;
+    text-align: left;
+    width: 100%;
 }
 
-/* Traducción resaltada (inicialmente vacía) */
+/* Traducción resaltada */
 .frase-traduccion {
-    background: #fff7ed; /* naranja muy suave */
-    border-color: #fed7aa; /* borde naranja suave */
+    background: #fff7ed;
+    border-top: 1px solid #fed7aa;
 }
 
 .frase-traduccion .texto-traduccion {
     margin: 0;
-    color: #d97706; /* texto naranja medio */
-    min-height: 1.6em; /* reserva espacio aunque esté vacía */
+    color: #d97706;
+    min-height: 1.6em;
+    width: 100%;
+    max-width: 900px;
+    padding: 3vh 5vw;
+    font-size: clamp(1.1rem, 2.8vh, 3.2rem);
+    line-height: 1.7;
+    text-align: left;
+    height: 100%;
+    display: flex;
+    align-items: center;
 }
 
-/* Acciones laterales (aparecen a la derecha y se despliegan hacia la izquierda) */
+/* Acciones laterales */
 .acciones-laterales {
     position: fixed;
     right: 12px;
@@ -115,14 +170,17 @@
 /* Controles inferiores */
 .controles-lectura {
     position: fixed;
-    left: 0; right: 0; bottom: 16px;
+    left: 0; 
+    right: 0; 
+    bottom: 16px;
     display: grid;
     place-items: center;
-    pointer-events: none; /* los hijos activan pointer */
+    pointer-events: none;
+    z-index: 30;
 }
 
 .paginacion {
-    background: rgba(248, 250, 252, .9);
+    background: rgba(248, 250, 252, .95);
     border: 1px solid #e2e8f0;
     box-shadow: 0 6px 24px rgba(15, 23, 42, .08);
     border-radius: 999px;
@@ -146,7 +204,7 @@
 
 .estado-pagina { font-size: .9rem; color: #334155; }
 
-/* Botón play/stop en esquina inferior derecha */
+/* Botón play/stop */
 .btn-play {
     position: fixed;
     right: 18px;
@@ -159,6 +217,7 @@
     box-shadow: 0 10px 30px rgba(16, 185, 129, .35);
     cursor: pointer;
     pointer-events: auto;
+    z-index: 30;
 }
 
 .btn-play::before {
@@ -171,21 +230,77 @@
     margin: 0 auto;
 }
 
-/* Botón volver visualmente discreto */
+/* Botón volver */
 .btn-volver {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    transform: translateY(120%);
-    background: transparent;
-    border: none;
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    background: rgba(248, 250, 252, .95);
+    border: 1px solid #e2e8f0;
     color: #2563eb;
-    text-decoration: underline;
+    padding: .5rem 1rem;
+    border-radius: 999px;
     cursor: pointer;
+    pointer-events: auto;
+    z-index: 30;
+    font-size: .9rem;
+}
+
+.btn-volver:hover {
+    background: #e2e8f0;
 }
 
 /* Responsivo */
 @media (max-width: 768px) {
-    .lectura { padding: 1rem 0.5rem 6.5rem; }
-    .acciones-laterales { top: auto; bottom: 120px; }
+    .acciones-laterales { 
+        top: auto; 
+        bottom: 120px; 
+    }
+    
+    .frase-original .contenido-texto,
+    .frase-traduccion .texto-traduccion {
+        padding: 2vh 4vw;
+    }
+    
+    .frase-original p {
+        font-size: clamp(1rem, 4vh, 2.5rem);
+    }
+    
+    .frase-traduccion .texto-traduccion {
+        font-size: clamp(0.95rem, 3.8vh, 2.3rem);
+    }
+}
+
+@media (min-width: 1400px) {
+    .frase-original p {
+        font-size: clamp(1.8rem, 4vh, 4.5rem);
+        line-height: 1.8;
+    }
+    
+    .frase-traduccion .texto-traduccion {
+        font-size: clamp(1.6rem, 3.8vh, 4.2rem);
+        line-height: 1.8;
+    }
+}
+
+/* Ajustes para pantallas muy altas */
+@media (min-height: 900px) {
+    .frase-original p {
+        font-size: clamp(1.5rem, 3.5vh, 4rem);
+    }
+    
+    .frase-traduccion .texto-traduccion {
+        font-size: clamp(1.4rem, 3.3vh, 3.8rem);
+    }
+}
+
+/* Ajustes para pantallas muy bajas */
+@media (max-height: 600px) {
+    .frase-original p {
+        font-size: clamp(1rem, 5vh, 2rem);
+    }
+    
+    .frase-traduccion .texto-traduccion {
+        font-size: clamp(0.9rem, 4.8vh, 1.8rem);
+    }
 }

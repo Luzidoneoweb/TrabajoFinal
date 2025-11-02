@@ -1,5 +1,5 @@
 @import url('palabras.css');
-@import url('pestanas.css');
+@import url('global.css');
 @import url('textos.css');
 @import url('biblioteca.css');
 @import url('practicas.css');
@@ -9,3 +9,41 @@
 
 
 /* @import url('componentes/menus.css'); */
+
+/* Estilos para la notificación flotante */
+.notificacion-flotante {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    min-width: 250px;
+    text-align: center;
+}
+
+.notificacion-flotante.mostrar {
+    opacity: 1;
+    visibility: visible;
+}
+
+.notificacion-flotante.exito {
+    background-color: #28a745; /* Verde para éxito */
+}
+
+.notificacion-flotante.error {
+    background-color: #dc3545; /* Rojo para error */
+}
+
+.notificacion-flotante p {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+}
