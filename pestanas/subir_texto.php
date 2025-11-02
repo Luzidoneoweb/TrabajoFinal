@@ -4,7 +4,7 @@
 
 <div class="contenedor-subir-texto">
     <!-- Incluir el archivo JavaScript -->
-    <script src="php/pestanas/js/subir_texto.js"></script>
+    <script src="pestanas/js/subir_texto.js"></script>
     <h2>Subir nuevo texto</h2>
 
     <div class="formulario-subir">

@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Función para cargar categorías
     function cargarCategorias() {
-        const urlCategorias = 'pestanas/php/get_categoria.php'; // Ruta corregida
+        const urlCategorias = '/trabajoFinal/pestanas/php/get_categoria.php'; // Ruta corregida
         console.log('Fetching categories from:', urlCategorias);
         fetch(urlCategorias, {
             credentials: 'include' // Incluir cookies de sesión
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if(texto_publico.checked) formData.append('texto_publico', 'on');
         if(categoria.value) formData.append('categoria', categoria.value);
 
-        const urlSubirTexto = 'pestanas/php/subirTextoFuncion.php'; // Ruta corregida
+        const urlSubirTexto = '/trabajoFinal/pestanas/php/subirTextoFuncion.php'; // Ruta corregida
         console.log('Submitting text to:', urlSubirTexto);
         fetch(urlSubirTexto, {
             method: 'POST',
