@@ -1,12 +1,15 @@
 /* Estilos del lector: claros, descriptivos y optimizados */
-/* Modificado para comportamiento tipo Readlang - adaptación dinámica al tamaño de pantalla */
- 
+/* Comportamiento similar a realdlan: adaptación dinámica al tamaño de pantalla y zoom */
+/* El contenido se adapta siempre a la pantalla, incluso con zoom amplio, manteniendo su estructura */
 
+/* Reset general para asegurar consistencia en todos los navegadores */
 * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/* Contenedor principal del lector - ocupa toda la pantalla */
+/* Se adapta al zoom y tamaño de ventana, manteniendo estructura fija */
 .lectura {
     max-width: 100%;
     margin: 0;
@@ -16,35 +19,38 @@
     left: 0;
     right: 0;
     bottom: 0;
-    height: 100vh;
+    top: 70px;
+    height: calc(100vh - 70px);
+    width: 100vw; /* Asegurar ancho completo */
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: hidden; /* Ocultar overflow para mantener estructura */
 }
 
 /* Caja única para todo el contenido de lectura */
+/* Contenedor principal que adapta el contenido al tamaño disponible */
 .contenedor-lectura {
     background: #ffffff;
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
+    height: calc(100vh - 70px); /* Ajustar la altura para el encabezado principal */
     width: 100%;
-          margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-       
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Mantener estructura sin scroll visible */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
+/* Encabezado de lectura - barra superior fija */
+/* No se reduce: mantiene tamaño constante */
 .encabezado-lectura {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1rem 1.5rem;
+        display: flex;
+    align-items: anchor-center;
+    justify-content: space-around;
+    padding: 14px;
     background: #f8fafc;
     border-bottom: 1px solid #e2e8f0;
-    flex-shrink: 0;
+    flex-shrink: 0; /* No reducir: tamaño fijo */
 }
 
 .titulo-lectura {
@@ -54,11 +60,24 @@
     color: #0f172a;
 }
 
+.titulo-lectura-traduccion {
+    font-size: 1rem; /* Un poco más pequeño que el título principal */
+    font-weight: 400;
+    margin: 0;
+    color: #64748b; /* Un color más tenue para la traducción */
+}
+
 .progreso-lectura {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
+ display: flex
+;
+    gap: 0.5rem;
     min-width: 220px;
+    align-content: center;
+    justify-content: center;
+    margin-left: 40%;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+    align-items: flex-end;
 }
 
 .barra-progreso {
@@ -80,44 +99,67 @@
     color: #475569; 
 }
 
-/* Zona de frases - permite scroll cuando hay múltiples frases */
+/* Zona de frases - área principal de contenido */
+/* Se adapta dinámicamente al tamaño de pantalla y zoom */
+/* El contenido puede desaparecer con zoom amplio pero mantiene su estructura */
+/* Siempre centrado, incluso cuando la pantalla está al 50% */
 .zona-frases { 
     display: flex;
     flex-direction: column;
     gap: 0;
-    flex: 1;
-    overflow: hidden; /* Cambiado de overflow-y: auto a hidden para eliminar la barra de desplazamiento */
-    min-height: 0;
+    flex: 1; /* Ocupa todo el espacio disponible */
+    overflow: hidden; /* Ocultar overflow: el contenido se adapta mediante paginación - sin scrollbar */
+    min-height: 0; /* Permitir que flexbox reduzca el tamaño si es necesario */
+    position: relative; /* Contexto de posicionamiento para elementos internos */
+    align-items: center; /* Centrar contenido horizontalmente */
+    width: 100%;
+    /* Asegurar que no aparezca scrollbar en ningún navegador */
+    -ms-overflow-style: none; /* IE y Edge */
+    scrollbar-width: none; /* Firefox */
 }
 
+/* Ocultar scrollbar en navegadores Webkit (Chrome, Safari, Edge moderno) */
+.zona-frases::-webkit-scrollbar {
+    display: none;
+}
+
+/* Contenedor base para cada frase */
+/* No se reduce, mantiene su altura natural */
 .frase {
     background: #f8fafc;
     border: none;
     border-radius: 0;
     padding: 0;
-    flex-shrink: 0;
+    flex-shrink: 0; /* No reducir tamaño: mantener altura natural */
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Asegurar alineación a la izquierda */
-    min-height: fit-content;
+    justify-content: flex-start; /* Alineación a la izquierda */
+    min-height: fit-content; /* Altura mínima según contenido */
+    width: 100%; /* Ocupar ancho completo */
 }
 
-    .frase-original {
-        background: #ffffff;
-        border-bottom: 1px solid #e2e8f0;
-        width: 90%;
-        margin-left: 0; /* Asegurar alineación a la izquierda */
-        margin-right: auto; /* Permitir que el margen derecho empuje a la izquierda */
-    }
+/* Frase original - contenedor centrado */
+/* Siempre centrado, incluso cuando la pantalla está al 50% */
+.frase-original {
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    width: 100%;
+    max-width: 900px; /* Ancho máximo del contenido */
+    margin: 0 auto; /* Centrado horizontal */
+    display: flex;
+    justify-content: center; /* Centrar contenido interno */
+}
 
 
+/* Contenedor de texto de la frase original */
+/* Usa unidades viewport (vh/vw) para adaptarse al zoom */
 .frase-original .contenido-texto {
     width: 100%;
     max-width: 900px;
-    padding: 1vh 2vw;
+    padding: 1vh 2vw; /* Padding adaptativo al tamaño de viewport */
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Asegurar alineación a la izquierda */
+    justify-content: flex-start; /* Texto alineado a la izquierda dentro del contenedor */
 }
 
 .frase-original p {
@@ -137,20 +179,19 @@
 
 /* Estilos para la línea de traducción debajo de cada frase original (máximo 20 palabras) */
 /* Estilo inspirado en la primera imagen: barra horizontal con gradiente azul y borde izquierdo */
+/* Se adapta al zoom manteniendo proporciones y estructura - siempre centrada */
 .frase-traduccion-original {
     background: linear-gradient(135deg, #EFF6FF 0%, #dbeafea6 100%);
     border-left: 4px solid #0061ff38;
     padding: 0.5rem 8px;
-    margin: 0.25rem 0 0.75rem 0;
+    margin: 0.25rem auto 0.75rem auto; /* Centrado horizontal */
     border-radius: 0 8px 8px 0;
     min-height: 30px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     width: 100%;
-    max-width: 900px;
-    /* margin-left: auto; */ /* Eliminado para alinear a la izquierda */
-    /* margin-right: auto; */ /* Eliminado para alinear a la izquierda */
+    max-width: 900px; /* Mismo ancho máximo que frase-original - siempre centrado */
 }
 
 .frase-traduccion-original .texto-traduccion-original {
@@ -205,7 +246,8 @@
 
 .accion-lateral:hover { transform: translateX(0); background: #1f2937; }
 
-/* Controles inferiores */
+/* Controles inferiores - barra de navegación fija */
+/* Posición fija para mantenerse visible durante el zoom */
 .controles-lectura {
     position: fixed;
     left: 0; 
@@ -213,8 +255,8 @@
     bottom: 16px;
     display: grid;
     place-items: center;
-    pointer-events: none;
-    z-index: 30;
+    pointer-events: none; /* Permite clicks a través, excepto en elementos hijos */
+    z-index: 30; /* Por encima del contenido */
 }
 
 .paginacion {

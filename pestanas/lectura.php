@@ -1,13 +1,16 @@
 <div class="lectura" id="panelLectura" aria-label="Lector de texto">
     <div class="contenedor-lectura">
         <!-- Encabezado de lectura -->
-        <header class="encabezado-lectura">
+        <div class="encabezado-lectura">
+            <button class="btn-volver" onclick="window.cambiarPestana('textos')">Volver a Mis Textos</button>
+
             <h1 class="titulo-lectura"></h1>
+            <h1 class="titulo-lectura-traduccion">Traducion Titulo</h1> <!-- Nuevo h1 para la traducción del título -->
             <div class="progreso-lectura" aria-label="Progreso">
                 <div class="barra-progreso"><span class="progreso" style="width:0%"></span></div>
                 <span class="porcentaje" aria-live="polite">0%</span>
             </div>
-        </header>
+</div>
 
         <!-- Área de frases -->
         <div class="zona-frases">
@@ -50,7 +53,6 @@
 
             <button class="btn-play" title="Reproducir / Detener" aria-label="Reproducir o detener"></button>
 
-            <button class="btn-volver" onclick="window.cambiarPestana('textos')">Volver a Mis Textos</button>
         </footer>
     </div>
 </div>
