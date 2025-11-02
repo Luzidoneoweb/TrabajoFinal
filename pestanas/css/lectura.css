@@ -1,6 +1,12 @@
 /* Estilos del lector: claros, descriptivos y optimizados */
 /* Modificado para comportamiento tipo Readlang - adaptación dinámica al tamaño de pantalla */
+ 
 
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 .lectura {
     max-width: 100%;
     margin: 0;
@@ -24,6 +30,10 @@
     height: 100vh;
     overflow: hidden;
     width: 100%;
+          margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+       
 }
 
 .encabezado-lectura {
@@ -70,13 +80,13 @@
     color: #475569; 
 }
 
-/* Zona de frases - ocupa todo el espacio disponible */
+/* Zona de frases - permite scroll cuando hay múltiples frases */
 .zona-frases { 
     display: flex;
     flex-direction: column;
     gap: 0;
     flex: 1;
-    overflow: hidden;
+    overflow: hidden; /* Cambiado de overflow-y: auto a hidden para eliminar la barra de desplazamiento */
     min-height: 0;
 }
 
@@ -85,27 +95,29 @@
     border: none;
     border-radius: 0;
     padding: 0;
-    flex: 1;
-    overflow-y: hidden;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
-    justify-content: center;
-    min-height: 0;
+    justify-content: flex-start; /* Asegurar alineación a la izquierda */
+    min-height: fit-content;
 }
 
-.frase-original {
-    background: #ffffff;
-    border-bottom: 1px solid #e2e8f0;
-}
+    .frase-original {
+        background: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+        width: 90%;
+        margin-left: 0; /* Asegurar alineación a la izquierda */
+        margin-right: auto; /* Permitir que el margen derecho empuje a la izquierda */
+    }
+
 
 .frase-original .contenido-texto {
     width: 100%;
     max-width: 900px;
-    padding: 3vh 5vw;
-    height: 100%;
+    padding: 1vh 2vw;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start; /* Asegurar alineación a la izquierda */
 }
 
 .frase-original p {
@@ -113,7 +125,7 @@
     font-size: clamp(1.2rem, 3vh, 3.5rem);
     line-height: 1.7;
     color: #0f172a;
-    text-align: left;
+    text-align: left; /* Asegurar alineación a la izquierda */
     width: 100%;
 }
 
@@ -121,6 +133,34 @@
 .frase-traduccion {
     background: #fff7ed;
     border-top: 1px solid #fed7aa;
+}
+
+/* Estilos para la línea de traducción debajo de cada frase original (máximo 20 palabras) */
+/* Estilo inspirado en la primera imagen: barra horizontal con gradiente azul y borde izquierdo */
+.frase-traduccion-original {
+    background: linear-gradient(135deg, #EFF6FF 0%, #dbeafea6 100%);
+    border-left: 4px solid #0061ff38;
+    padding: 0.5rem 8px;
+    margin: 0.25rem 0 0.75rem 0;
+    border-radius: 0 8px 8px 0;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 900px;
+    /* margin-left: auto; */ /* Eliminado para alinear a la izquierda */
+    /* margin-right: auto; */ /* Eliminado para alinear a la izquierda */
+}
+
+.frase-traduccion-original .texto-traduccion-original {
+    margin: 0;
+    font-size: clamp(0.9rem, 2.5vh, 2.5rem);
+    line-height: 1.5;
+    font-weight: 500;
+    color: #eaa827; /* Color naranja/amarillo como en la primera imagen */
+    text-align: left; /* Asegurar alineación a la izquierda */
+    width: 100%;
 }
 
 .frase-traduccion .texto-traduccion {
@@ -132,10 +172,9 @@
     padding: 3vh 5vw;
     font-size: clamp(1.1rem, 2.8vh, 3.2rem);
     line-height: 1.7;
-    text-align: left;
-    height: 100%;
-    display: flex;
-    align-items: center;
+    text-align: left; /* Asegurar alineación a la izquierda */
+    /* display: flex; */ /* Eliminado para evitar centrado implícito */
+    /* align-items: center; */ /* Eliminado para evitar centrado implícito */
 }
 
 /* Acciones laterales */
@@ -152,7 +191,6 @@
     display: flex;
     align-items: center;
     gap: .5rem;
-    background: #334155;
     color: #fff;
     border: none;
     border-radius: 999px 0 0 999px;
@@ -213,7 +251,7 @@
     height: 54px;
     border: none;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #34d399, #10b981);
+    /* background: radial-gradient(circle at 30% 30%, #34d399, #10b981); */
     box-shadow: 0 10px 30px rgba(16, 185, 129, .35);
     cursor: pointer;
     pointer-events: auto;
@@ -235,9 +273,7 @@
     position: fixed;
     left: 20px;
     bottom: 20px;
-    background: rgba(248, 250, 252, .95);
     border: 1px solid #e2e8f0;
-    color: #2563eb;
     padding: .5rem 1rem;
     border-radius: 999px;
     cursor: pointer;
@@ -286,7 +322,7 @@
 /* Ajustes para pantallas muy altas */
 @media (min-height: 900px) {
     .frase-original p {
-        font-size: clamp(1.5rem, 3.5vh, 4rem);
+        font-size: clamp(1rem, 2.5vh, 2rem);
     }
     
     .frase-traduccion .texto-traduccion {
@@ -297,10 +333,10 @@
 /* Ajustes para pantallas muy bajas */
 @media (max-height: 600px) {
     .frase-original p {
-        font-size: clamp(1rem, 5vh, 2rem);
+        font-size: clamp(1rem, 40%, 2rem);
     }
     
     .frase-traduccion .texto-traduccion {
-        font-size: clamp(0.9rem, 4.8vh, 1.8rem);
+        font-size: clamp(0.9rem, 3.8vh, 1.8rem);
     }
 }

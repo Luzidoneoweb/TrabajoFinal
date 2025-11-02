@@ -1,4 +1,4 @@
-<div class="lectura" aria-label="Lector de texto">
+<div class="lectura" id="panelLectura" aria-label="Lector de texto">
     <div class="contenedor-lectura">
         <!-- Encabezado de lectura -->
         <header class="encabezado-lectura">
@@ -11,11 +11,18 @@
 
         <!-- Área de frases -->
         <div class="zona-frases">
+            <!-- Frase original: se genera dinámicamente por JavaScript -->
             <div class="frase frase-original" aria-label="Frase original">
                 <div class="contenido-texto">
                     <p></p>
                 </div>
             </div>
+            <!-- Línea de traducción: debajo de cada frase original, máximo 20 palabras -->
+            <!-- Esta línea siempre existe, incluso si está vacía inicialmente -->
+            <div class="frase-traduccion-original" aria-label="Traducción de la frase original">
+                <p class="texto-traduccion-original"></p>
+            </div>
+            <!-- Traducción completa resaltada (opcional) -->
             <div class="frase frase-traduccion" aria-label="Traducción resaltada">
                 <p class="texto-traduccion"></p>
             </div>

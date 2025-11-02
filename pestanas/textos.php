@@ -3,7 +3,7 @@
         <p id="notificacion-mensaje"></p>
     </div>
     <div class="encabezado-textos">
-        <p class="contador-textos">7 textos encontrados</p>
+        <p class="contador-textos">...textos encontrados</p>
         <div class="acciones-grupo">
             <div class="desplegable-acciones">
                 <button class="btn-desplegable">Acciones en lote <span class="icono-flecha">▼</span></button>
@@ -24,7 +24,7 @@
 
     <div class="visor-texto">
         <!-- Aquí se mostrará el contenido del texto seleccionado -->
-    </div>gi
+    </div>
 </div>
 
 <script src="pestanas/js/global.js"></script>
