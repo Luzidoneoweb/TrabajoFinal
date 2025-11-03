@@ -19,13 +19,55 @@ document.addEventListener('DOMContentLoaded', function() {
             mutations.forEach(function(mutation) {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
                     if (panelLectura.classList.contains('activo')) {
-                        console.log('Panel de lectura activado, cargando texto...');
                         // Asegurar que el body tenga la clase para ocultar scrollbar
                         document.body.classList.add('lectura-activa');
+                        
+                        // Ocultar scroll en todos los contenedores padre SOLO cuando lectura está activa
+                        const html = document.documentElement;
+                        const main = document.querySelector('main');
+                        const section = document.querySelector('.contenido-aplicacion');
+                        
+                        if (html) {
+                            html.style.overflow = 'hidden';
+                            html.style.msOverflowStyle = 'none';
+                            html.style.scrollbarWidth = 'none';
+                        }
+                        if (main) {
+                            main.style.overflow = 'hidden';
+                            main.style.msOverflowStyle = 'none';
+                            main.style.scrollbarWidth = 'none';
+                        }
+                        if (section) {
+                            section.style.overflow = 'hidden';
+                            section.style.msOverflowStyle = 'none';
+                            section.style.scrollbarWidth = 'none';
+                        }
+                        
                         cargarContenidoLectura();
                     } else {
                         // Remover la clase cuando el panel se desactiva
                         document.body.classList.remove('lectura-activa');
+                        
+                        // Restaurar overflow en contenedores padre
+                        const html = document.documentElement;
+                        const main = document.querySelector('main');
+                        const section = document.querySelector('.contenido-aplicacion');
+                        
+                        if (html) {
+                            html.style.overflow = '';
+                            html.style.msOverflowStyle = '';
+                            html.style.scrollbarWidth = '';
+                        }
+                        if (main) {
+                            main.style.overflow = '';
+                            main.style.msOverflowStyle = '';
+                            main.style.scrollbarWidth = '';
+                        }
+                        if (section) {
+                            section.style.overflow = '';
+                            section.style.msOverflowStyle = '';
+                            section.style.scrollbarWidth = '';
+                        }
                     }
                 }
             });
@@ -143,11 +185,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Similar al comportamiento de realdlan: el contenido se adapta manteniendo su estructura
     function calcularFrasesPorPagina() {
         const zonaFrases = document.querySelector('.zona-frases');
-        if (!zonaFrases) return 1; // Si no existe el contenedor, retornar 1 por defecto
+        if (!zonaFrases) return 1;
         
         // Obtener altura disponible real (considerando zoom y viewport)
         const alturaDisponible = zonaFrases.clientHeight;
-        if (alturaDisponible <= 0) return 1; // Si no hay altura disponible, retornar 1
+        
+        if (alturaDisponible <= 0) {
+            // Intentar obtener altura del viewport como alternativa
+            const alturaViewport = window.innerHeight - 140; // Restar header y controles
+            if (alturaViewport > 0) {
+                return Math.max(2, Math.floor(alturaViewport / 150)); // Estimación conservadora
+            }
+            return 1;
+        }
         
         // Crear contenedor temporal para medir la altura de una frase completa
         // Este contenedor es invisible pero mantiene el layout real
@@ -182,15 +232,47 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Validaciones de seguridad
         if (alturaFraseCompleta === 0 || isNaN(alturaFraseCompleta)) {
-            return 1; // Si no se puede medir, retornar 1 como mínimo
+            // Estimar altura mínima de frase (texto + traducción + padding)
+            const alturaEstimada = 120; // Estimación conservadora
+            const frasesEstimadas = Math.floor(alturaDisponible / alturaEstimada);
+            return Math.max(2, frasesEstimadas); // Mínimo 2 frases
         }
 
-        // Calcular cuántas frases caben (redondeando hacia abajo para asegurar que todas caben)
-        // Usar Math.floor para que siempre quepan todas las frases mostradas sin desbordarse
-        const frasesQueCaben = Math.floor(alturaDisponible / alturaFraseCompleta);
+        // Calcular cuántas frases caben
+        // Usar un cálculo más agresivo: redondear hacia arriba si hay más del 20% de espacio adicional
+        // Esto maximiza el uso del espacio disponible y reduce espacios vacíos
+        const frasesQueCaben = alturaDisponible / alturaFraseCompleta;
+        const frasesBase = Math.floor(frasesQueCaben);
+        const espacioRestante = alturaDisponible - (frasesBase * alturaFraseCompleta);
         
-        // Asegurar al menos 1 frase por página
-        return Math.max(1, frasesQueCaben);
+        // Si hay más del 20% del espacio de una frase adicional disponible, añadir una más
+        // Umbral muy bajo para aprovechar al máximo el espacio vertical
+        const frasesFinales = espacioRestante > (alturaFraseCompleta * 0.2) 
+            ? frasesBase + 1 
+            : frasesBase;
+        
+        // Asegurar al menos 2 frases por página para aprovechar mejor el espacio
+        let resultado = Math.max(2, frasesFinales);
+        
+        // Si hay espacio para más de 1.1 frases pero calculamos solo 1, forzar 2
+        if (frasesQueCaben > 1.1 && resultado < 2) {
+            resultado = 2;
+        }
+        
+        // Si hay espacio para más de 2.1 frases pero calculamos menos de 3, forzar 3
+        if (frasesQueCaben > 2.1 && resultado < 3) {
+            resultado = 3;
+        }
+        
+        // Si hay espacio para más de 3.1 frases, añadir una más
+        if (frasesQueCaben > 3.1 && resultado < Math.ceil(frasesQueCaben)) {
+            resultado = Math.ceil(frasesQueCaben);
+        }
+        
+        // Límite máximo razonable para evitar problemas de rendimiento
+        resultado = Math.min(resultado, 10);
+        
+        return resultado;
     }
 
     // Función para actualizar el estado de la paginación (números y botones)
@@ -256,17 +338,42 @@ document.addEventListener('DOMContentLoaded', function() {
                     const contenidoTraduccion = (texto.content_translation || '').replace(/\n/g, ' ').trim();
                     todasLasFrasesTraduccion = dividirEnFrases(contenidoTraduccion, 20);
 
-                    // Calcular dinámicamente cuántas frases caben en la pantalla actual
-                    // Esto se adapta automáticamente al tamaño de pantalla y zoom
-                    frasesPorPagina = calcularFrasesPorPagina();
-                    
-                    // Resetear a la primera página al cargar un nuevo texto
-                    paginaActual = 0;
-                    
-                    // Mostrar la primera página
-                    mostrarPagina(paginaActual);
-                    
-                    console.log('Texto cargado y estructurado por frases:', texto.title);
+                    // Esperar a que el DOM esté completamente renderizado antes de calcular
+                    // Usar requestAnimationFrame para asegurar que el layout esté listo
+                    requestAnimationFrame(function() {
+                        requestAnimationFrame(function() {
+                            // Calcular dinámicamente cuántas frases caben en la pantalla actual
+                            // Esto se adapta automáticamente al tamaño de pantalla y zoom
+                            frasesPorPagina = calcularFrasesPorPagina();
+                            
+                            // Resetear a la primera página al cargar un nuevo texto
+                            paginaActual = 0;
+                            
+                            // Mostrar la primera página
+                            mostrarPagina(paginaActual);
+                            
+                            // Recalcular después de varios delays para obtener medidas más precisas
+                            // una vez que el contenido está completamente renderizado en el DOM
+                            setTimeout(function() {
+                                const nuevoFrasesPorPagina = calcularFrasesPorPagina();
+                                if (nuevoFrasesPorPagina !== frasesPorPagina) {
+                                    frasesPorPagina = nuevoFrasesPorPagina;
+                                    actualizarEstadoPaginacion();
+                                    mostrarPagina(paginaActual);
+                                }
+                            }, 200);
+                            
+                            // Segundo recálculo después de más tiempo para asegurar medidas precisas
+                            setTimeout(function() {
+                                const nuevoFrasesPorPagina = calcularFrasesPorPagina();
+                                if (nuevoFrasesPorPagina !== frasesPorPagina) {
+                                    frasesPorPagina = nuevoFrasesPorPagina;
+                                    actualizarEstadoPaginacion();
+                                    mostrarPagina(paginaActual);
+                                }
+                            }, 500);
+                        });
+                    });
                 } else {
                     console.error('Error al cargar el texto:', data.error);
                     document.querySelector('.titulo-lectura').textContent = 'Error al cargar';
