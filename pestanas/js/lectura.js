@@ -20,7 +20,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
                     if (panelLectura.classList.contains('activo')) {
                         console.log('Panel de lectura activado, cargando texto...');
+                        // Asegurar que el body tenga la clase para ocultar scrollbar
+                        document.body.classList.add('lectura-activa');
                         cargarContenidoLectura();
+                    } else {
+                        // Remover la clase cuando el panel se desactiva
+                        document.body.classList.remove('lectura-activa');
                     }
                 }
             });

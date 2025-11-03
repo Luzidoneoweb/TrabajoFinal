@@ -119,6 +119,9 @@
                 panel.classList.remove('activo');
             });
             
+            // Remover clase lectura-activa del body si estaba activa
+            document.body.classList.remove('lectura-activa');
+            
             // Activar la pestaña seleccionada
             const pestanaElemento = document.querySelector(`[data-pestana="${nombrePestana}"]`);
             if (pestanaElemento) {
@@ -131,6 +134,11 @@
             const panelElemento = document.getElementById(`panel${nombrePestana.charAt(0).toUpperCase() + nombrePestana.slice(1)}`);
             if (panelElemento) {
                 panelElemento.classList.add('activo');
+                
+                // Si es el panel de lectura, añadir clase al body para ocultar scroll
+                if (panelElemento.id === 'panelLectura') {
+                    document.body.classList.add('lectura-activa');
+                }
             } else {
                 console.warn(`Panel de pestaña con ID "panel${nombrePestana.charAt(0).toUpperCase() + nombrePestana.slice(1)}" no encontrado.`);
             }

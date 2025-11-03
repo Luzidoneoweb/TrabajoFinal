@@ -17,6 +17,8 @@ button:hover {
 
 html {
     scroll-behavior: smooth;
+    height: 100%; /* Asegura que el html ocupe el 100% de la altura del viewport */
+    overflow-y: hidden !important; /* Asegura que el html también oculte el scroll vertical */
 }
 
 body {
@@ -24,7 +26,9 @@ body {
     line-height: 1.6;
     color: #333;
     background-color: #ffffff;
+    height: 100%; /* Asegura que el body ocupe el 100% de la altura del html */
     overflow-x: hidden;
+    overflow-y: hidden !important; /* Oculta la barra de desplazamiento vertical */
 }
 
 /* ===== UTILIDADES GENERALES ===== */
@@ -503,6 +507,19 @@ button:hover {
     min-height: calc(100vh - 140px);
 }
 
+/* Ocultar scrollbar en el contenedor principal cuando lectura está activa */
+body.lectura-activa .contenido-aplicacion {
+    overflow: hidden !important;
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+}
+
+body.lectura-activa .contenido-aplicacion::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
 .panel-pestana {
     display: none;
     max-width: 1200px;
@@ -526,6 +543,48 @@ button:hover {
     background: #f6f6f6;
     padding: 1.5rem 1rem;
     min-height: 400px;
+}
+
+/* Ocultar scrollbar cuando el panel de lectura está activo */
+.panel-pestana#panelLectura.activo,
+.panel-pestana#panelLectura.activo .contenido-panel,
+body:has(.panel-pestana#panelLectura.activo) {
+    overflow: hidden !important;
+    -ms-overflow-style: none !important; /* IE y Edge */
+    scrollbar-width: none !important; /* Firefox */
+}
+
+.panel-pestana#panelLectura.activo {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+}
+
+.panel-pestana#panelLectura.activo .contenido-panel {
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+/* Ocultar scrollbar en navegadores Webkit cuando lectura está activa */
+.panel-pestana#panelLectura.activo::-webkit-scrollbar,
+.panel-pestana#panelLectura.activo .contenido-panel::-webkit-scrollbar,
+body:has(.panel-pestana#panelLectura.activo)::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/* Fallback para navegadores que no soportan :has() */
+body.lectura-activa {
+    overflow: hidden !important;
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+}
+
+body.lectura-activa::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
 }
 
 .buscador-biblioteca {

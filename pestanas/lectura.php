@@ -1,15 +1,26 @@
-<div class="lectura" id="panelLectura" aria-label="Lector de texto">
+<div class="lectura" aria-label="Lector de texto">
     <div class="contenedor-lectura">
         <!-- Encabezado de lectura -->
         <div class="encabezado-lectura">
-            <button class="btn-volver" onclick="window.cambiarPestana('textos')">Volver a Mis Textos</button>
-
-            <h1 class="titulo-lectura"></h1>
-            <h1 class="titulo-lectura-traduccion">Traducion Titulo</h1> <!-- Nuevo h1 para la traducción del título -->
+            <button class="btn-volver" onclick="window.cambiarPestana('textos')" aria-label="Volver a Mis Textos">&#x2190;</button>
+            <div class="titulos-lectura-contenedor">
+                <h1 class="titulo-lectura"></h1>
+                <h1 class="titulo-lectura-traduccion">Traducion Titulo</h1> <!-- Nuevo h1 para la traducción del título -->
+            </div>
             <div class="progreso-lectura" aria-label="Progreso">
                 <div class="barra-progreso"><span class="progreso" style="width:0%"></span></div>
                 <span class="porcentaje" aria-live="polite">0%</span>
             </div>
+               <aside class="acciones-laterales1" aria-label="Acciones">
+            <button class="accion-lateral accion-notas" title="Notas">
+                <span class="icono">📝</span>
+                <span class="etiqueta">Notas</span>
+            </button>
+            <button class="accion-lateral accion-vocab" title="Vocabulario">
+                <span class="icono">🔤</span>
+                <span class="etiqueta">Vocabulario</span>
+            </button>
+        </aside>
 </div>
 
         <!-- Área de frases -->
