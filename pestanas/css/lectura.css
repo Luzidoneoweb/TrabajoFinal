@@ -196,6 +196,19 @@
     width: 100%;
 }
 
+/* Estilo para resaltar el párrafo que se está leyendo actualmente */
+.frase-original p.paragraph.reading-current {
+    background-color: #fef3c7 !important;
+    border-left: 4px solid #f59e0b !important;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, border-left 0.3s ease;
+    box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+}
+
 /* Traducción resaltada */
 .frase-traduccion {
     background: #fff7ed;

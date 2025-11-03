@@ -134,7 +134,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const zonaFrases = document.querySelector('.zona-frases');
         if (!zonaFrases) return; // Validación de seguridad
         
-        zonaFrases.innerHTML = ''; // Limpiar contenido existente antes de mostrar nueva página
+        // Limpiar páginas anteriores y crear contenedor para la página activa
+        // MotorLectura busca elementos con clase .page.active
+        zonaFrases.innerHTML = '';
+        const pageContainer = document.createElement('div');
+        pageContainer.classList.add('page', 'active');
+        zonaFrases.appendChild(pageContainer);
 
         // Calcular índices de inicio y fin para la página actual
         const inicio = numeroPagina * frasesPorPagina;
@@ -150,12 +155,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const divFraseOriginal = document.createElement('div');
             divFraseOriginal.classList.add('frase', 'frase-original');
             divFraseOriginal.setAttribute('aria-label', 'Frase original');
+            
+            // Crear párrafo con clase .paragraph para que MotorLectura lo encuentre
+            const parrafo = document.createElement('p');
+            parrafo.classList.add('paragraph'); // Clase necesaria para MotorLectura
+            parrafo.textContent = fraseOriginal;
+            
             divFraseOriginal.innerHTML = `
                 <div class="contenido-texto">
-                    <p>${fraseOriginal}</p>
                 </div>
             `;
-            zonaFrases.appendChild(divFraseOriginal);
+            divFraseOriginal.querySelector('.contenido-texto').appendChild(parrafo);
+            pageContainer.appendChild(divFraseOriginal);
 
             // Crear línea de traducción con estilo de barra horizontal
             // Se crea directamente sin wrapper para mantener centrado correcto
@@ -172,8 +183,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p class="texto-traduccion-original">${traduccionTruncada}</p>
             `;
             
-            // Añadir directamente a zonaFrases - el CSS se encarga del centrado
-            zonaFrases.appendChild(divTraduccionOriginal);
+            // Añadir directamente a pageContainer - el CSS se encarga del centrado
+            pageContainer.appendChild(divTraduccionOriginal);
         });
 
         // Actualizar estado de paginación (números y botones)
@@ -342,16 +353,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Usar requestAnimationFrame para asegurar que el layout esté listo
                     requestAnimationFrame(function() {
                         requestAnimationFrame(function() {
-                            // Calcular dinámicamente cuántas frases caben en la pantalla actual
-                            // Esto se adapta automáticamente al tamaño de pantalla y zoom
-                            frasesPorPagina = calcularFrasesPorPagina();
-                            
-                            // Resetear a la primera página al cargar un nuevo texto
-                            paginaActual = 0;
-                            
-                            // Mostrar la primera página
-                            mostrarPagina(paginaActual);
-                            
+                    // Calcular dinámicamente cuántas frases caben en la pantalla actual
+                    // Esto se adapta automáticamente al tamaño de pantalla y zoom
+                    frasesPorPagina = calcularFrasesPorPagina();
+                    
+                    // Resetear a la primera página al cargar un nuevo texto
+                    paginaActual = 0;
+                    
+                    // Mostrar la primera página
+                    mostrarPagina(paginaActual);
+                    
                             // Recalcular después de varios delays para obtener medidas más precisas
                             // una vez que el contenido está completamente renderizado en el DOM
                             setTimeout(function() {
@@ -416,6 +427,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btnAnterior) {
         btnAnterior.addEventListener('click', function() {
             if (paginaActual > 0) {
+                lecturaContinua = false; // Detener lectura continua si el usuario navega manualmente
                 paginaActual--;
                 mostrarPagina(paginaActual);
             }
@@ -426,6 +438,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btnSiguiente) {
         btnSiguiente.addEventListener('click', function() {
             if (paginaActual < totalPaginas - 1) {
+                lecturaContinua = false; // Detener lectura continua si el usuario navega manualmente
                 paginaActual++;
                 mostrarPagina(paginaActual);
             }
@@ -458,4 +471,106 @@ document.addEventListener('DOMContentLoaded', function() {
             mostrarPagina(paginaActual);
         }, 100); // Delay de 100ms para optimizar rendimiento
     });
+
+    // Lógica para el botón de reproducción/detención
+    // Maneja el inicio y detención de la lectura de texto mediante MotorLectura
+    const btnPlay = document.querySelector('.btn-play');
+
+    // Variable para controlar si la lectura debe continuar automáticamente
+    let lecturaContinua = false;
+
+    // Función para actualizar el estado visual del botón según el estado de MotorLectura
+    function actualizarBotonPlay() {
+        if (btnPlay) {
+            if (window.MotorLectura && window.MotorLectura.estado === 'reproduciendo') {
+                btnPlay.title = 'Detener';
+                btnPlay.setAttribute('aria-label', 'Detener lectura');
+                btnPlay.classList.add('playing');
+            } else {
+                btnPlay.title = 'Reproducir / Detener';
+                btnPlay.setAttribute('aria-label', 'Reproducir o detener');
+                btnPlay.classList.remove('playing');
+            }
+        }
+    }
+
+    // Configurar listener del botón de reproducción
+    if (btnPlay) {
+        btnPlay.addEventListener('click', function() {
+            if (window.MotorLectura) {
+                if (window.MotorLectura.estado === 'reproduciendo' || window.MotorLectura.estado === 'pausado') {
+                    // Detener la lectura si está reproduciendo o pausada
+                    lecturaContinua = false;
+                    window.MotorLectura.detener();
+                } else {
+                    // Iniciar la lectura desde el primer párrafo de la página actual
+                    // MotorLectura busca párrafos con clase .paragraph dentro de .page.active
+                    lecturaContinua = true; // Activar lectura continua para todas las páginas
+                    window.MotorLectura.iniciar(0);
+                }
+                // Actualizar el botón después de cambiar el estado
+                setTimeout(actualizarBotonPlay, 100);
+            }
+        });
+    }
+
+    // Extender MotorLectura para que funcione con nuestro sistema de paginación
+    if (window.MotorLectura) {
+        const originalSiguiente = window.MotorLectura.siguiente.bind(window.MotorLectura);
+        window.MotorLectura.siguiente = function() {
+            const paras = this.parrafos();
+            if (this.indiceActual < paras.length) {
+                // Aún hay párrafos en esta página, continuar leyendo
+                this.hablarActual();
+                return;
+            }
+            // No hay más párrafos en esta página, intentar avanzar a la siguiente
+            if (lecturaContinua && paginaActual < totalPaginas - 1) {
+                // Avanzar a la siguiente página automáticamente
+                paginaActual++;
+                mostrarPagina(paginaActual);
+                // Esperar a que se renderice la nueva página y continuar leyendo
+                setTimeout(() => {
+                    this.indiceActual = 0;
+                    this.hablarActual();
+                }, 300);
+            } else {
+                // No hay más páginas o la lectura continua está desactivada
+                this.detener();
+                lecturaContinua = false;
+                actualizarBotonPlay();
+            }
+        };
+    }
+
+    // Modificar mostrarPagina para mantener la lectura continua cuando se cambia de página automáticamente
+    const originalMostrarPagina = mostrarPagina;
+    mostrarPagina = function(numeroPagina) {
+        // Solo detener la lectura si el usuario cambia de página manualmente (no automáticamente)
+        if (window.MotorLectura && window.MotorLectura.estado !== 'inactivo' && !lecturaContinua) {
+            window.MotorLectura.detener();
+        }
+        originalMostrarPagina(numeroPagina);
+        actualizarBotonPlay();
+    };
+
+    // Asegurarse de que el botón se actualice al cargar el contenido inicial
+    const originalCargarContenidoLectura = cargarContenidoLectura;
+    cargarContenidoLectura = function() {
+        originalCargarContenidoLectura();
+        // Esperar a que el contenido se renderice antes de actualizar el botón
+        setTimeout(actualizarBotonPlay, 200);
+    };
+
+    // Listener para actualizar el botón cuando cambie el estado de MotorLectura
+    // Se ejecuta periódicamente para mantener el botón sincronizado
+    setInterval(function() {
+        if (window.MotorLectura) {
+            actualizarBotonPlay();
+        }
+    }, 500);
+
+    // Inicializar el estado del botón al cargar la página
+    actualizarBotonPlay();
+
 });

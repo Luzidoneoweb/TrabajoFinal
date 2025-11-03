@@ -68,5 +68,8 @@
     </div>
 </div>
 
+<!-- Scripts del sistema de voz -->
+<script src="lector/electron-voice-integration.js"></script>
+<script src="lector/reading-engine.js"></script>
 <!-- Script para la lógica de carga y visualización de la lectura -->
 <script src="pestanas/js/lectura.js"></script>
