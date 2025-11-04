@@ -109,6 +109,19 @@
         
         // Función para cambiar entre pestañas (disponible globalmente)
         window.cambiarPestana = function cambiarPestana(nombrePestana) {
+            // Detener la lectura si está activa antes de cambiar de pestaña
+            if (window.MotorLectura && window.MotorLectura.estado !== 'inactivo') {
+                try {
+                    window.MotorLectura.detener();
+                    // Cancelar explícitamente speechSynthesis para asegurar que se detiene
+                    if (window.speechSynthesis) {
+                        window.speechSynthesis.cancel();
+                    }
+                } catch(e) {
+                    console.warn('Error al detener la lectura al cambiar de pestaña:', e);
+                }
+            }
+            
             // Remover clase activa de todas las pestañas
             document.querySelectorAll('.pestana').forEach(pestana => {
                 pestana.classList.remove('activa');

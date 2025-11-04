@@ -26,6 +26,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else {
                         // Remover la clase cuando el panel se desactiva
                         document.body.classList.remove('lectura-activa');
+                        // Detener la lectura cuando el panel se desactiva
+                        if (window.MotorLectura && window.MotorLectura.estado !== 'inactivo') {
+                            lecturaContinua = false;
+                            window.MotorLectura.detener();
+                            // Cancelar explícitamente speechSynthesis
+                            if (window.speechSynthesis) {
+                                window.speechSynthesis.cancel();
+                            }
+                            actualizarBotonPlay();
+                        }
                     }
                 }
             });
@@ -458,4 +468,53 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Inicializar el estado del botón al cargar la página
     actualizarBotonPlay();
+
+    // Event listener para detener la lectura cuando la visibilidad de la página cambia
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden && window.MotorLectura && window.MotorLectura.estado !== 'inactivo') {
+            lecturaContinua = false;
+            window.MotorLectura.detener();
+            // Cancelar explícitamente speechSynthesis cuando la página se oculta
+            if (window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+            }
+            actualizarBotonPlay();
+        }
+    });
+
+    // Event listener para detener la lectura cuando el usuario intenta salir/recargar la página
+    // IMPORTANTE: beforeunload debe ejecutar código síncrono, por eso cancelamos directamente
+    window.addEventListener('beforeunload', function() {
+        // Cancelar explícitamente speechSynthesis de forma síncrona
+        if (window.speechSynthesis) {
+            try {
+                window.speechSynthesis.cancel();
+            } catch(e) {
+                // Ignorar errores si el navegador ya está cerrando
+            }
+        }
+        // Detener MotorLectura si existe
+        if (window.MotorLectura && window.MotorLectura.estado !== 'inactivo') {
+            try {
+                window.MotorLectura.estado = 'inactivo';
+                window.MotorLectura.limpiarResaltado();
+            } catch(e) {
+                // Ignorar errores si el navegador ya está cerrando
+            }
+        }
+    });
+
+    // Detener cualquier lectura activa al cargar la página (por si acaso)
+    window.addEventListener('pageshow', function(event) {
+        // Si la página se carga desde caché (back/forward) o se recarga, detener lectura
+        if (window.speechSynthesis) {
+            window.speechSynthesis.cancel();
+        }
+        if (window.MotorLectura) {
+            window.MotorLectura.estado = 'inactivo';
+            window.MotorLectura.limpiarResaltado();
+            lecturaContinua = false;
+            actualizarBotonPlay();
+        }
+    });
 });
