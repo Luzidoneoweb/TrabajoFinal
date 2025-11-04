@@ -27,8 +27,7 @@
     height: 0 !important;
 }
 
-/* Contenedor principal del lector - ocupa toda la pantalla */
-/* Se adapta al zoom y tamaño de ventana, manteniendo estructura fija */
+/* Contenedor principal del lector */
 .lectura {
     max-width: 100%;
     margin: 0;
@@ -46,8 +45,7 @@
     overflow: hidden !important; /* Forzar la ocultación del overflow */
 }
 
-/* Caja única para todo el contenido de lectura */
-/* Contenedor principal que adapta el contenido al tamaño disponible */
+/* Contenedor principal de lectura */
 .contenedor-lectura {
     background: #ffffff;
     display: flex;
@@ -60,8 +58,7 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-/* Encabezado de lectura - barra superior fija */
-/* No se reduce: mantiene tamaño constante */
+/* Encabezado de lectura */
 .encabezado-lectura {
     display: flex;
     align-items: center; /* Alinea verticalmente los elementos */
@@ -125,22 +122,19 @@
 }
 
 /* Zona de frases - área principal de contenido */
-/* Se adapta dinámicamente al tamaño de pantalla y zoom */
-/* El contenido puede desaparecer con zoom amplio pero mantiene su estructura */
-/* Siempre centrado, incluso cuando la pantalla está al 50% */
+/* Siempre ocupa el máximo espacio disponible */
 .zona-frases { 
     display: flex;
     flex-direction: column;
     gap: 0;
-    flex: 1; /* Ocupa todo el espacio disponible */
-    overflow: hidden !important; /* Forzar la ocultación del overflow */
-    min-height: 0; /* Permitir que flexbox reduzca el tamaño si es necesario */
-    position: relative; /* Contexto de posicionamiento para elementos internos */
-    align-items: center; /* Centrar contenido horizontalmente */
+    flex: 1;
+    overflow: hidden !important;
+    position: relative;
+    align-items: center;
     width: 100%;
-    /* Asegurar que no aparezca scrollbar en ningún navegador */
-    -ms-overflow-style: none; /* IE y Edge */
-    scrollbar-width: none; /* Firefox */
+    height: 100%;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 /* Ocultar scrollbar en navegadores Webkit (Chrome, Safari, Edge moderno) */
@@ -149,42 +143,32 @@
 }
 
 /* Contenedor base para cada frase */
-/* No se reduce, mantiene su altura natural */
 .frase {
     background: #f8fafc;
     border: none;
     border-radius: 0;
     padding: 0;
-    flex-shrink: 0; /* No reducir tamaño: mantener altura natural */
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Alineación a la izquierda */
-    min-height: fit-content; /* Altura mínima según contenido */
-    width: 100%; /* Ocupar ancho completo */
+    display: block;
+    width: 100%;
+    margin-bottom: 0.75rem; /* Espacio reducido entre bloques de frase-traducción */
 }
 
 /* Frase original - contenedor centrado */
-/* Siempre centrado, incluso cuando la pantalla está al 50% */
 .frase-original {
     background: #ffffff;
     border-bottom: 1px solid #e2e8f0;
     width: 100%;
-    max-width: 900px; /* Ancho máximo del contenido */
-    margin: 0 auto; /* Centrado horizontal */
-    display: flex;
-    justify-content: center; /* Centrar contenido interno */
+    max-width: 900px;
+    margin: 0 auto;
+    display: block;
 }
 
-
 /* Contenedor de texto de la frase original */
-/* Usa unidades viewport (vh/vw) para adaptarse al zoom */
 .frase-original .contenido-texto {
     width: 100%;
     max-width: 900px;
-    padding: 1vh 2vw; /* Padding adaptativo al tamaño de viewport */
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Texto alineado a la izquierda dentro del contenedor */
+    padding: 1rem 2rem 0.5rem 2rem; /* Menos padding inferior para acercar la traducción */
+    display: block;
 }
 
 .frase-original p {
@@ -202,33 +186,28 @@
     border-top: 1px solid #fed7aa;
 }
 
-/* Estilos para la línea de traducción debajo de cada frase original (máximo 20 palabras) */
-/* Estilo inspirado en la primera imagen: barra horizontal con gradiente azul y borde izquierdo */
-/* Se adapta al zoom manteniendo proporciones y estructura - siempre centrada */
+/* Estilos para la línea de traducción debajo de cada frase original */
 .frase-traduccion-original {
     background: linear-gradient(135deg, #EFF6FF 0%, #dbeafea6 100%);
     border-left: 4px solid #0061ff38;
-    padding: 0rem 8px 0rem;
-    margin: 0.25rem 0 0.75rem 0;
+    padding: 0.5rem 1rem;
+    margin: 0 auto;
+    margin-top: 0; /* Sin margen superior, va justo debajo */
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    min-height: 30px;
     font-weight: 500;
     color: #eaa827;
+    width: 100%;
+    max-width: 900px;
 }
 
-/* .frase-traduccion-original .texto-traduccion-original {
-   background: linear-gradient(135deg, #EFF6FF 0%, #dbeafea6 100%);
-    border-left: 4px solid #0061ff38;
-    padding: 0rem 8px 0rem;
-    margin: 0.25rem 0 0.75rem 0;
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    min-height: 30px;
-    font-weight: 500;
-    color: #eaa827;
-} */
-.page .active{
-    width: 94%;
-    margin: auto;
+/* Contenedor de página - siempre ocupa el máximo espacio disponible */
+.page.active {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
 }
 .frase-traduccion .texto-traduccion {
     margin: 0;
@@ -380,61 +359,18 @@
         order: 2;
     }
 
-    
-
     .acciones-laterales { 
         top: auto; 
         bottom: 120px; 
-                display: none;
+        display: none;
     }
-    .acciones-laterales1{
+    
+    .acciones-laterales1 {
         display: block;
     }
-    .frase-original .contenido-texto,
-    .frase-traduccion .texto-traduccion {
-        padding: 2vh 4vw;
-    }
     
-    .frase-original p {
-        font-size: clamp(1rem, 4vh, 2.5rem);
-    }
-    
-    .frase-traduccion .texto-traduccion {
-        font-size: clamp(0.95rem, 3.8vh, 2.3rem);
-    }
-}
-
-@media (min-width: 1400px) {
-    .frase-original p {
-        font-size: clamp(1.8rem, 4vh, 4.5rem);
-        line-height: 1.8;
-    }
-    
-    .frase-traduccion .texto-traduccion {
-        font-size: clamp(1.6rem, 3.8vh, 4.2rem);
-        line-height: 1.8;
-    }
-}
-
-/* Ajustes para pantallas muy altas */
-@media (min-height: 900px) {
-    .frase-original p {
-        font-size: clamp(1rem, 2.5vh, 2rem);
-    }
-    
-    .frase-traduccion .texto-traduccion {
-        font-size: clamp(1.4rem, 3.3vh, 3.8rem);
-    }
-}
-
-/* Ajustes para pantallas muy bajas */
-@media (max-height: 600px) {
-    .frase-original p {
-        font-size: clamp(1rem, 40%, 2rem);
-    }
-    
-    .frase-traduccion .texto-traduccion {
-        font-size: clamp(0.9rem, 3.8vh, 1.8rem);
+    .frase-original .contenido-texto {
+        padding: 1rem;
     }
 }
 

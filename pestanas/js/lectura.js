@@ -160,58 +160,115 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Función para calcular dinámicamente cuántas frases caben en la pantalla
-    // Se adapta automáticamente al zoom, tamaño de pantalla y cambios de ventana
-    // Similar al comportamiento de realdlan: el contenido se adapta manteniendo su estructura
     function calcularFrasesPorPagina() {
         const zonaFrases = document.querySelector('.zona-frases');
-        if (!zonaFrases) return 1; // Si no existe el contenedor, retornar 1 por defecto
+        if (!zonaFrases) return 1;
         
-        // Obtener altura disponible real (considerando zoom y viewport)
-        const alturaDisponible = zonaFrases.clientHeight;
-        if (alturaDisponible <= 0) return 1; // Si no hay altura disponible, retornar 1
+        // Calcular altura disponible desde el contenedor padre
+        const contenedorLectura = document.querySelector('.contenedor-lectura');
+        let alturaDisponible = 0;
         
-        // Crear contenedor temporal para medir la altura de una frase completa
-        // Este contenedor es invisible pero mantiene el layout real
+        if (contenedorLectura) {
+            const rectContenedor = contenedorLectura.getBoundingClientRect();
+            const encabezado = document.querySelector('.encabezado-lectura');
+            const controles = document.querySelector('.controles-lectura');
+            
+            let alturaEncabezado = 0;
+            let alturaControles = 0;
+            
+            if (encabezado) {
+                alturaEncabezado = encabezado.getBoundingClientRect().height;
+            }
+            
+            if (controles) {
+                alturaControles = controles.getBoundingClientRect().height;
+            }
+            
+            alturaDisponible = rectContenedor.height - alturaEncabezado - alturaControles;
+        }
+        
+        // Si aún no tenemos altura, usar getBoundingClientRect en zonaFrases
+        if (alturaDisponible <= 0) {
+            const rectZona = zonaFrases.getBoundingClientRect();
+            alturaDisponible = rectZona.height;
+        }
+        
+        // Si aún no hay altura, usar estimación basada en viewport
+        if (alturaDisponible <= 0 || alturaDisponible < 100) {
+            alturaDisponible = window.innerHeight * 0.6;
+        }
+        
+        // Crear contenedor temporal con la misma estructura que el contenido real
         const tempContainer = document.createElement('div');
-        tempContainer.style.cssText = 'visibility: hidden; position: absolute; width: 100%; top: 0; left: 0;';
+        tempContainer.classList.add('page', 'active');
+        tempContainer.style.cssText = 'visibility: hidden; position: absolute; width: 100%; top: 0; left: 0; pointer-events: none;';
         zonaFrases.appendChild(tempContainer);
 
-        // Crear frase original de prueba con contenido realista
-        const divFraseOriginal = document.createElement('div');
-        divFraseOriginal.classList.add('frase', 'frase-original');
-        divFraseOriginal.innerHTML = `
-            <div class="contenido-texto">
-                <p>Texto de prueba para medir la altura real de una frase con contenido típico.</p>
-            </div>
-        `;
-        tempContainer.appendChild(divFraseOriginal);
+        // Crear contenedor de frase completo (incluyendo el margin-bottom)
+        const divFraseWrapper = document.createElement('div');
+        divFraseWrapper.classList.add('frase');
 
-        // Crear línea de traducción de prueba (sin wrapper para coincidir con estructura real)
+        // Crear frase original de prueba con estructura real
+        const divFraseOriginal = document.createElement('div');
+        divFraseOriginal.classList.add('frase-original');
+        const parrafoPrueba = document.createElement('p');
+        parrafoPrueba.classList.add('paragraph');
+        parrafoPrueba.textContent = 'Traveling is one of the best ways to learn about the world and about yourself.';
+        const contenidoPrueba = document.createElement('div');
+        contenidoPrueba.classList.add('contenido-texto');
+        contenidoPrueba.appendChild(parrafoPrueba);
+        divFraseOriginal.appendChild(contenidoPrueba);
+        divFraseWrapper.appendChild(divFraseOriginal);
+
+        // Crear línea de traducción de prueba
         const divTraduccionOriginal = document.createElement('div');
         divTraduccionOriginal.classList.add('frase-traduccion-original');
-        divTraduccionOriginal.innerHTML = `<p class="texto-traduccion-original">Translation test text for measuring height.</p>`;
-        tempContainer.appendChild(divTraduccionOriginal);
+        const traduccionPrueba = document.createElement('p');
+        traduccionPrueba.classList.add('texto-traduccion-original');
+        traduccionPrueba.textContent = 'Viajar es una de las mejores formas de aprender sobre el mundo.';
+        divTraduccionOriginal.appendChild(traduccionPrueba);
+        divFraseWrapper.appendChild(divTraduccionOriginal);
 
-        // Forzar reflow para obtener medidas precisas
+        tempContainer.appendChild(divFraseWrapper);
+
+        // Forzar reflow múltiples veces para medidas precisas
+        void tempContainer.offsetHeight;
         void tempContainer.offsetHeight;
         
-        // Calcular altura total de una frase completa (original + traducción)
-        const alturaFraseCompleta = tempContainer.offsetHeight;
+        // Calcular altura total de una frase completa (incluyendo margin-bottom)
+        const alturaFraseCompleta = divFraseWrapper.offsetHeight;
         
         // Limpiar elemento temporal
         zonaFrases.removeChild(tempContainer);
 
         // Validaciones de seguridad
-        if (alturaFraseCompleta === 0 || isNaN(alturaFraseCompleta)) {
-            return 1; // Si no se puede medir, retornar 1 como mínimo
+        if (alturaFraseCompleta === 0 || isNaN(alturaFraseCompleta) || !isFinite(alturaFraseCompleta)) {
+            console.warn('No se pudo calcular altura de frase, usando valor por defecto');
+            return 1;
         }
 
-        // Calcular cuántas frases caben (redondeando hacia abajo para asegurar que todas caben)
-        // Usar Math.floor para que siempre quepan todas las frases mostradas sin desbordarse
-        const frasesQueCaben = Math.floor(alturaDisponible / alturaFraseCompleta);
+        // Calcular cuántas frases caben - usar casi todo el espacio disponible
+        // Usar Math.ceil para ser agresivo: si cabe 2.5, mostrar 3
+        const espacioTeorico = alturaDisponible / alturaFraseCompleta;
+        let frasesQueCaben = Math.ceil(espacioTeorico * 0.98);
+        
+        // Si hay mucho espacio disponible, ser más agresivo
+        if (espacioTeorico > 3) {
+            frasesQueCaben = Math.ceil(espacioTeorico * 0.99);
+        }
         
         // Asegurar al menos 1 frase por página
-        return Math.max(1, frasesQueCaben);
+        const resultado = Math.max(1, frasesQueCaben);
+        
+        console.log('Cálculo de frases por página:', {
+            alturaDisponible: alturaDisponible.toFixed(2),
+            alturaFraseCompleta: alturaFraseCompleta.toFixed(2),
+            frasesQueCaben: frasesQueCaben,
+            resultado: resultado,
+            espacioDisponible: (alturaDisponible / alturaFraseCompleta).toFixed(2)
+        });
+        
+        return resultado;
     }
 
     // Función para actualizar el estado de la paginación (números y botones)
@@ -277,15 +334,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     const contenidoTraduccion = (texto.content_translation || '').replace(/\n/g, ' ').trim();
                     todasLasFrasesTraduccion = dividirEnFrases(contenidoTraduccion, 20);
 
-                    // Calcular dinámicamente cuántas frases caben en la pantalla actual
-                    // Esto se adapta automáticamente al tamaño de pantalla y zoom
-                    frasesPorPagina = calcularFrasesPorPagina();
-                    
                     // Resetear a la primera página al cargar un nuevo texto
                     paginaActual = 0;
                     
-                    // Mostrar la primera página
-                    mostrarPagina(paginaActual);
+                    // Esperar un momento para que el DOM se estabilice antes de calcular
+                    setTimeout(() => {
+                        // Calcular dinámicamente cuántas frases caben en la pantalla actual
+                        frasesPorPagina = calcularFrasesPorPagina();
+                        
+                        // Mostrar la primera página después de calcular
+                        mostrarPagina(paginaActual);
+                    }, 200);
                     
                     console.log('Texto cargado y estructurado por frases:', texto.title);
                 } else {
