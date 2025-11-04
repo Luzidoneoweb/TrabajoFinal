@@ -1,4 +1,7 @@
  <!-- Contenido de la aplicación - visible cuando está logueado -->
+ <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/pestanas/php/loading_message.php'; ?>
+ <link rel="stylesheet" href="pestanas/css/loading_message.css">
+ <script src="pestanas/js/loading_message.js"></script>
   
         <section class="contenido-aplicacion" id="contenidoAplicacion">
              

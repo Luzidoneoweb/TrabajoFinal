@@ -1,6 +1,12 @@
 // Función para cargar textos
 function cargarTextos() {
     console.log('Cargando textos...');
+    
+    // Mostrar mensaje de carga
+    if (typeof window.showLoadingMessage === 'function') {
+        window.showLoadingMessage();
+    }
+    
     fetch('pestanas/php/get_textos.php', { credentials: 'include' })
         .then(response => {
             if (!response.ok) {
@@ -77,13 +83,26 @@ function cargarTextos() {
                         if (target && target.classList && (target.classList.contains('chk-texto') || target.classList.contains('btn-estado-publico'))) {
                             return;
                         }
-                        // Guardar el ID del texto en localStorage y cambiar a la pestaña de lectura
+                        // Guardar el ID del texto en localStorage
                         localStorage.setItem('currentTextId', texto.id);
-                        if (typeof window.cambiarPestana === 'function') {
-                            window.cambiarPestana('lectura');
-                        } else {
-                            console.error('La función cambiarPestana no está definida.');
+                        
+                        // Mostrar el mensaje de carga antes de cambiar a lectura
+                        if (typeof window.showLoadingMessage === 'function') {
+                            window.showLoadingMessage();
                         }
+                        
+                        // Pequeño delay para asegurar que el mensaje se muestre
+                        setTimeout(() => {
+                            if (typeof window.cambiarPestana === 'function') {
+                                window.cambiarPestana('lectura');
+                            } else {
+                                console.error('La función cambiarPestana no está definida.');
+                                // Ocultar si hay un error
+                                if (typeof window.hideLoadingMessage === 'function') {
+                                    window.hideLoadingMessage();
+                                }
+                            }
+                        }, 50);
                     });
                     listaTextos.appendChild(itemTexto);
                 });
@@ -94,12 +113,22 @@ function cargarTextos() {
                     listaTextos.innerHTML = `<p style="color: red; padding: 1rem;">Error: ${data.error}</p>`;
                 }
             }
+            
+            // Ocultar mensaje de carga al finalizar (éxito o error)
+            if (typeof window.hideLoadingMessage === 'function') {
+                window.hideLoadingMessage();
+            }
         })
         .catch(error => {
             console.error('Error en la petición fetch:', error);
             const listaTextos = document.querySelector('.lista-textos');
             if (listaTextos) {
                 listaTextos.innerHTML = `<p style="color: red; padding: 1rem;">Error de conexión: ${error.message}</p>`;
+            }
+            
+            // Ocultar mensaje de carga en caso de error
+            if (typeof window.hideLoadingMessage === 'function') {
+                window.hideLoadingMessage();
             }
         });
 }

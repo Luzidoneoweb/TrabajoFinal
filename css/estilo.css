@@ -17,8 +17,7 @@ button:hover {
 
 html {
     scroll-behavior: smooth;
-    height: 100%; /* Asegura que el html ocupe el 100% de la altura del viewport */
-    overflow-y: hidden !important; /* Asegura que el html también oculte el scroll vertical */
+    height: 100%;
 }
 
 body {
@@ -26,9 +25,8 @@ body {
     line-height: 1.6;
     color: #333;
     background-color: #ffffff;
-    height: 100%; /* Asegura que el body ocupe el 100% de la altura del html */
+    height: 100%;
     overflow-x: hidden;
-    overflow-y: hidden !important; /* Oculta la barra de desplazamiento vertical */
 }
 
 /* ===== UTILIDADES GENERALES ===== */
@@ -503,11 +501,11 @@ button:hover {
 
 /* ===== CONTENIDO DE LA APLICACIÓN ===== */
 .contenido-aplicacion {
-   
     min-height: calc(100vh - 140px);
+    overflow-y: auto; /* Permitir scroll vertical cuando sea necesario */
 }
 
-/* Ocultar scrollbar en el contenedor principal cuando lectura está activa */
+/* Ocultar scrollbar en el contenedor principal SOLO cuando lectura está activa */
 body.lectura-activa .contenido-aplicacion {
     overflow: hidden !important;
     -ms-overflow-style: none !important;
@@ -543,6 +541,12 @@ body.lectura-activa .contenido-aplicacion::-webkit-scrollbar {
     background: #f6f6f6;
     padding: 1.5rem 1rem;
     min-height: 400px;
+    overflow-y: auto; /* Permitir scroll vertical cuando sea necesario */
+}
+
+/* Excepción: el panel de lectura no debe tener scroll */
+.panel-pestana#panelLectura .contenido-panel {
+    overflow: hidden !important;
 }
 
 /* Ocultar scrollbar cuando el panel de lectura está activo */
@@ -575,13 +579,15 @@ body:has(.panel-pestana#panelLectura.activo)::-webkit-scrollbar {
 }
 
 /* Fallback para navegadores que no soportan :has() */
-body.lectura-activa {
-    overflow: hidden !important;
+body.lectura-activa,
+body.lectura-activa html {
+    overflow-y: hidden !important;
     -ms-overflow-style: none !important;
     scrollbar-width: none !important;
 }
 
-body.lectura-activa::-webkit-scrollbar {
+body.lectura-activa::-webkit-scrollbar,
+body.lectura-activa html::-webkit-scrollbar {
     display: none !important;
     width: 0 !important;
     height: 0 !important;

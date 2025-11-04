@@ -108,7 +108,14 @@
         }
         
         // Función para cambiar entre pestañas (disponible globalmente)
-        window.cambiarPestana = function cambiarPestana(nombrePestana) {
+        window.cambiarPestana = async function cambiarPestana(nombrePestana) {
+            // Mostrar mensaje de carga solo para ciertas pestañas
+            // Para lectura, el mensaje ya se muestra en texto.js cuando se hace clic,
+            // pero lo mostramos aquí también por si se accede directamente a lectura
+            if (window.showLoadingMessage && (nombrePestana === 'textos' || nombrePestana === 'practicas' || nombrePestana === 'lectura')) {
+                window.showLoadingMessage();
+            }
+
             // Detener la lectura si está activa antes de cambiar de pestaña
             if (window.MotorLectura && window.MotorLectura.estado !== 'inactivo') {
                 try {
@@ -133,7 +140,18 @@
             });
             
             // Remover clase lectura-activa del body si estaba activa
+            // Esto restaura el scroll en las demás páginas
             document.body.classList.remove('lectura-activa');
+            
+            // Restaurar overflow en html y body cuando se sale de lectura
+            if (document.documentElement) {
+                document.documentElement.style.overflowY = '';
+                document.documentElement.style.msOverflowStyle = '';
+                document.documentElement.style.scrollbarWidth = '';
+            }
+            document.body.style.overflowY = '';
+            document.body.style.msOverflowStyle = '';
+            document.body.style.scrollbarWidth = '';
             
             // Activar la pestaña seleccionada
             const pestanaElemento = document.querySelector(`[data-pestana="${nombrePestana}"]`);
@@ -151,6 +169,22 @@
                 // Si es el panel de lectura, añadir clase al body para ocultar scroll
                 if (panelElemento.id === 'panelLectura') {
                     document.body.classList.add('lectura-activa');
+                    // Ocultar scroll en html y body cuando se activa lectura
+                    if (document.documentElement) {
+                        document.documentElement.style.overflowY = 'hidden';
+                        document.documentElement.style.msOverflowStyle = 'none';
+                        document.documentElement.style.scrollbarWidth = 'none';
+                    }
+                    document.body.style.overflowY = 'hidden';
+                    document.body.style.msOverflowStyle = 'none';
+                    document.body.style.scrollbarWidth = 'none';
+                    
+                    // Ocultar el contenido de lectura mientras se carga
+                    const contenedorLectura = panelElemento.querySelector('.contenedor-lectura');
+                    if (contenedorLectura) {
+                        contenedorLectura.style.visibility = 'hidden';
+                        contenedorLectura.style.opacity = '0';
+                    }
                 }
             } else {
                 console.warn(`Panel de pestaña con ID "panel${nombrePestana.charAt(0).toUpperCase() + nombrePestana.slice(1)}" no encontrado.`);
@@ -160,6 +194,10 @@
             if (navegacionUsuario && navegacionUsuario.classList.contains('menu-abierto')) {
                 navegacionUsuario.classList.remove('menu-abierto');
             }
+
+            // NO ocultar el mensaje de carga aquí automáticamente
+            // Cada pestaña (textos.js, practicas.js, lectura.js) es responsable de ocultar
+            // el mensaje cuando su contenido esté completamente cargado
         }
         
         // Event listeners para las pestañas

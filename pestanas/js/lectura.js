@@ -301,6 +301,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Obtiene el texto completo, lo divide en frases y configura la paginación inicial
     // Similar al comportamiento de get_lectura_data.php en realdlan
     function cargarContenidoLectura() {
+        // Asegurar que el mensaje de carga esté visible si no lo está ya
+        if (typeof window.showLoadingMessage === 'function') {
+            window.showLoadingMessage();
+        }
+        
         // Obtener ID del texto seleccionado desde localStorage
         let textId = localStorage.getItem('currentTextId');
         if (!textId) {
@@ -344,6 +349,22 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         // Mostrar la primera página después de calcular
                         mostrarPagina(paginaActual);
+                        
+                        // Mostrar el contenido de lectura ahora que está listo
+                        const panelLectura = document.getElementById('panelLectura');
+                        if (panelLectura) {
+                            const contenedorLectura = panelLectura.querySelector('.contenedor-lectura');
+                            if (contenedorLectura) {
+                                contenedorLectura.style.visibility = 'visible';
+                                contenedorLectura.style.opacity = '1';
+                                contenedorLectura.style.transition = 'opacity 0.3s ease-in';
+                            }
+                        }
+                        
+                        // Ocultar mensaje de carga cuando el contenido esté listo
+                        if (typeof window.hideLoadingMessage === 'function') {
+                            window.hideLoadingMessage();
+                        }
                     }, 200);
                     
                     console.log('Texto cargado y estructurado por frases:', texto.title);
@@ -361,6 +382,21 @@ document.addEventListener('DOMContentLoaded', function() {
                             <p class="texto-traduccion-original"></p>
                         </div>
                     `;
+                    
+                    // Mostrar el contenido aunque haya error
+                    const panelLectura = document.getElementById('panelLectura');
+                    if (panelLectura) {
+                        const contenedorLectura = panelLectura.querySelector('.contenedor-lectura');
+                        if (contenedorLectura) {
+                            contenedorLectura.style.visibility = 'visible';
+                            contenedorLectura.style.opacity = '1';
+                        }
+                    }
+                    
+                    // Ocultar mensaje de carga en caso de error
+                    if (typeof window.hideLoadingMessage === 'function') {
+                        window.hideLoadingMessage();
+                    }
                 }
             })
             .catch(error => {
@@ -377,6 +413,21 @@ document.addEventListener('DOMContentLoaded', function() {
                         <p class="texto-traduccion-original"></p>
                     </div>
                 `;
+                
+                // Mostrar el contenido aunque haya error
+                const panelLectura = document.getElementById('panelLectura');
+                if (panelLectura) {
+                    const contenedorLectura = panelLectura.querySelector('.contenedor-lectura');
+                    if (contenedorLectura) {
+                        contenedorLectura.style.visibility = 'visible';
+                        contenedorLectura.style.opacity = '1';
+                    }
+                }
+                
+                // Ocultar mensaje de carga en caso de error
+                if (typeof window.hideLoadingMessage === 'function') {
+                    window.hideLoadingMessage();
+                }
             });
     }
 

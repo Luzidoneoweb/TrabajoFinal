@@ -1,3 +1,5 @@
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/php/login_seguridad/seguridad.php'; ?>
+
 <div class="lectura" aria-label="Lector de texto">
     <div class="contenedor-lectura">
         <!-- Encabezado de lectura -->
