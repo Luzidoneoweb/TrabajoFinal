@@ -15,11 +15,11 @@
     parrafos() {
       const page = document.querySelector('.page.active');
       if (!page) {
-        console.log('MotorLectura.parrafos(): No se encontró la página activa.');
+        // console.log('MotorLectura.parrafos(): No se encontró la página activa.'); // Eliminado para producción
         return [];
       }
       const paragraphs = Array.from(page.querySelectorAll('p.paragraph'));
-      console.log('MotorLectura.parrafos(): Párrafos encontrados:', paragraphs.length);
+      // console.log('MotorLectura.parrafos(): Párrafos encontrados:', paragraphs.length); // Eliminado para producción
       return paragraphs;
     },
 
@@ -41,14 +41,14 @@
     },
 
     hablar(text) {
-      console.log('MotorLectura.hablar() llamado con texto:', text);
+      // console.log('MotorLectura.hablar() llamado con texto:', text); // Eliminado para producción
       if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) {
         console.error('SpeechSynthesis no disponible. Asegúrate de que el navegador lo soporte.');
         this.detener();
         return;
       }
-      console.log('SpeechSynthesis y SpeechSynthesisUtterance disponibles.');
-      try { window.speechSynthesis.cancel(); } catch(e) { console.warn('Error al cancelar síntesis de voz anterior:', e); }
+      // console.log('SpeechSynthesis y SpeechSynthesisUtterance disponibles.'); // Eliminado para producción
+      try { window.speechSynthesis.cancel(); } catch(e) { /* console.warn('Error al cancelar síntesis de voz anterior:', e); */ }
       const utt = new SpeechSynthesisUtterance(text);
       utt.rate = this.obtenerVelocidad();
       utt.pitch = 1.0;
@@ -71,7 +71,7 @@
     },
 
     hablarActual() {
-      console.log('MotorLectura.hablarActual() llamado. Indice actual:', this.indiceActual);
+      // console.log('MotorLectura.hablarActual() llamado. Indice actual:', this.indiceActual); // Eliminado para producción
       const paras = this.parrafos();
       if (!paras.length) {
         console.warn('MotorLectura.hablarActual(): No hay párrafos para leer. Deteniendo.');
@@ -80,17 +80,17 @@
       }
       if (this.indiceActual < 0) this.indiceActual = 0;
       if (this.indiceActual >= paras.length) {
-        console.log('MotorLectura.hablarActual(): Indice actual fuera de rango. Pasando al siguiente.');
+        // console.log('MotorLectura.hablarActual(): Indice actual fuera de rango. Pasando al siguiente.'); // Eliminado para producción
         this.siguiente();
         return;
       }
       const p = paras[this.indiceActual];
       const text = p ? p.innerText.trim() : '';
-      console.log('MotorLectura.hablarActual(): Texto del párrafo actual:', text);
+      // console.log('MotorLectura.hablarActual(): Texto del párrafo actual:', text); // Eliminado para producción
       this.limpiarResaltado();
       this.resaltar(this.indiceActual);
       if (!text) {
-        console.log('MotorLectura.hablarActual(): Párrafo vacío. Avanzando al siguiente.');
+        // console.log('MotorLectura.hablarActual(): Párrafo vacío. Avanzando al siguiente.'); // Eliminado para producción
         this.indiceActual++;
         this.siguiente();
         return;
@@ -113,7 +113,7 @@
           this.hablarActual();
         }, 300);
       } else {
-        this.detener();
+        this.finalizarLecturaNatural(); // Llamar a la nueva función para finalización natural
       }
     },
 
@@ -129,42 +129,72 @@
         this.indiceActual = 0;
       }
       this.estado = 'reproduciendo';
-      console.log('MotorLectura.estado cambiado a:', this.estado);
+      // console.log('MotorLectura.estado cambiado a:', this.estado); // Eliminado para producción
       // Sincronizar flags globales
-      try { window.isCurrentlyReading = true; window.isCurrentlyPaused = false; } catch(e) { console.warn('Error al sincronizar flags globales (isCurrentlyReading/isCurrentlyPaused):', e); }
-      try { if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton(); } catch(e) { console.warn('Error al llamar a updateFloatingButton:', e); }
+      try { window.isCurrentlyReading = true; window.isCurrentlyPaused = false; } catch(e) { /* console.warn('Error al sincronizar flags globales (isCurrentlyReading/isCurrentlyPaused):', e); */ }
+      try { if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton(); } catch(e) { /* console.warn('Error al llamar a updateFloatingButton:', e); */ }
       this.hablarActual();
     },
 
     pausar() {
       if (this.estado !== 'reproduciendo') return;
       this.estado = 'pausado';
-      console.log('MotorLectura.estado cambiado a:', this.estado);
-      try { window.isCurrentlyPaused = true; } catch(e) { console.warn('Error al sincronizar flag global (isCurrentlyPaused):', e); }
-      try { window.speechSynthesis.cancel(); } catch(e) { console.warn('Error al cancelar síntesis de voz en pausa:', e); }
-      try { if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton(); } catch(e) { console.warn('Error al llamar a updateFloatingButton en pausa:', e); }
+      // console.log('MotorLectura.estado cambiado a:', this.estado); // Eliminado para producción
+      try { window.isCurrentlyPaused = true; } catch(e) { /* console.warn('Error al sincronizar flag global (isCurrentlyPaused):', e); */ }
+      try { window.speechSynthesis.cancel(); } catch(e) { /* console.warn('Error al cancelar síntesis de voz en pausa:', e); */ }
+      try { if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton(); } catch(e) { /* console.warn('Error al llamar a updateFloatingButton en pausa:', e); */ }
     },
 
     reanudar() {
       if (this.estado === 'pausado') {
         this.estado = 'reproduciendo';
-        console.log('MotorLectura.estado cambiado a:', this.estado);
-        try { window.isCurrentlyPaused = false; window.isCurrentlyReading = true; } catch(e) { console.warn('Error al sincronizar flags globales (isCurrentlyPaused/isCurrentlyReading) en reanudar:', e); }
-        try { if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton(); } catch(e) { console.warn('Error al llamar a updateFloatingButton en reanudar:', e); }
-        this.hablarActual();
-      } else if (this.estado === 'inactivo') {
+        // console.log('MotorLectura.estado cambiado a:', this.estado); // Eliminado para producción
+        try { window.isCurrentlyPaused = false; window.isCurrentlyReading = true; } catch(e) { /* console.warn('Error al sincronizar flags globales (isCurrentlyReading/isCurrentlyPaused) en reanudar:', e); */ }
+      try { if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton(); } catch(e) { /* console.warn('Error al llamar a updateFloatingButton en reanudar:', e); */ }
+      this.hablarActual();
+    } else if (this.estado === 'inactivo') {
         this.iniciar(this.indiceActual || 0);
       }
     },
 
     detener() {
       this.estado = 'inactivo';
-      console.log('MotorLectura.estado cambiado a:', this.estado);
-      try { window.speechSynthesis.cancel(); } catch(e) { console.warn('Error al cancelar síntesis de voz en detener:', e); }
+      // console.log('MotorLectura.estado cambiado a:', this.estado); // Eliminado para producción
+      try { window.speechSynthesis.cancel(); } catch(e) { /* console.warn('Error al cancelar síntesis de voz en detener:', e); */ }
       this.limpiarResaltado();
       // Sincronizar flags globales
-      try { window.isCurrentlyReading = false; window.isCurrentlyPaused = false; } catch(e) { console.warn('Error al sincronizar flags globales (isCurrentlyReading/isCurrentlyPaused) en detener:', e); }
-      try { if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton(); } catch(e) { console.warn('Error al llamar a updateFloatingButton en detener:', e); }
+      try { window.isCurrentlyReading = false; window.isCurrentlyPaused = false; } catch(e) { /* console.warn('Error al sincronizar flags globales (isCurrentlyReading/isCurrentlyPaused) en detener:', e); */ }
+      try { if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton(); } catch(e) { /* console.warn('Error al llamar a updateFloatingButton en detener:', e); */ }
+
+      // Ocultar botones de final de lectura y mostrar controles
+      const botonesFinalLectura = document.querySelector('.botones-final-lectura');
+      const controlesLectura = document.querySelector('.controles-lectura');
+      const paginacion = document.querySelector('.paginacion');
+      const btnPlay = document.querySelector('.btn-play');
+
+      if (botonesFinalLectura) botonesFinalLectura.style.display = 'none';
+      if (controlesLectura) controlesLectura.style.display = 'grid'; // O el display original
+      if (paginacion) paginacion.style.display = 'flex'; // O el display original
+      if (btnPlay) btnPlay.style.display = 'block'; // O el display original
+    },
+
+    finalizarLecturaNatural() {
+      this.estado = 'inactivo';
+      try { window.speechSynthesis.cancel(); } catch(e) { /* console.warn('Error al cancelar síntesis de voz en finalizarLecturaNatural:', e); */ }
+      this.limpiarResaltado();
+      try { window.isCurrentlyReading = false; window.isCurrentlyPaused = false; } catch(e) { /* console.warn('Error al sincronizar flags globales en finalizarLecturaNatural:', e); */ }
+      try { if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton(); } catch(e) { /* console.warn('Error al llamar a updateFloatingButton en finalizarLecturaNatural:', e); */ }
+
+      // Mostrar botones de final de lectura y ocultar controles
+      const botonesFinalLectura = document.querySelector('.botones-final-lectura');
+      const controlesLectura = document.querySelector('.controles-lectura');
+      const paginacion = document.querySelector('.paginacion');
+      const btnPlay = document.querySelector('.btn-play');
+
+      if (botonesFinalLectura) botonesFinalLectura.style.display = 'flex';
+      if (controlesLectura) controlesLectura.style.display = 'none';
+      if (paginacion) paginacion.style.display = 'none';
+      if (btnPlay) btnPlay.style.display = 'block';
     }
   };
 
@@ -172,10 +202,20 @@
   
   // Exponer controles SOLO si no existen (no pisar los de lector.js)
   if (typeof window.iniciarLectura !== 'function') {
-    window.iniciarLectura = function() { MotorLectura.iniciar(0); };
+    window.iniciarLectura = function() { 
+      MotorLectura.iniciar(0); 
+      // Ocultar botones de final de lectura al iniciar
+      const botonesFinalLectura = document.querySelector('.botones-final-lectura');
+      if (botonesFinalLectura) botonesFinalLectura.style.display = 'none';
+    };
   }
   if (typeof window.iniciarLecturaDesdeIndice !== 'function') {
-  window.iniciarLecturaDesdeIndice = function(i) { MotorLectura.iniciar(typeof i === 'number' ? i : 0); };
+  window.iniciarLecturaDesdeIndice = function(i) { 
+    MotorLectura.iniciar(typeof i === 'number' ? i : 0); 
+    // Ocultar botones de final de lectura al iniciar
+    const botonesFinalLectura = document.querySelector('.botones-final-lectura');
+    if (botonesFinalLectura) botonesFinalLectura.style.display = 'none';
+  };
   }
   if (typeof window.pausarVoz !== 'function') {
   window.pausarVoz = function() { MotorLectura.pausar(); };

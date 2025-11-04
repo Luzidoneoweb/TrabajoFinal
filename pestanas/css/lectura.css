@@ -196,19 +196,6 @@
     width: 100%;
 }
 
-/* Estilo para resaltar el párrafo que se está leyendo actualmente */
-.frase-original p.paragraph.reading-current {
-    background-color: #fef3c7 !important;
-    border-left: 4px solid #f59e0b !important;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-    border-radius: 4px;
-    transition: background-color 0.3s ease, border-left 0.3s ease;
-    box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
-}
-
 /* Traducción resaltada */
 .frase-traduccion {
     background: #fff7ed;
@@ -219,27 +206,30 @@
 /* Estilo inspirado en la primera imagen: barra horizontal con gradiente azul y borde izquierdo */
 /* Se adapta al zoom manteniendo proporciones y estructura - siempre centrada */
 .frase-traduccion-original {
-    background: linear-gradient(135deg, #919eaff2 0%, #dbeafe 100%);
-    border-left: 4px solid #0061ff45;
-    padding: 0.5rem 1px;
-    border-radius: 0 8px 8px 0;
-    display: flex
-;
-    align-items: center;
-    justify-content: flex-start;
-    width: 96%;
-}
-
-.frase-traduccion-original .texto-traduccion-original {
-    margin: 0;
-    font-size: clamp(0.9rem, 2.5vh, 2.5rem);
-    line-height: 1.5;
+    background: linear-gradient(135deg, #EFF6FF 0%, #dbeafea6 100%);
+    border-left: 4px solid #0061ff38;
+    padding: 0rem 8px 0rem;
+    margin: 0.25rem 0 0.75rem 0;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    min-height: 30px;
     font-weight: 500;
-    color: #eaa827; /* Color naranja/amarillo como en la primera imagen */
-    text-align: left; /* Asegurar alineación a la izquierda */
-    width: 100%;
+    color: #eaa827;
 }
 
+/* .frase-traduccion-original .texto-traduccion-original {
+   background: linear-gradient(135deg, #EFF6FF 0%, #dbeafea6 100%);
+    border-left: 4px solid #0061ff38;
+    padding: 0rem 8px 0rem;
+    margin: 0.25rem 0 0.75rem 0;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    min-height: 30px;
+    font-weight: 500;
+    color: #eaa827;
+} */
+.page .active{
+    width: 94%;
+    margin: auto;
+}
 .frase-traduccion .texto-traduccion {
     margin: 0;
     color: #d97706;
@@ -323,6 +313,7 @@
 /* Botón play/stop */
 .btn-play {
     position: fixed;
+    display: block !important;
     right: 18px;
     bottom: 18px;
     width: 54px;
@@ -334,9 +325,10 @@
     cursor: pointer;
     pointer-events: auto;
     z-index: 30;
+        font-size: 22px
 }
 
-.btn-play::before {
+/* .btn-play::before {
     content: '';
     display: block;
     width: 0; height: 0;
@@ -344,7 +336,7 @@
     border-top: 9px solid transparent;
     border-bottom: 9px solid transparent;
     margin: 0 auto;
-}
+} */
 
 /* Botón volver */
 
@@ -452,4 +444,20 @@
         align-items: center;
         gap: 10px; /* Espacio entre el título y la traducción */
     }
+}
+
+/* Estilos para el mensaje de finalización de lectura */
+
+
+/* Estilo para resaltar el párrafo que se está leyendo actualmente */
+.frase-original p.paragraph.reading-current {
+    background-color: #fef3c7 !important;
+    border-left: 4px solid #f59e0b !important;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, border-left 0.3s ease;
+    box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
 }

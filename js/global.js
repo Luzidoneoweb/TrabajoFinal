@@ -138,48 +138,6 @@
                 // Si es el panel de lectura, añadir clase al body para ocultar scroll
                 if (panelElemento.id === 'panelLectura') {
                     document.body.classList.add('lectura-activa');
-                    
-                    // Ocultar scroll en todos los contenedores padre SOLO cuando lectura está activa
-                    const html = document.documentElement;
-                    const main = document.querySelector('main');
-                    const section = document.querySelector('.contenido-aplicacion');
-                    
-                    if (html) {
-                        html.style.overflow = 'hidden';
-                        html.style.msOverflowStyle = 'none';
-                        html.style.scrollbarWidth = 'none';
-                    }
-                    if (main) {
-                        main.style.overflow = 'hidden';
-                        main.style.msOverflowStyle = 'none';
-                        main.style.scrollbarWidth = 'none';
-                    }
-                    if (section) {
-                        section.style.overflow = 'hidden';
-                        section.style.msOverflowStyle = 'none';
-                        section.style.scrollbarWidth = 'none';
-                    }
-                } else {
-                    // Restaurar overflow si no es lectura (devolver scroll a otras páginas)
-                    const html = document.documentElement;
-                    const main = document.querySelector('main');
-                    const section = document.querySelector('.contenido-aplicacion');
-                    
-                    if (html) {
-                        html.style.overflow = '';
-                        html.style.msOverflowStyle = '';
-                        html.style.scrollbarWidth = '';
-                    }
-                    if (main) {
-                        main.style.overflow = '';
-                        main.style.msOverflowStyle = '';
-                        main.style.scrollbarWidth = '';
-                    }
-                    if (section) {
-                        section.style.overflow = '';
-                        section.style.msOverflowStyle = '';
-                        section.style.scrollbarWidth = '';
-                    }
                 }
             } else {
                 console.warn(`Panel de pestaña con ID "panel${nombrePestana.charAt(0).toUpperCase() + nombrePestana.slice(1)}" no encontrado.`);

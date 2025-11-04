@@ -4,7 +4,7 @@
 
 (function() {
     'use strict';
-    console.log('electron-voice-integration.js: Script iniciado.');
+    // console.log('electron-voice-integration.js: Script iniciado.'); // Eliminado para producción
 
     // Silenciar logs verbosos del script ResponsiveVoice sin afectar el resto
     (function setupRVLogSilencer(){
@@ -69,12 +69,12 @@
         // Función principal de inicialización
     function inicializarVoz() {
         detectarElectron();
-        console.log('inicializarVoz() llamado. _esElectron:', _esElectron);
+        // console.log('inicializarVoz() llamado. _esElectron:', _esElectron); // Eliminado para producción
 
         // Verificar si ResponsiveVoice ya está cargado
         if (typeof responsiveVoice !== 'undefined') {
             _vozCargada = true;
-            console.log('ResponsiveVoice ya está cargado. _vozCargada = true.');
+            // console.log('ResponsiveVoice ya está cargado. _vozCargada = true.'); // Eliminado para producción
             configurarFuncionesVoz();
             return Promise.resolve();
         }
@@ -83,7 +83,7 @@
         return new Promise((resolve) => {
             cargarScript(`https://code.responsivevoice.org/responsivevoice.js?key=${_claveAPI}`, () => {
                 _vozCargada = true;
-                console.log('ResponsiveVoice cargado desde CDN. _vozCargada = true.');
+                // console.log('ResponsiveVoice cargado desde CDN. _vozCargada = true.'); // Eliminado para producción
                 configurarFuncionesVoz();
                 resolve();
             });
@@ -92,10 +92,10 @@
 
     // Configurar funciones de voz globales
     function configurarFuncionesVoz() {
-        console.log('configurarFuncionesVoz() llamado.');
+        // console.log('configurarFuncionesVoz() llamado.'); // Eliminado para producción
         // Función principal para leer texto
         window.leerTexto = function(texto, velocidad = 1.0, callbacks = {}) {
-            console.log('window.leerTexto() llamado con texto:', texto);
+            // console.log('window.leerTexto() llamado con texto:', texto); // Eliminado para producción
             if (typeof responsiveVoice !== 'undefined' && _vozCargada) {
                 const config = {
                     VOICE: 'UK English Female',
@@ -116,7 +116,7 @@
                 if (typeof callbacks.onerror === 'function') options.onerror = callbacks.onerror;
                 
                 responsiveVoice.speak(texto, config.VOICE, options);
-                console.log('responsiveVoice.speak() llamado.');
+                // console.log('responsiveVoice.speak() llamado.'); // Eliminado para producción
                 return true;
             } else {
                 console.warn('responsiveVoice no disponible o no cargado.');
@@ -126,10 +126,10 @@
 
         // Función para detener la lectura
         window.detenerLectura = function() {
-            console.log('window.detenerLectura() llamado.');
+            // console.log('window.detenerLectura() llamado.'); // Eliminado para producción
             if (typeof responsiveVoice !== 'undefined' && _vozCargada) {
                 responsiveVoice.cancel();
-                console.log('responsiveVoice.cancel() llamado.');
+                // console.log('responsiveVoice.cancel() llamado.'); // Eliminado para producción
                 return true;
             }
             return false;
@@ -192,7 +192,7 @@
                 reanudar: typeof window.reanudarLectura === 'function'
             }
         };
-        console.log('Estado del sistema de voz:', estado);
+        // console.log('Estado del sistema de voz:', estado); // Eliminado para producción
         return estado;
     };
 

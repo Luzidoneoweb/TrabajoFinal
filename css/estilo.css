@@ -18,6 +18,7 @@ button:hover {
 html {
     scroll-behavior: smooth;
     height: 100%; /* Asegura que el html ocupe el 100% de la altura del viewport */
+    overflow-y: hidden !important; /* Asegura que el html también oculte el scroll vertical */
 }
 
 body {
@@ -27,6 +28,7 @@ body {
     background-color: #ffffff;
     height: 100%; /* Asegura que el body ocupe el 100% de la altura del html */
     overflow-x: hidden;
+    overflow-y: hidden !important; /* Oculta la barra de desplazamiento vertical */
 }
 
 /* ===== UTILIDADES GENERALES ===== */
@@ -543,18 +545,10 @@ body.lectura-activa .contenido-aplicacion::-webkit-scrollbar {
     min-height: 400px;
 }
 
-/* Ocultar scrollbar SOLO cuando el panel de lectura está activo */
-body:has(.panel-pestana#panelLectura.activo),
-body.lectura-activa {
-    overflow: hidden !important;
-    -ms-overflow-style: none !important; /* IE y Edge */
-    scrollbar-width: none !important; /* Firefox */
-}
-
+/* Ocultar scrollbar cuando el panel de lectura está activo */
 .panel-pestana#panelLectura.activo,
 .panel-pestana#panelLectura.activo .contenido-panel,
-main:has(.panel-pestana#panelLectura.activo),
-section:has(.panel-pestana#panelLectura.activo) {
+body:has(.panel-pestana#panelLectura.activo) {
     overflow: hidden !important;
     -ms-overflow-style: none !important; /* IE y Edge */
     scrollbar-width: none !important; /* Firefox */
@@ -571,32 +565,23 @@ section:has(.panel-pestana#panelLectura.activo) {
     background: transparent !important;
 }
 
-/* Ocultar scrollbar en navegadores Webkit SOLO cuando lectura está activa */
-html:has(.panel-pestana#panelLectura.activo)::-webkit-scrollbar,
-body:has(.panel-pestana#panelLectura.activo)::-webkit-scrollbar,
+/* Ocultar scrollbar en navegadores Webkit cuando lectura está activa */
 .panel-pestana#panelLectura.activo::-webkit-scrollbar,
 .panel-pestana#panelLectura.activo .contenido-panel::-webkit-scrollbar,
-main:has(.panel-pestana#panelLectura.activo)::-webkit-scrollbar,
-section:has(.panel-pestana#panelLectura.activo)::-webkit-scrollbar {
+body:has(.panel-pestana#panelLectura.activo)::-webkit-scrollbar {
     display: none !important;
     width: 0 !important;
     height: 0 !important;
 }
 
-/* Fallback para navegadores que no soportan :has() - SOLO cuando lectura está activa */
-body.lectura-activa main,
-body.lectura-activa section,
-body.lectura-activa .contenido-aplicacion {
+/* Fallback para navegadores que no soportan :has() */
+body.lectura-activa {
     overflow: hidden !important;
     -ms-overflow-style: none !important;
     scrollbar-width: none !important;
 }
 
-body.lectura-activa::-webkit-scrollbar,
-body.lectura-activa html::-webkit-scrollbar,
-body.lectura-activa main::-webkit-scrollbar,
-body.lectura-activa section::-webkit-scrollbar,
-body.lectura-activa .contenido-aplicacion::-webkit-scrollbar {
+body.lectura-activa::-webkit-scrollbar {
     display: none !important;
     width: 0 !important;
     height: 0 !important;
@@ -794,6 +779,7 @@ body.lectura-activa .contenido-aplicacion::-webkit-scrollbar {
         transform: translateY(0);
         opacity: 1;
         visibility: visible;
+     position: relative;
         height: auto;
         max-height: 80vh;
         overflow-y: auto;
