@@ -409,6 +409,8 @@
 
 .encabezado-secundario-lectura.visible-lectura {
     display: flex !important;
+    position: fixed;
+    width: 100%;
 }
 
 /* Responsivo */
