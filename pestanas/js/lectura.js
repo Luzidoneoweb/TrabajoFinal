@@ -369,10 +369,46 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 const texto = data.data;
                 
-                // Actualizar título del texto en el encabezado
-                const tituloLectura = document.querySelector('.titulo-lectura');
-                if (tituloLectura) {
-                    tituloLectura.textContent = texto.title;
+                // Actualizar título del texto en el encabezado (ambos encabezados)
+                const titulosLectura = document.querySelectorAll('.titulo-lectura');
+                titulosLectura.forEach(titulo => {
+                    titulo.textContent = texto.title;
+                });
+                
+                // Cargar y mostrar traducción del título
+                const titulosTraduccion = document.querySelectorAll('.titulo-lectura-traduccion');
+                
+                // Si ya existe traducción guardada, mostrarla
+                if (texto.title_translation) {
+                    titulosTraduccion.forEach(tituloTraduccion => {
+                        tituloTraduccion.textContent = texto.title_translation;
+                    });
+                } else {
+                    // Si no existe, traducir automáticamente
+                    if (typeof window.traducirTitulo === 'function') {
+                        window.traducirTitulo(texto.title, currentTextId).then(traduccion => {
+                            if (traduccion) {
+                                titulosTraduccion.forEach(tituloTraduccion => {
+                                    tituloTraduccion.textContent = traduccion;
+                                });
+                            } else {
+                                // Si no se pudo traducir, dejar vacío o mostrar mensaje
+                                titulosTraduccion.forEach(tituloTraduccion => {
+                                    tituloTraduccion.textContent = '';
+                                });
+                            }
+                        }).catch(error => {
+                            console.error('Error al traducir título:', error);
+                            titulosTraduccion.forEach(tituloTraduccion => {
+                                tituloTraduccion.textContent = '';
+                            });
+                        });
+                    } else {
+                        console.warn('Función traducirTitulo no está disponible. Asegúrate de incluir traducion_api/lectura-translation-functions.js');
+                        titulosTraduccion.forEach(tituloTraduccion => {
+                            tituloTraduccion.textContent = '';
+                        });
+                    }
                 }
                 
                 // Preparar contenido original: convertir saltos de línea en espacios y limpiar

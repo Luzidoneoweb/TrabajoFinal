@@ -126,7 +126,124 @@ async function cargarCacheTraducciones(textId) {
     }
 }
 
+/**
+ * Traduce el título de un texto y lo guarda en la base de datos
+ * @param {string} title - El título original
+ * @param {number} textId - ID del texto
+ * @returns {Promise<string>} - La traducción del título
+ */
+async function traducirTitulo(title, textId) {
+    if (!title || !title.trim()) {
+        return '';
+    }
+
+    try {
+        // Traducir usando la API
+        const formData = new URLSearchParams();
+        formData.append('word', title);
+
+        const response = await fetch('traducion_api/translate.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            credentials: 'include',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.translation) {
+            // Guardar la traducción del título en la base de datos
+            if (textId) {
+                await guardarTraduccionTituloEnBD(textId, title, data.translation);
+            }
+
+            return data.translation;
+        } else {
+            console.warn('No se recibió traducción para el título:', title);
+            return '';
+        }
+    } catch (error) {
+        console.error('Error al traducir título:', error);
+        return '';
+    }
+}
+
+/**
+ * Guarda la traducción del título en la base de datos
+ * @param {number} textId - ID del texto
+ * @param {string} title - Título original
+ * @param {string} translation - Traducción del título
+ * @returns {Promise<void>}
+ */
+async function guardarTraduccionTituloEnBD(textId, title, translation) {
+    try {
+        const formData = new URLSearchParams();
+        formData.append('text_id', textId);
+        formData.append('title', title);
+        formData.append('title_translation', translation);
+
+        await fetch('traducion_api/save_title_translation.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            credentials: 'include',
+            body: formData
+        });
+        // No esperamos respuesta, solo enviamos
+    } catch (error) {
+        console.error('Error al guardar traducción del título en BD:', error);
+    }
+}
+
+/**
+ * Guarda la traducción completa del contenido en la base de datos
+ * @param {number} textId - ID del texto
+ * @param {string} contentTranslation - Traducción completa del contenido
+ * @returns {Promise<void>}
+ */
+async function guardarTraduccionCompletaEnBD(textId, contentTranslation) {
+    if (!textId || !contentTranslation) {
+        return;
+    }
+
+    try {
+        const formData = new URLSearchParams();
+        formData.append('text_id', textId);
+        formData.append('content_translation', contentTranslation);
+
+        await fetch('traducion_api/save_complete_translation.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            credentials: 'include',
+            body: formData
+        });
+        // No esperamos respuesta, solo enviamos
+    } catch (error) {
+        console.error('Error al guardar traducción completa en BD:', error);
+    }
+}
+
+/**
+ * Construye el texto completo traducido a partir de un array de frases traducidas
+ * @param {Array<string>} frasesTraduccion - Array con todas las frases traducidas
+ * @returns {string} - Texto completo traducido
+ */
+function construirTextoCompletoTraducido(frasesTraduccion) {
+    // Filtrar frases vacías y unirlas con espacios
+    return frasesTraduccion
+        .filter(frase => frase && frase.trim().length > 0)
+        .join(' ')
+        .trim();
+}
+
 // Exportar funciones para uso global
 window.traducirFrase = traducirFrase;
 window.guardarTraduccionEnBD = guardarTraduccionEnBD;
 window.cargarCacheTraducciones = cargarCacheTraducciones;
+window.traducirTitulo = traducirTitulo;
+window.guardarTraduccionTituloEnBD = guardarTraduccionTituloEnBD;
+window.guardarTraduccionCompletaEnBD = guardarTraduccionCompletaEnBD;
+window.construirTextoCompletoTraducido = construirTextoCompletoTraducido;

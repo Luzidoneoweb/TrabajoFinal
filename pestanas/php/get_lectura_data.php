@@ -19,7 +19,7 @@ if (!isset($_GET['id'])) {
 $text_id = (int)$_GET['id'];
 
 try {
-    $stmt = $pdo->prepare("SELECT title, content, content_translation FROM texts WHERE id = :id");
+    $stmt = $pdo->prepare("SELECT title, title_translation, content, content_translation FROM texts WHERE id = :id");
     $stmt->bindValue(':id', $text_id, PDO::PARAM_INT);
     $stmt->execute();
     $text_data = $stmt->fetch(PDO::FETCH_ASSOC);
