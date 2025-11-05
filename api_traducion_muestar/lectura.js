@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let frasesPorPagina = 1; // Número de frases que caben por página (se calcula dinámicamente)
     let totalPaginas = 0; // Total de páginas según el número de frases y capacidad de pantalla
     let timeoutResize = null; // Timeout para optimizar el evento resize
-    let currentTextId = null; // ID del texto actual para las traducciones
 
     // Observar cambios en el panel de lectura para cargar el texto cuando se active
     // Esto permite cargar el contenido solo cuando el panel es visible
@@ -96,13 +95,10 @@ document.addEventListener('DOMContentLoaded', function() {
         return texto.trim();
     }
 
-    // Las funciones de traducción están en traducion_api/lectura-translation-functions.js
-    // Se usan: window.traducirFrase, window.guardarTraduccionEnBD, window.cargarCacheTraducciones
-
     // Función para mostrar la página actual
     // Renderiza solo las frases que corresponden a la página seleccionada
     // Comportamiento similar a ventana de navegador: muestra el contenido de la página actual
-    async function mostrarPagina(numeroPagina) {
+    function mostrarPagina(numeroPagina) {
         const zonaFrases = document.querySelector('.zona-frases');
         if (!zonaFrases) return; // Validación de seguridad
         
@@ -119,12 +115,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Obtener solo las frases que corresponden a esta página
         const frasesAMostrarOriginal = todasLasFrasesOriginales.slice(inicio, fin);
+        const frasesAMostrarTraduccion = todasLasFrasesTraduccion.slice(inicio, fin);
 
         // Crear y añadir cada frase con su traducción correspondiente
-        for (let index = 0; index < frasesAMostrarOriginal.length; index++) {
-            const fraseOriginal = frasesAMostrarOriginal[index];
-            const indiceGlobal = inicio + index; // Índice global en el array completo
-            
+        frasesAMostrarOriginal.forEach((fraseOriginal, index) => {
             // Crear contenedor para la frase original
             const divFraseOriginal = document.createElement('div');
             divFraseOriginal.classList.add('frase', 'frase-original');
@@ -148,30 +142,8 @@ document.addEventListener('DOMContentLoaded', function() {
             divTraduccionOriginal.classList.add('frase-traduccion-original');
             divTraduccionOriginal.setAttribute('aria-label', 'Traducción de la frase original');
             
-            // Obtener traducción desde caché o traducir si no existe
-            let traduccionFrase = '';
-            
-            // Verificar si ya tenemos traducción en el array (del contenido original)
-            if (todasLasFrasesTraduccion[indiceGlobal]) {
-                traduccionFrase = todasLasFrasesTraduccion[indiceGlobal];
-                } else {
-                    // Intentar obtener del caché o traducir usando funciones de traducion_api
-                    if (window.contentTranslationsCache && window.contentTranslationsCache[fraseOriginal]) {
-                        traduccionFrase = window.contentTranslationsCache[fraseOriginal];
-                        // Guardar en el array para futuras referencias
-                        todasLasFrasesTraduccion[indiceGlobal] = traduccionFrase;
-                    } else {
-                        // Traducir si no está en caché usando función de traducion_api
-                        if (typeof window.traducirFrase === 'function') {
-                            traduccionFrase = await window.traducirFrase(fraseOriginal, currentTextId);
-                            // Actualizar el array para futuras referencias
-                            todasLasFrasesTraduccion[indiceGlobal] = traduccionFrase;
-                        } else {
-                            console.warn('Función traducirFrase no está disponible. Asegúrate de incluir traducion_api/lectura-translation-functions.js');
-                        }
-                    }
-                }
-            
+            // Obtener traducción correspondiente (o cadena vacía si no existe)
+            const traduccionFrase = frasesAMostrarTraduccion[index] || '';
             // Truncar a máximo 20 palabras para mantener consistencia
             const traduccionTruncada = truncarTexto(traduccionFrase, 20);
             
@@ -181,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Añadir directamente a pageContainer - el CSS se encarga del centrado
             pageContainer.appendChild(divTraduccionOriginal);
-        }
+        });
 
         // Actualizar estado de paginación (números y botones)
         actualizarEstadoPaginacion();
@@ -328,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Función para cargar el contenido del texto desde el servidor
     // Obtiene el texto completo, lo divide en frases y configura la paginación inicial
     // Similar al comportamiento de get_lectura_data.php en realdlan
-    async function cargarContenidoLectura() {
+    function cargarContenidoLectura() {
         // Asegurar que el mensaje de carga esté visible si no lo está ya
         if (typeof window.showLoadingMessage === 'function') {
             window.showLoadingMessage();
@@ -341,104 +313,100 @@ document.addEventListener('DOMContentLoaded', function() {
             textId = 1; // ID por defecto para pruebas
         }
 
-        // Guardar el textId actual para las traducciones
-        currentTextId = parseInt(textId);
-
-        try {
-            // Cargar caché de traducciones primero (en paralelo con la carga del texto)
-            // Usar función de traducion_api
-            let cachePromise = Promise.resolve();
-            if (typeof window.cargarCacheTraducciones === 'function') {
-                cachePromise = window.cargarCacheTraducciones(currentTextId);
-            } else {
-                console.warn('Función cargarCacheTraducciones no está disponible. Asegúrate de incluir traducion_api/lectura-translation-functions.js');
-            }
-
-            // Realizar petición fetch al endpoint PHP para obtener los datos del texto
-            const response = await fetch(`pestanas/php/get_lectura_data.php?id=${textId}`, { credentials: 'include' });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            // Esperar a que se cargue el caché
-            await cachePromise;
-
-            if (data.success) {
-                const texto = data.data;
-                
-                // Actualizar título del texto en el encabezado
-                const tituloLectura = document.querySelector('.titulo-lectura');
-                if (tituloLectura) {
-                    tituloLectura.textContent = texto.title;
+        // Realizar petición fetch al endpoint PHP para obtener los datos del texto
+        fetch(`pestanas/php/get_lectura_data.php?id=${textId}`, { credentials: 'include' })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
-                // Preparar contenido original: convertir saltos de línea en espacios y limpiar
-                const contenidoOriginal = (texto.content || '').replace(/\n/g, ' ').trim();
-                todasLasFrasesOriginales = dividirEnFrases(contenidoOriginal, 20);
-
-                // Inicializar array de traducciones (puede estar vacío si no hay traducciones guardadas)
-                todasLasFrasesTraduccion = [];
-                
-                // Dividir traducción completa si existe
-                let frasesTraduccionCompletas = [];
-                if (texto.content_translation) {
-                    const contenidoTraduccion = (texto.content_translation || '').replace(/\n/g, ' ').trim();
-                    frasesTraduccionCompletas = dividirEnFrases(contenidoTraduccion, 20);
-                }
-                
-                // Mapear traducciones: prioridad 1) caché, 2) traducción completa, 3) se traducirá después
-                todasLasFrasesOriginales.forEach((fraseOriginal, index) => {
-                    // Si hay traducción en el caché, usarla (mayor prioridad)
-                    if (window.contentTranslationsCache && window.contentTranslationsCache[fraseOriginal]) {
-                        todasLasFrasesTraduccion[index] = window.contentTranslationsCache[fraseOriginal];
-                    } 
-                    // Si no, usar la traducción del contenido completo si existe
-                    else if (frasesTraduccionCompletas[index]) {
-                        todasLasFrasesTraduccion[index] = frasesTraduccionCompletas[index];
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    const texto = data.data;
+                    
+                    // Actualizar título del texto en el encabezado
+                    const tituloLectura = document.querySelector('.titulo-lectura');
+                    if (tituloLectura) {
+                        tituloLectura.textContent = texto.title;
                     }
-                    // Si no hay ninguna, se traducirá cuando se muestre la página
-                });
+                    
+                    // Preparar contenido original: convertir saltos de línea en espacios y limpiar
+                    const contenidoOriginal = (texto.content || '').replace(/\n/g, ' ').trim();
+                    todasLasFrasesOriginales = dividirEnFrases(contenidoOriginal, 20);
 
-                // Resetear a la primera página al cargar un nuevo texto
-                paginaActual = 0;
-                
-                // Esperar un momento para que el DOM se estabilice antes de calcular
-                setTimeout(async () => {
-                    // Calcular dinámicamente cuántas frases caben en la pantalla actual
-                    frasesPorPagina = calcularFrasesPorPagina();
+                    // Preparar contenido de traducción de la misma manera
+                    const contenidoTraduccion = (texto.content_translation || '').replace(/\n/g, ' ').trim();
+                    todasLasFrasesTraduccion = dividirEnFrases(contenidoTraduccion, 20);
+
+                    // Resetear a la primera página al cargar un nuevo texto
+                    paginaActual = 0;
                     
-                    // Mostrar la primera página después de calcular (ahora es async)
-                    await mostrarPagina(paginaActual);
+                    // Esperar un momento para que el DOM se estabilice antes de calcular
+                    setTimeout(() => {
+                        // Calcular dinámicamente cuántas frases caben en la pantalla actual
+                        frasesPorPagina = calcularFrasesPorPagina();
+                        
+                        // Mostrar la primera página después de calcular
+                        mostrarPagina(paginaActual);
+                        
+                        // Mostrar el contenido de lectura ahora que está listo
+                        const panelLectura = document.getElementById('panelLectura');
+                        if (panelLectura) {
+                            const contenedorLectura = panelLectura.querySelector('.contenedor-lectura');
+                            if (contenedorLectura) {
+                                contenedorLectura.style.visibility = 'visible';
+                                contenedorLectura.style.opacity = '1';
+                                contenedorLectura.style.transition = 'opacity 0.3s ease-in';
+                            }
+                        }
+                        
+                        // Ocultar mensaje de carga cuando el contenido esté listo
+                        if (typeof window.hideLoadingMessage === 'function') {
+                            window.hideLoadingMessage();
+                        }
+                    }, 200);
                     
-                    // Mostrar el contenido de lectura ahora que está listo
+                    console.log('Texto cargado y estructurado por frases:', texto.title);
+                } else {
+                    console.error('Error al cargar el texto:', data.error);
+                    document.querySelector('.titulo-lectura').textContent = 'Error al cargar';
+                    const zonaFrases = document.querySelector('.zona-frases');
+                    zonaFrases.innerHTML = `
+                        <div class="frase frase-original" aria-label="Frase original">
+                            <div class="contenido-texto">
+                                <p>No se pudo cargar el texto: ${data.error}</p>
+                            </div>
+                        </div>
+                        <div class="frase-traduccion-original" aria-label="Traducción de la frase original">
+                            <p class="texto-traduccion-original"></p>
+                        </div>
+                    `;
+                    
+                    // Mostrar el contenido aunque haya error
                     const panelLectura = document.getElementById('panelLectura');
                     if (panelLectura) {
                         const contenedorLectura = panelLectura.querySelector('.contenedor-lectura');
                         if (contenedorLectura) {
                             contenedorLectura.style.visibility = 'visible';
                             contenedorLectura.style.opacity = '1';
-                            contenedorLectura.style.transition = 'opacity 0.3s ease-in';
                         }
                     }
                     
-                    // Ocultar mensaje de carga cuando el contenido esté listo
+                    // Ocultar mensaje de carga en caso de error
                     if (typeof window.hideLoadingMessage === 'function') {
                         window.hideLoadingMessage();
                     }
-                }, 200);
-                
-                console.log('Texto cargado y estructurado por frases:', texto.title);
-            } else {
-                console.error('Error al cargar el texto:', data.error);
-                document.querySelector('.titulo-lectura').textContent = 'Error al cargar';
+                }
+            })
+            .catch(error => {
+                console.error('Error en la petición fetch para cargar el texto:', error);
+                document.querySelector('.titulo-lectura').textContent = 'Error de conexión';
                 const zonaFrases = document.querySelector('.zona-frases');
                 zonaFrases.innerHTML = `
                     <div class="frase frase-original" aria-label="Frase original">
                         <div class="contenido-texto">
-                            <p>No se pudo cargar el texto: ${data.error}</p>
+                            <p>Error de red: ${error.message}</p>
                         </div>
                     </div>
                     <div class="frase-traduccion-original" aria-label="Traducción de la frase original">
@@ -460,37 +428,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (typeof window.hideLoadingMessage === 'function') {
                     window.hideLoadingMessage();
                 }
-            }
-        } catch (error) {
-            console.error('Error en la petición fetch para cargar el texto:', error);
-            document.querySelector('.titulo-lectura').textContent = 'Error de conexión';
-            const zonaFrases = document.querySelector('.zona-frases');
-            zonaFrases.innerHTML = `
-                <div class="frase frase-original" aria-label="Frase original">
-                    <div class="contenido-texto">
-                        <p>Error de red: ${error.message}</p>
-                    </div>
-                </div>
-                <div class="frase-traduccion-original" aria-label="Traducción de la frase original">
-                    <p class="texto-traduccion-original"></p>
-                </div>
-            `;
-            
-            // Mostrar el contenido aunque haya error
-            const panelLectura = document.getElementById('panelLectura');
-            if (panelLectura) {
-                const contenedorLectura = panelLectura.querySelector('.contenedor-lectura');
-                if (contenedorLectura) {
-                    contenedorLectura.style.visibility = 'visible';
-                    contenedorLectura.style.opacity = '1';
-                }
-            }
-            
-            // Ocultar mensaje de carga en caso de error
-            if (typeof window.hideLoadingMessage === 'function') {
-                window.hideLoadingMessage();
-            }
-        }
+            });
     }
 
     // Event Listeners para los botones de paginación
@@ -500,22 +438,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Listener para botón "Anterior": retrocede a la página previa si existe
     if (btnAnterior) {
-        btnAnterior.addEventListener('click', async function() {
+        btnAnterior.addEventListener('click', function() {
             if (paginaActual > 0) {
                 lecturaContinua = false; // Detener lectura continua si el usuario navega manualmente
                 paginaActual--;
-                await mostrarPagina(paginaActual);
+                mostrarPagina(paginaActual);
             }
         });
     }
 
     // Listener para botón "Siguiente": avanza a la página siguiente si existe
     if (btnSiguiente) {
-        btnSiguiente.addEventListener('click', async function() {
+        btnSiguiente.addEventListener('click', function() {
             if (paginaActual < totalPaginas - 1) {
                 lecturaContinua = false; // Detener lectura continua si el usuario navega manualmente
                 paginaActual++;
-                await mostrarPagina(paginaActual);
+                mostrarPagina(paginaActual);
             }
         });
     }
@@ -542,10 +480,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 paginaActual = Math.max(0, totalPaginas - 1);
             }
             
-            // Refrescar la vista con la nueva paginación (async)
-            mostrarPagina(paginaActual).catch(error => {
-                console.error('Error al mostrar página después de resize:', error);
-            });
+            // Refrescar la vista con la nueva paginación
+            mostrarPagina(paginaActual);
         }, 100); // Delay de 100ms para optimizar rendimiento
     });
 
@@ -635,38 +571,35 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             // No hay más párrafos en esta página, intentar avanzar a la siguiente
             if (lecturaContinua && paginaActual < totalPaginas - 1) {
-                // Avanzar a la siguiente página automáticamente (async)
+                // Avanzar a la siguiente página automáticamente
                 paginaActual++;
-                mostrarPagina(paginaActual).then(() => {
-                    // Esperar a que se renderice la nueva página y continuar leyendo
-                    setTimeout(() => {
-                        this.indiceActual = 0;
-                        this.hablarActual();
-                    }, 300);
-                }).catch(error => {
-                    console.error('Error al avanzar página en lectura continua:', error);
-                    this.detener();
-                    lecturaContinua = false;
-                    actualizarBotonPlay();
-                });
+                mostrarPagina(paginaActual);
+                // Esperar a que se renderice la nueva página y continuar leyendo
+                setTimeout(() => {
+                    this.indiceActual = 0;
+                    this.hablarActual();
+                }, 300);
             } else {
                 // No hay más páginas - la lectura ha terminado completamente
                 this.detener();
                 lecturaContinua = false;
                 actualizarBotonPlay();
+                // Mostrar modal de finalización y redirigir
+                if (typeof window.mostrarModalFinalizacion === 'function') {
+                    window.mostrarModalFinalizacion();
+                }
             }
         };
     }
 
     // Modificar mostrarPagina para detener la lectura al cambiar de página manualmente
-    // Nota: mostrarPagina ya es async, así que solo necesitamos envolver la llamada original
     const originalMostrarPagina = mostrarPagina;
-    mostrarPagina = async function(numeroPagina) {
+    mostrarPagina = function(numeroPagina) {
         // Solo detener la lectura si el usuario cambia de página manualmente (no automáticamente)
         if (window.MotorLectura && window.MotorLectura.estado !== 'inactivo' && !lecturaContinua) {
             window.MotorLectura.detener();
         }
-        await originalMostrarPagina(numeroPagina);
+        originalMostrarPagina(numeroPagina);
         actualizarBotonPlay();
     };
 

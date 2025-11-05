@@ -73,6 +73,8 @@
 <script src="lector/electron-voice-integration.js"></script>
 <script src="lector/reading-engine.js"></script>
 <script src="pestanas/js/modalFinalizacion.js"></script>
+<!-- Scripts de traducción (debe cargarse antes de lectura.js) -->
+<script src="traducion_api/lectura-translation-functions.js"></script>
 <!-- Script para la lógica de carga y visualización de la lectura -->
 <script src="pestanas/js/lectura.js"></script>
 <!-- Script del modal de finalización (cargado después para no bloquear) -->
