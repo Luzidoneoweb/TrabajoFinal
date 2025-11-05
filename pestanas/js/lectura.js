@@ -584,6 +584,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.detener();
                 lecturaContinua = false;
                 actualizarBotonPlay();
+                // Mostrar modal de finalización y redirigir
+                if (typeof window.mostrarModalFinalizacion === 'function') {
+                    window.mostrarModalFinalizacion();
+                }
             }
         };
     }
