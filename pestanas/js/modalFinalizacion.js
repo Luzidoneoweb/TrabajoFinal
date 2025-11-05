@@ -16,7 +16,7 @@
  */
 function mostrarModalFinalizacion(urlRedireccion, liberarFlag) {
     // Valores por defecto
-    urlRedireccion = urlRedireccion || "index.php?tab=practice";
+    urlRedireccion = urlRedireccion || "index.php?tab=textos";
     liberarFlag = liberarFlag !== false;
     
     try {
