@@ -49,7 +49,7 @@
 
     <!-- Contenido principal de la aplicación -->
      <?php include 'php/menu_logueado.php'; ?>
-    <main class="contenido-principal">
+    <main class="contenido-principal" style="padding-top: 70px;">
         <!-- Página de inicio - visible cuando no está logueado -->
         <section class="pagina-inicio oculto" id="paginaInicio">
             <!-- Sección hero principal -->

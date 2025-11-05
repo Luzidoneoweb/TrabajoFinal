@@ -24,6 +24,19 @@
             </button>
         </aside>
 </div>
+        <!-- Encabezado secundario de lectura (oculto por defecto) -->
+        <div class="encabezado-secundario-lectura oculto" aria-label="Controles de lectura secundarios">
+            <button class="btn-volver-secundario" aria-label="Volver a la lectura normal">&#x2190;</button>
+            <span class="titulo-secundario-lectura">Modo de Lectura</span>
+            <div class="controles-secundarios">
+                <button class="accion-lateral accion-notas-secundario" title="Notas">
+                    <span class="icono">📝</span>
+                </button>
+                <button class="accion-lateral accion-vocab-secundario" title="Vocabulario">
+                    <span class="icono">🔤</span>
+                </button>
+            </div>
+        </div>
 
         <!-- Área de frases -->
         <div class="zona-frases">

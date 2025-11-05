@@ -339,6 +339,78 @@
         display: none;
     }
 
+/* Estilos para el encabezado secundario de lectura */
+.encabezado-secundario-lectura {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px;
+    background: #f8fafc; /* Fondo similar al encabezado principal */
+    border-bottom: 1px solid #e2e8f0;
+    flex-shrink: 0;
+    height: 70px; /* Altura similar al encabezado principal de la app */
+    position: sticky;
+    top: 0;
+    z-index: 10; /* Asegurar que esté por encima del contenido de lectura */
+}
+
+.encabezado-secundario-lectura .btn-volver-secundario {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #0f172a;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.encabezado-secundario-lectura .btn-volver-secundario:hover {
+    background: #e2e8f0;
+    border-radius: 50%;
+}
+
+.encabezado-secundario-lectura .titulo-secundario-lectura {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #0f172a;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.encabezado-secundario-lectura .controles-secundarios {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.encabezado-secundario-lectura .accion-lateral {
+    background: #e2e8f0;
+    color: #0f172a;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transform: translateX(0); /* No hay efecto de deslizamiento aquí */
+}
+
+.encabezado-secundario-lectura .accion-lateral:hover {
+    background: #cbd5e1;
+    transform: translateX(0);
+}
+
+/* Clases para controlar la visibilidad */
+.encabezado-lectura.oculto-lectura {
+    display: none !important;
+}
+
+.encabezado-secundario-lectura.visible-lectura {
+    display: flex !important;
+}
+
 /* Responsivo */
 @media (max-width: 768px) {
     .encabezado-lectura {
@@ -346,6 +418,10 @@
         flex-wrap: wrap;
         justify-content: space-between;
         padding: 10px;
+    }
+
+    .encabezado-secundario-lectura .titulo-secundario-lectura {
+        font-size: 1.2rem;
     }
 
     .progreso-lectura {

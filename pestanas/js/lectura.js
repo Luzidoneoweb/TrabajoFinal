@@ -488,6 +488,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Lógica para el botón de reproducción/detención
     // Maneja el inicio y detención de la lectura de texto mediante MotorLectura
     const btnPlay = document.querySelector('.btn-play');
+    const encabezadoLectura = document.querySelector('.encabezado-lectura');
+    const encabezadoSecundarioLectura = document.querySelector('.encabezado-secundario-lectura');
+    const btnVolverSecundario = document.querySelector('.btn-volver-secundario');
 
     // Variable para controlar si la lectura debe continuar automáticamente
     let lecturaContinua = false;
@@ -500,11 +503,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 btnPlay.setAttribute('aria-label', 'Detener lectura');
                 btnPlay.innerHTML = '&#10074;&#10074;'; // Icono de pausa (||)
                 btnPlay.classList.add('playing');
+                // Ocultar encabezado principal de la app y encabezado de lectura, mostrar secundario
+                if (window.toggleEncabezadoPrincipal) window.toggleEncabezadoPrincipal(true);
+                if (encabezadoLectura) encabezadoLectura.classList.add('oculto-lectura');
+                if (encabezadoSecundarioLectura) encabezadoSecundarioLectura.classList.add('visible-lectura');
             } else {
                 btnPlay.title = 'Reproducir / Detener';
                 btnPlay.setAttribute('aria-label', 'Reproducir o detener');
                 btnPlay.innerHTML = '&#9658;'; // Icono de reproducción (▶)
                 btnPlay.classList.remove('playing');
+                // Mostrar encabezado principal de la app y encabezado de lectura, ocultar secundario
+                if (window.toggleEncabezadoPrincipal) window.toggleEncabezadoPrincipal(false);
+                if (encabezadoLectura) encabezadoLectura.classList.remove('oculto-lectura');
+                if (encabezadoSecundarioLectura) encabezadoSecundarioLectura.classList.remove('visible-lectura');
             }
         }
     }
@@ -523,9 +534,28 @@ document.addEventListener('DOMContentLoaded', function() {
                     lecturaContinua = true; // Activar lectura continua para todas las páginas
                     window.MotorLectura.iniciar(0);
                 }
-                // Actualizar el botón después de cambiar el estado
+                // Actualizar el botón y los encabezados después de cambiar el estado
                 setTimeout(actualizarBotonPlay, 100);
             }
+        });
+    }
+
+    // Listener para el botón "Volver" del encabezado secundario
+    if (btnVolverSecundario) {
+        btnVolverSecundario.addEventListener('click', function() {
+            if (window.MotorLectura && window.MotorLectura.estado !== 'inactivo') {
+                lecturaContinua = false;
+                window.MotorLectura.detener();
+                if (window.speechSynthesis) {
+                    window.speechSynthesis.cancel();
+                }
+            }
+            // Restaurar encabezados
+            if (window.toggleEncabezadoPrincipal) window.toggleEncabezadoPrincipal(false);
+            if (encabezadoLectura) encabezadoLectura.classList.remove('oculto-lectura');
+            if (encabezadoSecundarioLectura) encabezadoSecundarioLectura.classList.remove('visible-lectura');
+            // Volver a la pestaña de textos
+            window.cambiarPestana('textos');
         });
     }
 

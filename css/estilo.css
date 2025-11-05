@@ -65,6 +65,11 @@ button:hover {
     position: sticky;
     top: 0;
     z-index: 1000;
+    transition: transform 0.3s ease-in-out; /* Transición para ocultar/mostrar */
+}
+
+.encabezado-principal.encabezado-oculto {
+    transform: translateY(-100%); /* Ocultar completamente hacia arriba */
 }
 
 .contenedor-encabezado {
@@ -185,6 +190,7 @@ button:hover {
 /* ===== CONTENIDO PRINCIPAL ===== */
 .contenido-principal {
     min-height: calc(100vh - 70px);
+    padding: 0px !important;
 }
 
 /* ===== SECCIÓN HERO ===== */

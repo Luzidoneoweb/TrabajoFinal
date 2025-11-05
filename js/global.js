@@ -1,6 +1,9 @@
         // Variables globales
         let usuarioLogueado = false;
         let rememberedIdentifier = null; // Variable para almacenar el identificador recordado
+        const encabezadoPrincipal = document.querySelector('.encabezado-principal');
+        const contenidoPrincipal = document.querySelector('.contenido-principal');
+        const alturaEncabezadoPrincipal = encabezadoPrincipal ? encabezadoPrincipal.offsetHeight : 0;
 
 	// Función global para verificar el estado de sesión y actualizar la UI
 	window.verificarEstadoSesion = async function verificarEstadoSesion() {
@@ -33,6 +36,44 @@
         // Verificar estado de sesión al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
             verificarEstadoSesion();
+
+            // Comprobar si hay un parámetro 'pestana' en la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const pestanaParam = urlParams.get('pestana');
+            const storedPestana = localStorage.getItem('activeTabAfterRedirect');
+
+            if (pestanaParam) {
+                window.cambiarPestana(pestanaParam);
+            } else if (storedPestana) {
+                window.cambiarPestana(storedPestana);
+                localStorage.removeItem('activeTabAfterRedirect'); // Limpiar después de usar
+            }
+        });
+
+        // Función global para alternar la visibilidad del encabezado principal
+        window.toggleEncabezadoPrincipal = function(ocultar) {
+            if (encabezadoPrincipal) {
+                if (ocultar) {
+                    encabezadoPrincipal.classList.add('encabezado-oculto');
+                    if (contenidoPrincipal) {
+                        contenidoPrincipal.style.paddingTop = '0'; // Eliminar padding
+                    }
+                } else {
+                    encabezadoPrincipal.classList.remove('encabezado-oculto');
+                    if (contenidoPrincipal) {
+                        // Asegurarse de que el padding-top se aplique solo si no hay otro estilo que lo anule
+                        contenidoPrincipal.style.paddingTop = `${alturaEncabezadoPrincipal}px`; // Restaurar padding
+                    }
+                }
+            }
+        };
+
+        // Aplicar el padding-top inicial al contenido principal al cargar la página
+        // Se ejecuta después de que el DOM esté completamente cargado y los estilos aplicados
+        window.addEventListener('load', function() {
+            if (contenidoPrincipal && encabezadoPrincipal && !encabezadoPrincipal.classList.contains('encabezado-oculto')) {
+                contenidoPrincipal.style.paddingTop = `${alturaEncabezadoPrincipal}px`;
+            }
         });
         
         // Elementos del DOM
