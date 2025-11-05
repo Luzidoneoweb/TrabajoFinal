@@ -70,8 +70,7 @@
       window.speechSynthesis.speak(utt);
     },
 
-    hablarActual() {
-      // console.log('MotorLectura.hablarActual() llamado. Indice actual:', this.indiceActual); // Eliminado para producción
+    async hablarActual() {
       const paras = this.parrafos();
       if (!paras.length) {
         console.warn('MotorLectura.hablarActual(): No hay párrafos para leer. Deteniendo.');
@@ -80,21 +79,60 @@
       }
       if (this.indiceActual < 0) this.indiceActual = 0;
       if (this.indiceActual >= paras.length) {
-        // console.log('MotorLectura.hablarActual(): Indice actual fuera de rango. Pasando al siguiente.'); // Eliminado para producción
         this.siguiente();
         return;
       }
+      
       const p = paras[this.indiceActual];
       const text = p ? p.innerText.trim() : '';
-      // console.log('MotorLectura.hablarActual(): Texto del párrafo actual:', text); // Eliminado para producción
-      this.limpiarResaltado();
-      this.resaltar(this.indiceActual);
+      
       if (!text) {
-        // console.log('MotorLectura.hablarActual(): Párrafo vacío. Avanzando al siguiente.'); // Eliminado para producción
         this.indiceActual++;
         this.siguiente();
         return;
       }
+
+      // Limpiar resaltado y resaltar el párrafo actual
+      this.limpiarResaltado();
+      this.resaltar(this.indiceActual);
+
+      // Mostrar traducción simultáneamente ANTES de empezar a hablar
+      if (window.todasLasFrasesOriginales && window.currentTextId) {
+        const indiceGlobal = window.paginaActual * window.frasesPorPagina + this.indiceActual;
+        const fraseOriginal = window.todasLasFrasesOriginales[indiceGlobal];
+        
+        // Buscar el elemento de traducción: desde .paragraph -> .frase-original -> siguiente .frase-traduccion-original -> .texto-traduccion-original
+        const fraseOriginalDiv = p.closest('.frase-original');
+        const divTraduccion = fraseOriginalDiv ? fraseOriginalDiv.nextElementSibling : null;
+        const pTraduccion = divTraduccion ? divTraduccion.querySelector('.texto-traduccion-original') : null;
+
+        if (pTraduccion && fraseOriginal) {
+          // Primero verificar si ya tenemos la traducción en el array
+          let traduccionFrase = window.todasLasFrasesTraduccion[indiceGlobal];
+          
+          // Si no está en el array, verificar el caché
+          if (!traduccionFrase && window.contentTranslationsCache && window.contentTranslationsCache[fraseOriginal]) {
+            traduccionFrase = window.contentTranslationsCache[fraseOriginal];
+            window.todasLasFrasesTraduccion[indiceGlobal] = traduccionFrase;
+          }
+          
+          // Si aún no hay traducción, traducir ahora
+          if (!traduccionFrase && typeof window.traducirFrase === 'function') {
+            traduccionFrase = await window.traducirFrase(fraseOriginal, window.currentTextId);
+            if (traduccionFrase) {
+              window.todasLasFrasesTraduccion[indiceGlobal] = traduccionFrase;
+              if (typeof window.guardarTextoCompletoTraducido === 'function') {
+                window.guardarTextoCompletoTraducido();
+              }
+            }
+          }
+          
+          // Mostrar la traducción justo antes de empezar a leer
+          pTraduccion.textContent = traduccionFrase || '';
+        }
+      }
+
+      // Iniciar la lectura después de mostrar la traducción
       this.hablar(text);
     },
 
@@ -105,7 +143,7 @@
         return;
       }
       // Pasar de página si existe botón siguiente
-      const nextBtn = document.getElementById('next-page');
+      const nextBtn = document.querySelector('.btn-siguiente');
       if (nextBtn && !nextBtn.disabled) {
         nextBtn.click();
         setTimeout(() => {
@@ -113,7 +151,7 @@
           this.hablarActual();
         }, 300);
       } else {
-        this.finalizarLecturaNatural(); // Llamar a la nueva función para finalización natural
+        this.finalizarLecturaNatural();
       }
     },
 

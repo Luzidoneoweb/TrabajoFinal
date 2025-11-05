@@ -2,18 +2,54 @@
 // Script principal para la funcionalidad de lectura de textos
 // Comportamiento similar a realdlan: adaptación dinámica al tamaño de pantalla y zoom
 
+// Declarar variables globales necesarias para la interacción con reading-engine.js
+window.todasLasFrasesOriginales = []; // Array con todas las frases originales divididas
+window.todasLasFrasesTraduccion = []; // Array con todas las traducciones divididas
+window.paginaActual = 0; // Índice de la página actual (comienza en 0)
+window.frasesPorPagina = 1; // Número de frases que caben por página (se calcula dinámicamente)
+window.currentTextId = null; // ID del texto actual para las traducciones
+
+// Función para guardar el texto completo traducido en la BD
+// Se llama cuando se traducen nuevas frases (con debounce para evitar múltiples guardados)
+window.guardarTextoCompletoTraducido = function() { // Exponer globalmente
+    let timeoutGuardarCompleto = null; // Variable local para el debounce
+
+    if (!window.currentTextId || window.todasLasFrasesOriginales.length === 0) {
+        return;
+    }
+
+    // Limpiar timeout anterior si existe
+    if (timeoutGuardarCompleto) {
+        clearTimeout(timeoutGuardarCompleto);
+    }
+
+    // Usar debounce: esperar 2 segundos después de la última traducción
+    timeoutGuardarCompleto = setTimeout(() => {
+        // Verificar si todas las frases están traducidas
+        const todasTraducidas = window.todasLasFrasesOriginales.every((frase, index) => {
+            return window.todasLasFrasesTraduccion[index] && window.todasLasFrasesTraduccion[index].trim().length > 0;
+        });
+
+        // Si todas están traducidas, construir y guardar el texto completo
+        if (todasTraducidas && typeof window.construirTextoCompletoTraducido === 'function' && typeof window.guardarTraduccionCompletaEnBD === 'function') {
+            const textoCompletoTraducido = window.construirTextoCompletoTraducido(window.todasLasFrasesTraduccion);
+            
+            if (textoCompletoTraducido) {
+                // Guardar en BD (asíncrono, no esperamos)
+                window.guardarTraduccionCompletaEnBD(window.currentTextId, textoCompletoTraducido);
+                console.log('Texto completo traducido guardado en BD');
+            }
+        }
+    }, 2000); // Esperar 2 segundos antes de guardar
+};
+
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Referencias y variables globales
+    // Referencias y variables locales
     const panelLectura = document.getElementById('panelLectura');
-    let todasLasFrasesOriginales = []; // Array con todas las frases originales divididas
-    let todasLasFrasesTraduccion = []; // Array con todas las traducciones divididas
-    let paginaActual = 0; // Índice de la página actual (comienza en 0)
-    let frasesPorPagina = 1; // Número de frases que caben por página (se calcula dinámicamente)
     let totalPaginas = 0; // Total de páginas según el número de frases y capacidad de pantalla
     let timeoutResize = null; // Timeout para optimizar el evento resize
-    let currentTextId = null; // ID del texto actual para las traducciones
-    let timeoutGuardarCompleto = null; // Timeout para optimizar el guardado del texto completo
-
+    
     // Observar cambios en el panel de lectura para cargar el texto cuando se active
     // Esto permite cargar el contenido solo cuando el panel es visible
     if (panelLectura) {
@@ -101,38 +137,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Se usan: window.traducirFrase, window.guardarTraduccionEnBD, window.cargarCacheTraducciones
     // window.guardarTraduccionCompletaEnBD, window.construirTextoCompletoTraducido
 
-    // Función para guardar el texto completo traducido en la BD
-    // Se llama cuando se traducen nuevas frases (con debounce para evitar múltiples guardados)
-    function guardarTextoCompletoTraducido() {
-        if (!currentTextId || todasLasFrasesOriginales.length === 0) {
-            return;
-        }
-
-        // Limpiar timeout anterior si existe
-        if (timeoutGuardarCompleto) {
-            clearTimeout(timeoutGuardarCompleto);
-        }
-
-        // Usar debounce: esperar 2 segundos después de la última traducción
-        timeoutGuardarCompleto = setTimeout(() => {
-            // Verificar si todas las frases están traducidas
-            const todasTraducidas = todasLasFrasesOriginales.every((frase, index) => {
-                return todasLasFrasesTraduccion[index] && todasLasFrasesTraduccion[index].trim().length > 0;
-            });
-
-            // Si todas están traducidas, construir y guardar el texto completo
-            if (todasTraducidas && typeof window.construirTextoCompletoTraducido === 'function' && typeof window.guardarTraduccionCompletaEnBD === 'function') {
-                const textoCompletoTraducido = window.construirTextoCompletoTraducido(todasLasFrasesTraduccion);
-                
-                if (textoCompletoTraducido) {
-                    // Guardar en BD (asíncrono, no esperamos)
-                    window.guardarTraduccionCompletaEnBD(currentTextId, textoCompletoTraducido);
-                    console.log('Texto completo traducido guardado en BD');
-                }
-            }
-        }, 2000); // Esperar 2 segundos antes de guardar
-    }
-
     // Función para mostrar la página actual
     // Renderiza solo las frases que corresponden a la página seleccionada
     // Comportamiento similar a ventana de navegador: muestra el contenido de la página actual
@@ -148,11 +152,11 @@ document.addEventListener('DOMContentLoaded', function() {
         zonaFrases.appendChild(pageContainer);
 
         // Calcular índices de inicio y fin para la página actual
-        const inicio = numeroPagina * frasesPorPagina;
-        const fin = inicio + frasesPorPagina;
+        const inicio = numeroPagina * window.frasesPorPagina;
+        const fin = inicio + window.frasesPorPagina;
 
         // Obtener solo las frases que corresponden a esta página
-        const frasesAMostrarOriginal = todasLasFrasesOriginales.slice(inicio, fin);
+        const frasesAMostrarOriginal = window.todasLasFrasesOriginales.slice(inicio, fin);
 
         // Crear y añadir cada frase con su traducción correspondiente
         for (let index = 0; index < frasesAMostrarOriginal.length; index++) {
@@ -177,41 +181,15 @@ document.addEventListener('DOMContentLoaded', function() {
             pageContainer.appendChild(divFraseOriginal);
 
             // Crear línea de traducción con estilo de barra horizontal
-            // Se crea directamente sin wrapper para mantener centrado correcto
+            // Se crea vacío inicialmente - la traducción aparecerá solo cuando se lea esa línea
             const divTraduccionOriginal = document.createElement('div');
             divTraduccionOriginal.classList.add('frase-traduccion-original');
             divTraduccionOriginal.setAttribute('aria-label', 'Traducción de la frase original');
+            divTraduccionOriginal.setAttribute('data-indice-global', indiceGlobal); // Guardar índice para referencia
             
-            // Obtener traducción desde caché o traducir si no existe
-            let traduccionFrase = '';
-            
-            // Verificar si ya tenemos traducción en el array (del contenido original)
-            if (todasLasFrasesTraduccion[indiceGlobal]) {
-                traduccionFrase = todasLasFrasesTraduccion[indiceGlobal];
-                } else {
-                    // Intentar obtener del caché o traducir usando funciones de traducion_api
-                    if (window.contentTranslationsCache && window.contentTranslationsCache[fraseOriginal]) {
-                        traduccionFrase = window.contentTranslationsCache[fraseOriginal];
-                        // Guardar en el array para futuras referencias
-                        todasLasFrasesTraduccion[indiceGlobal] = traduccionFrase;
-                    } else {
-                        // Traducir si no está en caché usando función de traducion_api
-                        if (typeof window.traducirFrase === 'function') {
-                            traduccionFrase = await window.traducirFrase(fraseOriginal, currentTextId);
-                            // Actualizar el array para futuras referencias
-                            todasLasFrasesTraduccion[indiceGlobal] = traduccionFrase;
-                            
-                            // Guardar el texto completo traducido en la BD después de traducir
-                            guardarTextoCompletoTraducido();
-                        } else {
-                            console.warn('Función traducirFrase no está disponible. Asegúrate de incluir traducion_api/lectura-translation-functions.js');
-                        }
-                    }
-                }
-            
-            // Mostrar la traducción completa (sin truncar)
+            // Crear el elemento vacío - se llenará cuando se lea la línea
             divTraduccionOriginal.innerHTML = `
-                <p class="texto-traduccion-original">${traduccionFrase || ''}</p>
+                <p class="texto-traduccion-original"></p>
             `;
             
             // Añadir directamente a pageContainer - el CSS se encarga del centrado
@@ -339,12 +317,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Comportamiento similar a realdlan: muestra "X / Y" y deshabilita botones cuando corresponde
     function actualizarEstadoPaginacion() {
         // Recalcular total de páginas basado en número de frases y capacidad actual
-        totalPaginas = Math.ceil(todasLasFrasesOriginales.length / frasesPorPagina);
+        totalPaginas = Math.ceil(window.todasLasFrasesOriginales.length / window.frasesPorPagina);
         
         // Actualizar texto del contador de páginas (formato: "1 / 5")
         const estadoPagina = document.querySelector('.estado-pagina');
         if (estadoPagina) {
-            estadoPagina.textContent = `${paginaActual + 1} / ${totalPaginas}`;
+            estadoPagina.textContent = `${window.paginaActual + 1} / ${totalPaginas}`;
         }
 
         // Obtener referencias a los botones de navegación
@@ -353,10 +331,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Habilitar/deshabilitar botones según la posición actual
         if (btnAnterior) {
-            btnAnterior.disabled = paginaActual === 0; // Deshabilitar si estamos en la primera página
+            btnAnterior.disabled = window.paginaActual === 0; // Deshabilitar si estamos en la primera página
         }
         if (btnSiguiente) {
-            btnSiguiente.disabled = paginaActual >= totalPaginas - 1; // Deshabilitar si estamos en la última
+            btnSiguiente.disabled = window.paginaActual >= totalPaginas - 1; // Deshabilitar si estamos en la última
         }
     }
 
@@ -377,14 +355,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Guardar el textId actual para las traducciones
-        currentTextId = parseInt(textId);
+        window.currentTextId = parseInt(textId);
 
         try {
             // Cargar caché de traducciones primero (en paralelo con la carga del texto)
             // Usar función de traducion_api
             let cachePromise = Promise.resolve();
             if (typeof window.cargarCacheTraducciones === 'function') {
-                cachePromise = window.cargarCacheTraducciones(currentTextId);
+                cachePromise = window.cargarCacheTraducciones(window.currentTextId);
             } else {
                 console.warn('Función cargarCacheTraducciones no está disponible. Asegúrate de incluir traducion_api/lectura-translation-functions.js');
             }
@@ -421,7 +399,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     // Si no existe, traducir automáticamente
                     if (typeof window.traducirTitulo === 'function') {
-                        window.traducirTitulo(texto.title, currentTextId).then(traduccion => {
+                        window.traducirTitulo(texto.title, window.currentTextId).then(traduccion => {
                             if (traduccion) {
                                 titulosTraduccion.forEach(tituloTraduccion => {
                                     tituloTraduccion.textContent = traduccion;
@@ -447,11 +425,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 // Preparar contenido original: convertir saltos de línea en espacios y limpiar
-                const contenidoOriginal = (texto.content || '').replace(/\n/g, ' ').trim();
-                todasLasFrasesOriginales = dividirEnFrases(contenidoOriginal, 20);
+                window.todasLasFrasesOriginales = dividirEnFrases((texto.content || '').replace(/\n/g, ' ').trim(), 20);
 
                 // Inicializar array de traducciones (puede estar vacío si no hay traducciones guardadas)
-                todasLasFrasesTraduccion = [];
+                window.todasLasFrasesTraduccion = [];
                 
                 // Dividir traducción completa si existe
                 let frasesTraduccionCompletas = [];
@@ -461,44 +438,44 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 // Mapear traducciones: prioridad 1) caché, 2) traducción completa, 3) se traducirá después
-                todasLasFrasesOriginales.forEach((fraseOriginal, index) => {
+                window.todasLasFrasesOriginales.forEach((fraseOriginal, index) => {
                     // Si hay traducción en el caché, usarla (mayor prioridad)
                     if (window.contentTranslationsCache && window.contentTranslationsCache[fraseOriginal]) {
-                        todasLasFrasesTraduccion[index] = window.contentTranslationsCache[fraseOriginal];
+                        window.todasLasFrasesTraduccion[index] = window.contentTranslationsCache[fraseOriginal];
                     } 
                     // Si no, usar la traducción del contenido completo si existe
                     else if (frasesTraduccionCompletas[index]) {
-                        todasLasFrasesTraduccion[index] = frasesTraduccionCompletas[index];
+                        window.todasLasFrasesTraduccion[index] = frasesTraduccionCompletas[index];
                     }
                     // Si no hay ninguna, se traducirá cuando se muestre la página
                 });
                 
                 // Si todas las frases ya están traducidas al cargar, guardar el texto completo en BD
                 // (por si acaso no está guardado aún)
-                if (todasLasFrasesOriginales.length > 0) {
-                    const todasTraducidas = todasLasFrasesOriginales.every((frase, index) => {
-                        return todasLasFrasesTraduccion[index] && todasLasFrasesTraduccion[index].trim().length > 0;
+                if (window.todasLasFrasesOriginales.length > 0) {
+                    const todasTraducidas = window.todasLasFrasesOriginales.every((frase, index) => {
+                        return window.todasLasFrasesTraduccion[index] && window.todasLasFrasesTraduccion[index].trim().length > 0;
                     });
                     
                     if (todasTraducidas && typeof window.construirTextoCompletoTraducido === 'function' && typeof window.guardarTraduccionCompletaEnBD === 'function') {
-                        const textoCompletoTraducido = window.construirTextoCompletoTraducido(todasLasFrasesTraduccion);
+                        const textoCompletoTraducido = window.construirTextoCompletoTraducido(window.todasLasFrasesTraduccion);
                         if (textoCompletoTraducido && textoCompletoTraducido !== texto.content_translation) {
                             // Solo guardar si es diferente al que ya está guardado
-                            window.guardarTraduccionCompletaEnBD(currentTextId, textoCompletoTraducido);
+                            window.guardarTraduccionCompletaEnBD(window.currentTextId, textoCompletoTraducido);
                         }
                     }
                 }
 
                 // Resetear a la primera página al cargar un nuevo texto
-                paginaActual = 0;
+                window.paginaActual = 0;
                 
                 // Esperar un momento para que el DOM se estabilice antes de calcular
                 setTimeout(async () => {
                     // Calcular dinámicamente cuántas frases caben en la pantalla actual
-                    frasesPorPagina = calcularFrasesPorPagina();
+                    window.frasesPorPagina = calcularFrasesPorPagina();
                     
                     // Mostrar la primera página después de calcular (ahora es async)
-                    await mostrarPagina(paginaActual);
+                    await mostrarPagina(window.paginaActual);
                     
                     // Mostrar el contenido de lectura ahora que está listo
                     const panelLectura = document.getElementById('panelLectura');
@@ -588,10 +565,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Listener para botón "Anterior": retrocede a la página previa si existe
     if (btnAnterior) {
         btnAnterior.addEventListener('click', async function() {
-            if (paginaActual > 0) {
+            if (window.paginaActual > 0) {
                 lecturaContinua = false; // Detener lectura continua si el usuario navega manualmente
-                paginaActual--;
-                await mostrarPagina(paginaActual);
+                window.paginaActual--;
+                await mostrarPagina(window.paginaActual);
             }
         });
     }
@@ -599,10 +576,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Listener para botón "Siguiente": avanza a la página siguiente si existe
     if (btnSiguiente) {
         btnSiguiente.addEventListener('click', async function() {
-            if (paginaActual < totalPaginas - 1) {
+            if (window.paginaActual < totalPaginas - 1) {
                 lecturaContinua = false; // Detener lectura continua si el usuario navega manualmente
-                paginaActual++;
-                await mostrarPagina(paginaActual);
+                window.paginaActual++;
+                await mostrarPagina(window.paginaActual);
             }
         });
     }
@@ -619,18 +596,18 @@ document.addEventListener('DOMContentLoaded', function() {
         // Usar debounce para optimizar: esperar 100ms después del último resize
         timeoutResize = setTimeout(function() {
             // Recalcular cuántas frases caben ahora (considerando nuevo tamaño/zoom)
-            frasesPorPagina = calcularFrasesPorPagina();
+            window.frasesPorPagina = calcularFrasesPorPagina();
             
             // Recalcular total de páginas con el nuevo número de frases por página
-            totalPaginas = Math.ceil(todasLasFrasesOriginales.length / frasesPorPagina);
+            totalPaginas = Math.ceil(window.todasLasFrasesOriginales.length / window.frasesPorPagina);
             
             // Ajustar página actual si es necesario (evitar páginas inexistentes)
-            if (paginaActual >= totalPaginas) {
-                paginaActual = Math.max(0, totalPaginas - 1);
+            if (window.paginaActual >= totalPaginas) {
+                window.paginaActual = Math.max(0, totalPaginas - 1);
             }
             
             // Refrescar la vista con la nueva paginación (async)
-            mostrarPagina(paginaActual).catch(error => {
+            mostrarPagina(window.paginaActual).catch(error => {
                 console.error('Error al mostrar página después de resize:', error);
             });
         }, 100); // Delay de 100ms para optimizar rendimiento
@@ -716,15 +693,15 @@ document.addEventListener('DOMContentLoaded', function() {
         window.MotorLectura.siguiente = function() {
             const paras = this.parrafos();
             if (this.indiceActual < paras.length) {
-                // Aún hay párrafos en esta página, continuar leyendo
+                // La traducción ya se muestra en hablarActual(), solo continuar
                 this.hablarActual();
                 return;
             }
             // No hay más párrafos en esta página, intentar avanzar a la siguiente
-            if (lecturaContinua && paginaActual < totalPaginas - 1) {
-                // Avanzar a la siguiente página automáticamente (async)
-                paginaActual++;
-                mostrarPagina(paginaActual).then(() => {
+            if (lecturaContinua && window.paginaActual < totalPaginas - 1) {
+                // Avanzar a la siguiente página automáticamente
+                window.paginaActual++;
+                mostrarPagina(window.paginaActual).then(() => {
                     // Esperar a que se renderice la nueva página y continuar leyendo
                     setTimeout(() => {
                         this.indiceActual = 0;

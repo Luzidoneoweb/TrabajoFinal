@@ -124,12 +124,11 @@
 /* Zona de frases - área principal de contenido */
 /* Siempre ocupa el máximo espacio disponible */
 .zona-frases { 
-    display: flex;
+       display: flex;
     flex-direction: column;
     gap: 0;
     flex: 1;
-    overflow: hidden !important;
-    position: relative;
+    overflow: scroll;
     align-items: center;
     width: 100%;
     height: 100%;

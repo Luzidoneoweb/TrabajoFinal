@@ -72,6 +72,8 @@
 <!-- Scripts del sistema de voz -->
 <script src="lector/electron-voice-integration.js"></script>
 <script src="lector/reading-engine.js"></script>
+<script src="js/modalFinalizacion.js"></script>
+
 <!-- Scripts de traducción (debe cargarse antes de lectura.js) -->
 <script src="traducion_api/lectura-translation-functions.js"></script>
 <!-- Script para la lógica de carga y visualización de la lectura -->
