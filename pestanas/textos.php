@@ -30,4 +30,6 @@
 </div>
 
 <script src="pestanas/js/global.js"></script>
+<!-- Scripts de traducción (debe cargarse antes de texto.js) -->
+<script src="traducion_api/lectura-translation-functions.js"></script>
 <script src="pestanas/js/texto.js"></script>

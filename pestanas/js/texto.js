@@ -65,16 +65,37 @@ function cargarTextos() {
                     const itemTexto = document.createElement('div');
                     itemTexto.classList.add('item-texto');
                     itemTexto.dataset.id = texto.id; // Añadir el ID del texto como data-id
+                    
+                    // Determinar texto inicial para la traducción
+                    let textoTraduccion = texto.title_translation || 'Traduciendo...';
+                    
                     itemTexto.innerHTML = `
                         <input type="checkbox" class="chk-texto">
                         <div class="info-texto">
                             <p class="titulo-texto">${texto.title}</p>
-                            <p class="traduccion-texto">${texto.title_translation || 'Sin traducción'}</p>
+                            <p class="traduccion-texto" data-text-id="${texto.id}">${textoTraduccion}</p>
                         </div>
                         <p class="palabras-texto">${texto.content ? texto.content.split(' ').length : 0} palabras</p>
                         <span class="estado-leido">${texto.is_public ? 'Público' : 'Privado'}</span>
                         <button class="btn-estado-publico">${texto.is_public ? 'PÚBLICO' : 'PRIVADO'}</button>
                     `;
+                    
+                    // Si no hay traducción guardada, traducir automáticamente
+                    if (!texto.title_translation && typeof window.traducirTitulo === 'function') {
+                        const elementoTraduccion = itemTexto.querySelector('.traduccion-texto');
+                        window.traducirTitulo(texto.title, texto.id).then(traduccion => {
+                            if (traduccion && elementoTraduccion) {
+                                elementoTraduccion.textContent = traduccion;
+                            } else if (elementoTraduccion) {
+                                elementoTraduccion.textContent = 'Sin traducción';
+                            }
+                        }).catch(error => {
+                            console.error('Error al traducir título:', error);
+                            if (elementoTraduccion) {
+                                elementoTraduccion.textContent = 'Sin traducción';
+                            }
+                        });
+                    }
                     // Mostrar contenido al hacer clic (excepto en checkbox y botón)
                     // Añadir evento de clic para cargar el texto en la pestaña de lectura
                     itemTexto.addEventListener('click', (e) => {
