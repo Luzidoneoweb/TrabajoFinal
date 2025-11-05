@@ -223,33 +223,6 @@
     /* align-items: center; */ /* Eliminado para evitar centrado implícito */
 }
 
-/* Acciones laterales */
-.acciones-laterales {
-    position: fixed;
-    right: 12px;
-    top: 40%;
-    display: grid;
-    gap: .5rem;
-    z-index: 20;
-}
-
-.accion-lateral {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    color: #fff;
-    border: none;
-    border-radius: 999px 0 0 999px;
-    padding: .6rem .8rem;
-    cursor: pointer;
-    transform: translateX(56%);
-    transition: transform .25s ease, background .2s ease;
-}
-
-.accion-lateral .icono { font-size: 1rem; }
-.accion-lateral .etiqueta { font-size: .9rem; white-space: nowrap; }
-
-.accion-lateral:hover { transform: translateX(0); background: #1f2937; }
 
 /* Controles inferiores - barra de navegación fija */
 /* Posición fija para mantenerse visible durante el zoom */
