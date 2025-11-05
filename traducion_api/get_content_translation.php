@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'conexion.php';
+require_once '../db/conexion.php';
 require_once 'content_functions.php';
 
 header('Content-Type: application/json; charset=utf-8');

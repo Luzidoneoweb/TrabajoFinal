@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'conexion.php';
+require_once '../db/conexion.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -43,10 +43,15 @@ try {
 // Actualizar la traducción del título en la tabla texts
 try {
     $stmt = $pdo->prepare("UPDATE texts SET title_translation = ? WHERE id = ?");
-    $stmt->execute([$title_translation, $text_id]);
+    $result = $stmt->execute([$title_translation, $text_id]);
     
-    echo json_encode(['success' => true, 'message' => 'Traducción del título guardada correctamente']);
+    if ($result) {
+        echo json_encode(['success' => true, 'message' => 'Traducción del título guardada correctamente']);
+    } else {
+        echo json_encode(['error' => 'Error al ejecutar la actualización']);
+    }
 } catch (PDOException $e) {
+    error_log("Error al guardar traducción del título: " . $e->getMessage());
     echo json_encode(['error' => 'Error al guardar la traducción del título: ' . $e->getMessage()]);
 }
 ?>

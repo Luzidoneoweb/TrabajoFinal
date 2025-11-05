@@ -186,13 +186,20 @@ async function guardarTraduccionTituloEnBD(textId, title, translation) {
         formData.append('title', title);
         formData.append('title_translation', translation);
 
-        await fetch('traducion_api/save_title_translation.php', {
+        const response = await fetch('traducion_api/save_title_translation.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             credentials: 'include',
             body: formData
         });
-        // No esperamos respuesta, solo enviamos
+
+        const data = await response.json();
+        
+        if (data.success) {
+            console.log('Traducción del título guardada correctamente:', data.message);
+        } else {
+            console.error('Error al guardar traducción del título:', data.error);
+        }
     } catch (error) {
         console.error('Error al guardar traducción del título en BD:', error);
     }
@@ -206,6 +213,7 @@ async function guardarTraduccionTituloEnBD(textId, title, translation) {
  */
 async function guardarTraduccionCompletaEnBD(textId, contentTranslation) {
     if (!textId || !contentTranslation) {
+        console.warn('Faltan parámetros para guardar traducción completa:', { textId, contentTranslation });
         return;
     }
 
@@ -214,13 +222,20 @@ async function guardarTraduccionCompletaEnBD(textId, contentTranslation) {
         formData.append('text_id', textId);
         formData.append('content_translation', contentTranslation);
 
-        await fetch('traducion_api/save_complete_translation.php', {
+        const response = await fetch('traducion_api/save_complete_translation.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             credentials: 'include',
             body: formData
         });
-        // No esperamos respuesta, solo enviamos
+
+        const data = await response.json();
+        
+        if (data.success) {
+            console.log('Traducción completa guardada correctamente:', data.message, 'Filas afectadas:', data.rows_affected);
+        } else {
+            console.error('Error al guardar traducción completa:', data.error);
+        }
     } catch (error) {
         console.error('Error al guardar traducción completa en BD:', error);
     }

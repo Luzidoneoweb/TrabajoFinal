@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'conexion.php';
+require_once '../db/conexion.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -37,10 +37,20 @@ try {
 // Actualizar la traducción completa del contenido en la tabla texts
 try {
     $stmt = $pdo->prepare("UPDATE texts SET content_translation = ? WHERE id = ?");
-    $stmt->execute([$content_translation, $text_id]);
+    $result = $stmt->execute([$content_translation, $text_id]);
     
-    echo json_encode(['success' => true, 'message' => 'Traducción completa guardada correctamente']);
+    if ($result) {
+        $rowsAffected = $stmt->rowCount();
+        echo json_encode([
+            'success' => true, 
+            'message' => 'Traducción completa guardada correctamente',
+            'rows_affected' => $rowsAffected
+        ]);
+    } else {
+        echo json_encode(['error' => 'Error al ejecutar la actualización']);
+    }
 } catch (PDOException $e) {
+    error_log("Error al guardar traducción completa: " . $e->getMessage());
     echo json_encode(['error' => 'Error al guardar la traducción completa: ' . $e->getMessage()]);
 }
 ?>
