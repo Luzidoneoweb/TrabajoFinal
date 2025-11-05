@@ -44,7 +44,7 @@
                     <p></p>
                 </div>
             </div>
-            <!-- Línea de traducción: debajo de cada frase original, máximo 20 palabras -->
+            <!-- Línea de traducción: debajo de cada frase original (traducción completa en español) -->
             <!-- Esta línea siempre existe, incluso si está vacía inicialmente -->
             <div class="frase-traduccion-original" aria-label="Traducción de la frase original">
                 <p class="texto-traduccion-original"></p>

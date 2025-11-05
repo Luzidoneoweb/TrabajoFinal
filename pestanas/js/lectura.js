@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Función para truncar texto a un máximo de palabras especificado
-    // Se usa para limitar las traducciones a 20 palabras con indicador "..." si excede
+    // NOTA: Ya no se usa para truncar traducciones, se mantiene por compatibilidad
     function truncarTexto(texto, limitePalabras) {
         if (!texto || texto.trim() === '') return '';
         const palabras = texto.trim().split(/\s+/);
@@ -209,11 +209,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             
-            // Truncar a máximo 20 palabras para mantener consistencia
-            const traduccionTruncada = truncarTexto(traduccionFrase, 20);
-            
+            // Mostrar la traducción completa (sin truncar)
             divTraduccionOriginal.innerHTML = `
-                <p class="texto-traduccion-original">${traduccionTruncada}</p>
+                <p class="texto-traduccion-original">${traduccionFrase || ''}</p>
             `;
             
             // Añadir directamente a pageContainer - el CSS se encarga del centrado
