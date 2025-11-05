@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let totalPaginas = 0; // Total de páginas según el número de frases y capacidad de pantalla
     let timeoutResize = null; // Timeout para optimizar el evento resize
     let currentTextId = null; // ID del texto actual para las traducciones
+    let timeoutGuardarCompleto = null; // Timeout para optimizar el guardado del texto completo
 
     // Observar cambios en el panel de lectura para cargar el texto cuando se active
     // Esto permite cargar el contenido solo cuando el panel es visible
@@ -98,6 +99,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Las funciones de traducción están en traducion_api/lectura-translation-functions.js
     // Se usan: window.traducirFrase, window.guardarTraduccionEnBD, window.cargarCacheTraducciones
+    // window.guardarTraduccionCompletaEnBD, window.construirTextoCompletoTraducido
+
+    // Función para guardar el texto completo traducido en la BD
+    // Se llama cuando se traducen nuevas frases (con debounce para evitar múltiples guardados)
+    function guardarTextoCompletoTraducido() {
+        if (!currentTextId || todasLasFrasesOriginales.length === 0) {
+            return;
+        }
+
+        // Limpiar timeout anterior si existe
+        if (timeoutGuardarCompleto) {
+            clearTimeout(timeoutGuardarCompleto);
+        }
+
+        // Usar debounce: esperar 2 segundos después de la última traducción
+        timeoutGuardarCompleto = setTimeout(() => {
+            // Verificar si todas las frases están traducidas
+            const todasTraducidas = todasLasFrasesOriginales.every((frase, index) => {
+                return todasLasFrasesTraduccion[index] && todasLasFrasesTraduccion[index].trim().length > 0;
+            });
+
+            // Si todas están traducidas, construir y guardar el texto completo
+            if (todasTraducidas && typeof window.construirTextoCompletoTraducido === 'function' && typeof window.guardarTraduccionCompletaEnBD === 'function') {
+                const textoCompletoTraducido = window.construirTextoCompletoTraducido(todasLasFrasesTraduccion);
+                
+                if (textoCompletoTraducido) {
+                    // Guardar en BD (asíncrono, no esperamos)
+                    window.guardarTraduccionCompletaEnBD(currentTextId, textoCompletoTraducido);
+                    console.log('Texto completo traducido guardado en BD');
+                }
+            }
+        }, 2000); // Esperar 2 segundos antes de guardar
+    }
 
     // Función para mostrar la página actual
     // Renderiza solo las frases que corresponden a la página seleccionada
@@ -166,6 +200,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             traduccionFrase = await window.traducirFrase(fraseOriginal, currentTextId);
                             // Actualizar el array para futuras referencias
                             todasLasFrasesTraduccion[indiceGlobal] = traduccionFrase;
+                            
+                            // Guardar el texto completo traducido en la BD después de traducir
+                            guardarTextoCompletoTraducido();
                         } else {
                             console.warn('Función traducirFrase no está disponible. Asegúrate de incluir traducion_api/lectura-translation-functions.js');
                         }
@@ -437,6 +474,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     // Si no hay ninguna, se traducirá cuando se muestre la página
                 });
+                
+                // Si todas las frases ya están traducidas al cargar, guardar el texto completo en BD
+                // (por si acaso no está guardado aún)
+                if (todasLasFrasesOriginales.length > 0) {
+                    const todasTraducidas = todasLasFrasesOriginales.every((frase, index) => {
+                        return todasLasFrasesTraduccion[index] && todasLasFrasesTraduccion[index].trim().length > 0;
+                    });
+                    
+                    if (todasTraducidas && typeof window.construirTextoCompletoTraducido === 'function' && typeof window.guardarTraduccionCompletaEnBD === 'function') {
+                        const textoCompletoTraducido = window.construirTextoCompletoTraducido(todasLasFrasesTraduccion);
+                        if (textoCompletoTraducido && textoCompletoTraducido !== texto.content_translation) {
+                            // Solo guardar si es diferente al que ya está guardado
+                            window.guardarTraduccionCompletaEnBD(currentTextId, textoCompletoTraducido);
+                        }
+                    }
+                }
 
                 // Resetear a la primera página al cargar un nuevo texto
                 paginaActual = 0;
