@@ -675,10 +675,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     lecturaContinua = false;
                     window.MotorLectura.detener();
                 } else {
-                    // Iniciar la lectura desde el primer párrafo de la página actual
-                    // MotorLectura busca párrafos con clase .paragraph dentro de .page.active
+                    // Iniciar la lectura. MotorLectura decidirá si reanudar o empezar desde 0.
                     lecturaContinua = true; // Activar lectura continua para todas las páginas
-                    window.MotorLectura.iniciar(0);
+                    window.MotorLectura.iniciar(); // Llamar sin parámetros para que use la lógica interna
                 }
                 // Actualizar el botón y los encabezados después de cambiar el estado
                 setTimeout(actualizarBotonPlay, 100);

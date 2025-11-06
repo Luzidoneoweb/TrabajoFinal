@@ -5,6 +5,8 @@
     estado: 'inactivo', // 'inactivo' | 'reproduciendo' | 'pausado'
     indiceActual: 0,
     pronunciacion: null,
+    lastPausedParagraphIndex: 0, // Nuevo: para guardar el índice del párrafo pausado
+    lastPausedPageIndex: 0,      // Nuevo: para guardar el índice de la página pausada
 
     obtenerVelocidad() {
       const input = document.getElementById('rate');
@@ -158,17 +160,34 @@
       }
     },
 
-    iniciar(startIndex) {
-      // Elegir índice de inicio: preferir parámetro, luego índice actual, luego último guardado, luego 0
+    async iniciar(startIndex) {
+      // Elegir índice de inicio:
+      // 1. Preferir el parámetro `startIndex` si se proporciona.
+      // 2. Si no, y hay una posición pausada guardada, usarla.
+      // 3. Si no, y hay una última posición leída global, usarla.
+      // 4. Si no, iniciar desde 0.
       if (typeof startIndex === 'number') {
         this.indiceActual = startIndex;
-      } else if (typeof this.indiceActual === 'number' && this.indiceActual >= 0) {
-        // mantener
+      } else if (this.lastPausedPageIndex !== 0 || this.lastPausedParagraphIndex !== 0) {
+        // Si hay una posición pausada, ir a esa página y párrafo
+        if (window.paginaActual !== this.lastPausedPageIndex) {
+          window.paginaActual = this.lastPausedPageIndex;
+          await window.mostrarPagina(window.paginaActual);
+          // Esperar un breve momento para que el DOM se actualice
+          setTimeout(() => {
+            this.indiceActual = this.lastPausedParagraphIndex;
+            this.hablarActual();
+          }, 100);
+          return; // Salir para evitar doble llamada a hablarActual
+        } else {
+          this.indiceActual = this.lastPausedParagraphIndex;
+        }
       } else if (typeof window.lastReadParagraphIndex === 'number') {
         this.indiceActual = window.lastReadParagraphIndex;
       } else {
         this.indiceActual = 0;
       }
+      
       this.estado = 'reproduciendo';
       // console.log('MotorLectura.estado cambiado a:', this.estado); // Eliminado para producción
       // Sincronizar flags globales
@@ -180,21 +199,38 @@
     pausar() {
       if (this.estado !== 'reproduciendo') return;
       this.estado = 'pausado';
-      // console.log('MotorLectura.estado cambiado a:', this.estado); // Eliminado para producción
+      // Guardar la posición actual al pausar
+      this.lastPausedParagraphIndex = this.indiceActual;
+      this.lastPausedPageIndex = window.paginaActual;
+      // console.log('MotorLectura.estado cambiado a:', this.estado, 'Pausado en párrafo:', this.lastPausedParagraphIndex, 'página:', this.lastPausedPageIndex); // Eliminado para producción
       try { window.isCurrentlyPaused = true; } catch(e) { /* console.warn('Error al sincronizar flag global (isCurrentlyPaused):', e); */ }
       try { window.speechSynthesis.cancel(); } catch(e) { /* console.warn('Error al cancelar síntesis de voz en pausa:', e); */ }
       try { if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton(); } catch(e) { /* console.warn('Error al llamar a updateFloatingButton en pausa:', e); */ }
     },
 
-    reanudar() {
+    async reanudar() {
       if (this.estado === 'pausado') {
         this.estado = 'reproduciendo';
-        // console.log('MotorLectura.estado cambiado a:', this.estado); // Eliminado para producción
+        // console.log('MotorLectura.estado cambiado a:', this.estado, 'Reanudando desde párrafo:', this.lastPausedParagraphIndex, 'página:', this.lastPausedPageIndex); // Eliminado para producción
         try { window.isCurrentlyPaused = false; window.isCurrentlyReading = true; } catch(e) { /* console.warn('Error al sincronizar flags globales (isCurrentlyReading/isCurrentlyPaused) en reanudar:', e); */ }
-      try { if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton(); } catch(e) { /* console.warn('Error al llamar a updateFloatingButton en reanudar:', e); */ }
-      this.hablarActual();
-    } else if (this.estado === 'inactivo') {
-        this.iniciar(this.indiceActual || 0);
+        try { if (typeof window.updateFloatingButton === 'function') window.updateFloatingButton(); } catch(e) { /* console.warn('Error al llamar a updateFloatingButton en reanudar:', e); */ }
+        
+        // Reanudar desde la posición guardada
+        if (window.paginaActual !== this.lastPausedPageIndex) {
+          window.paginaActual = this.lastPausedPageIndex;
+          await window.mostrarPagina(window.paginaActual);
+          // Esperar un breve momento para que el DOM se actualice
+          setTimeout(() => {
+            this.indiceActual = this.lastPausedParagraphIndex;
+            this.hablarActual();
+          }, 100);
+        } else {
+          this.indiceActual = this.lastPausedParagraphIndex;
+          this.hablarActual();
+        }
+      } else if (this.estado === 'inactivo') {
+        // Si estaba inactivo, iniciar desde la última posición pausada o 0
+        this.iniciar(this.lastPausedParagraphIndex);
       }
     },
 
