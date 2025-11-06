@@ -126,6 +126,9 @@
               }
             }
           }
+          console.log(`DEBUG: Frase Original (Índice Global ${indiceGlobal}):`, fraseOriginal);
+          console.log(`DEBUG: Elemento de Traducción (pTraduccion):`, pTraduccion);
+          console.log(`DEBUG: Traducción obtenida (traduccionFrase):`, traduccionFrase);
           
           // Mostrar la traducción justo antes de empezar a leer
           pTraduccion.textContent = traduccionFrase || '';
