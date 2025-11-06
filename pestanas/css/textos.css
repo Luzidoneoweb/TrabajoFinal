@@ -157,6 +157,7 @@
     font-size: 1rem;
     font-weight: 600;
     color: var(--texto-principal);
+    cursor: pointer;
 }
 
 .traduccion-texto {
