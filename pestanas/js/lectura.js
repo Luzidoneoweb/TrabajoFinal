@@ -8,6 +8,7 @@ window.todasLasFrasesTraduccion = []; // Array con todas las traducciones dividi
 window.paginaActual = 0; // Índice de la página actual (comienza en 0)
 window.frasesPorPagina = 1; // Número de frases que caben por página (se calcula dinámicamente)
 window.currentTextId = null; // ID del texto actual para las traducciones
+let isPageReadyForReading = false; // Bandera para controlar si la página está lista para la lectura
 
 // Función para guardar el texto completo traducido en la BD
 // Se llama cuando se traducen nuevas frases (con debounce para evitar múltiples guardados)
@@ -342,9 +343,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Obtiene el texto completo, lo divide en frases y configura la paginación inicial
     // Similar al comportamiento de get_lectura_data.php en realdlan
     async function cargarContenidoLectura() {
+        // Reiniciar la bandera de listo para leer al inicio de la carga
+        isPageReadyForReading = false;
+
         // Asegurar que el mensaje de carga esté visible si no lo está ya
         if (typeof window.showLoadingMessage === 'function') {
             window.showLoadingMessage();
+        }
+
+        // Deshabilitar el botón de play durante la carga
+        const btnPlay = document.querySelector('.btn-play');
+        if (btnPlay) {
+            btnPlay.disabled = true;
         }
         
         // Obtener ID del texto seleccionado desde localStorage
@@ -469,30 +479,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Resetear a la primera página al cargar un nuevo texto
                 window.paginaActual = 0;
                 
-                // Esperar un momento para que el DOM se estabilice antes de calcular
-                setTimeout(async () => {
-                    // Calcular dinámicamente cuántas frases caben en la pantalla actual
-                    window.frasesPorPagina = calcularFrasesPorPagina();
-                    
-                    // Mostrar la primera página después de calcular (ahora es async)
-                    await mostrarPagina(window.paginaActual);
-                    
-                    // Mostrar el contenido de lectura ahora que está listo
-                    const panelLectura = document.getElementById('panelLectura');
-                    if (panelLectura) {
-                        const contenedorLectura = panelLectura.querySelector('.contenedor-lectura');
-                        if (contenedorLectura) {
-                            contenedorLectura.style.visibility = 'visible';
-                            contenedorLectura.style.opacity = '1';
-                            contenedorLectura.style.transition = 'opacity 0.3s ease-in';
-                        }
+                // Calcular dinámicamente cuántas frases caben en la pantalla actual
+                window.frasesPorPagina = calcularFrasesPorPagina();
+                
+                // Mostrar la primera página después de calcular (ahora es async)
+                await mostrarPagina(window.paginaActual);
+                
+                // Mostrar el contenido de lectura ahora que está listo
+                const panelLectura = document.getElementById('panelLectura');
+                if (panelLectura) {
+                    const contenedorLectura = panelLectura.querySelector('.contenedor-lectura');
+                    if (contenedorLectura) {
+                        contenedorLectura.style.visibility = 'visible';
+                        contenedorLectura.style.opacity = '1';
+                        contenedorLectura.style.transition = 'opacity 0.3s ease-in';
                     }
-                    
-                    // Ocultar mensaje de carga cuando el contenido esté listo
-                    if (typeof window.hideLoadingMessage === 'function') {
-                        window.hideLoadingMessage();
-                    }
-                }, 200);
+                }
+                
+                // Ocultar mensaje de carga cuando el contenido esté listo
+                if (typeof window.hideLoadingMessage === 'function') {
+                    window.hideLoadingMessage();
+                }
+
+                // Habilitar el botón de play una vez que la carga ha finalizado
+                if (btnPlay) {
+                    btnPlay.disabled = false;
+                }
+                isPageReadyForReading = true; // La página está lista para la lectura
                 
                 console.log('Texto cargado y estructurado por frases:', texto.title);
             } else {
@@ -527,6 +540,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (error) {
             console.error('Error en la petición fetch para cargar el texto:', error);
+            // Habilitar el botón de play en caso de error para permitir reintentos
+            const btnPlay = document.querySelector('.btn-play');
+            if (btnPlay) {
+                btnPlay.disabled = false;
+            }
             document.querySelector('.titulo-lectura').textContent = 'Error de conexión';
             const zonaFrases = document.querySelector('.zona-frases');
             zonaFrases.innerHTML = `
@@ -651,7 +669,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Configurar listener del botón de reproducción
     if (btnPlay) {
         btnPlay.addEventListener('click', function() {
-            if (window.MotorLectura) {
+            if (window.MotorLectura && isPageReadyForReading) { // Solo iniciar si la página está lista
                 if (window.MotorLectura.estado === 'reproduciendo' || window.MotorLectura.estado === 'pausado') {
                     // Detener la lectura si está reproduciendo o pausada
                     lecturaContinua = false;
@@ -664,6 +682,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 // Actualizar el botón y los encabezados después de cambiar el estado
                 setTimeout(actualizarBotonPlay, 100);
+            } else if (!isPageReadyForReading) {
+                console.warn('Intento de iniciar lectura antes de que la página esté lista.');
             }
         });
     }
