@@ -558,7 +558,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Event Listeners para los botones de paginación
-    // Comportamiento similar a realdlan: navegación entre páginas con validación de límites
+    // Comportamiento: navegación entre páginas con validación de límites
     const btnAnterior = document.querySelector('.btn-anterior');
     const btnSiguiente = document.querySelector('.btn-siguiente');
     

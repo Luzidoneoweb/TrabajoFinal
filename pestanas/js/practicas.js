@@ -1,9 +1,9 @@
 // Función para cargar textos en el selector de prácticas
 function cargarTextosPractica() {
     // Mostrar mensaje de carga
-    if (typeof window.showLoadingMessage === 'function') {
-        window.showLoadingMessage();
-    }
+    // if (typeof window.showLoadingMessage === 'function') {
+    //     window.showLoadingMessage();
+    // }
     
     fetch('pestanas/php/get_textos.php', { credentials: 'include' })
         .then(response => {
@@ -12,15 +12,7 @@ function cargarTextosPractica() {
             }
             return response.json();
         })
-        .then(data => {
-            const selector = document.getElementById('selectorTextosPractica');
-            if (!selector) {
-                console.error('No se encontró el selector de textos');
-                if (typeof window.hideLoadingMessage === 'function') {
-                    window.hideLoadingMessage();
-                }
-                return;
-            }
+        
             
             // Limpiar opciones existentes (excepto la primera)
             selector.innerHTML = '<option value="">Selecciona un texto...</option>';
@@ -35,22 +27,8 @@ function cargarTextosPractica() {
             }
             
             // Ocultar mensaje de carga
-            if (typeof window.hideLoadingMessage === 'function') {
-                window.hideLoadingMessage();
-            }
-        })
-        .catch(error => {
-            console.error('Error al cargar textos para práctica:', error);
-            const selector = document.getElementById('selectorTextosPractica');
-            if (selector) {
-                selector.innerHTML = '<option value="">Error al cargar textos</option>';
-            }
-            
-            // Ocultar mensaje de carga en caso de error
-            if (typeof window.hideLoadingMessage === 'function') {
-                window.hideLoadingMessage();
-            }
-        });
+           
+       
 }
 
 // Cargar cuando el DOM esté listo y cuando se active el panel

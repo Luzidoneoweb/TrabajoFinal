@@ -1,4 +1,7 @@
 <?php require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/php/login_seguridad/seguridad.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/pestanas/php/loading_message.php'; ?>
+<link rel="stylesheet" href="pestanas/css/loading_message.css">
+<script src="pestanas/js/loading_message.js"></script>
 
 <div class="lectura" aria-label="Lector de texto">
     <div class="contenedor-lectura">
@@ -70,9 +73,10 @@
 </div>
 
 <!-- Scripts del sistema de voz -->
+ <script src="js/modalFinalizacion.js"></script>
 <script src="lector/electron-voice-integration.js"></script>
 <script src="lector/reading-engine.js"></script>
-<script src="js/modalFinalizacion.js"></script>
+
 
 <!-- Scripts de traducción (debe cargarse antes de lectura.js) -->
 <script src="traducion_api/lectura-translation-functions.js"></script>
