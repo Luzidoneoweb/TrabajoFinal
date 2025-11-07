@@ -9,6 +9,7 @@ window.paginaActual = 0; // Índice de la página actual (comienza en 0)
 window.frasesPorPagina = 1; // Número de frases que caben por página (se calcula dinámicamente)
 window.currentTextId = null; // ID del texto actual para las traducciones
 let isPageReadyForReading = false; // Bandera para controlar si la página está lista para la lectura
+let isContentLoading = false; // Nueva bandera para evitar cargas múltiples
 
 // Función para guardar el texto completo traducido en la BD
 // Se llama cuando se traducen nuevas frases (con debounce para evitar múltiples guardados)
@@ -343,6 +344,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Obtiene el texto completo, lo divide en frases y configura la paginación inicial
     // Similar al comportamiento de get_lectura_data.php en realdlan
     async function cargarContenidoLectura() {
+        if (isContentLoading) {
+            console.warn('cargarContenidoLectura() ya está en progreso. Ignorando llamada duplicada.');
+            return;
+        }
+        isContentLoading = true;
+        console.log('Iniciando cargarContenidoLectura()...');
+
         // Reiniciar la bandera de listo para leer al inicio de la carga
         isPageReadyForReading = false;
 
@@ -506,10 +514,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     btnPlay.disabled = false;
                 }
                 isPageReadyForReading = true; // La página está lista para la lectura
-                
+                isContentLoading = false; // La carga ha finalizado
                 console.log('Texto cargado y estructurado por frases:', texto.title);
             } else {
                 console.error('Error al cargar el texto:', data.error);
+                isContentLoading = false; // La carga ha finalizado (con error)
                 document.querySelector('.titulo-lectura').textContent = 'Error al cargar';
                 const zonaFrases = document.querySelector('.zona-frases');
                 zonaFrases.innerHTML = `
@@ -572,6 +581,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (typeof window.hideLoadingMessage === 'function') {
                 window.hideLoadingMessage();
             }
+        } finally {
+            isContentLoading = false; // Asegurar que la bandera se resetee incluso si hay errores inesperados
+            console.log('Finalizando cargarContenidoLectura().');
         }
     }
 
