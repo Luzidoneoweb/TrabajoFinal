@@ -19,24 +19,32 @@ class MultiWordSelector {
     
     init() {
         // Agregar estilos CSS para la selección
-        this.addStyles?.();
+        this.addStyles();
         
         // Event listeners para selección usando arrow functions para mantener el contexto
         document.addEventListener('mousedown', (e) => this.onMouseDown(e));
         document.addEventListener('mousemove', (e) => this.onMouseMove(e));
         document.addEventListener('mouseup', (e) => this.onMouseUp(e));
         
-        // Limpiar selección al hacer clic fuera
+        // Limpiar selección al hacer clic fuera (pero no en palabras clickeables)
         document.addEventListener('click', (e) => this.onDocumentClick(e));
+        
+        // Debug: Verificar inicialización
+        console.log('MultiWordSelector inicializado');
     }
     
     addStyles() {
+        // Verificar si ya se añadieron los estilos
+        if (document.getElementById('multi-word-selector-styles')) {
+            return;
+        }
+        
         const style = document.createElement('style');
+        style.id = 'multi-word-selector-styles';
         style.textContent = `
             .word-selection { background: rgba(74,144,226,0.2) !important; border-radius: 3px; transition: background 0.2s ease; }
             .word-selection-start { background: rgba(74,144,226,0.35) !important; border-left: 2px solid #4a90e2; }
             .word-selection-end { background: rgba(74,144,226,0.35) !important; border-right: 2px solid #4a90e2; }
-            
         `;
         document.head.appendChild(style);
     }
@@ -128,10 +136,13 @@ class MultiWordSelector {
         
         // Si el usuario no arrastró, es un clic simple
         if (!this.hasDragged) {
-            // Para clic simple, usar la funcionalidad de traducción individual
-            // que ya está implementada en la página
+            // Para clic simple, traducir la palabra individual
+            const wordText = target.textContent.trim();
+            console.log('Clic simple en palabra:', wordText);
+            this.selectedWords = [target];
+            this.highlightWord(target, 'single');
+            this.translateSelection();
             this.isSelecting = false;
-            this.clearSelection();
             return;
         }
         
@@ -143,12 +154,19 @@ class MultiWordSelector {
     }
     
     onDocumentClick(event) {
-        // Si se hace clic fuera de la selección, limpiar
-        if (!event.target.closest('.multi-word-tooltip') && 
-            !this.selectedWords.includes(event.target)) {
-            this.clearSelection();
-            this.hideTooltip();
+        // Si se hace clic fuera de la selección y del tooltip, limpiar
+        const clickedWord = event.target.closest('.clickable-word, .word-clickable');
+        const clickedTooltip = event.target.closest('.multi-word-tooltip');
+        
+        // Si se hace clic en una palabra clickeable o en el tooltip, no limpiar
+        // (el clic en palabra ya se maneja en onMouseUp)
+        if (clickedWord || clickedTooltip) {
+            return;
         }
+        
+        // Si se hace clic fuera, limpiar selección y tooltip
+        this.clearSelection();
+        this.hideTooltip();
     }
     
     detectAdjacentWords(clickedWord) {
@@ -419,34 +437,44 @@ class MultiWordSelector {
     translateSelection() {
         const text = this.selectedWords.map(word => word.textContent.trim()).join(' ');
         
+        console.log('Traduciendo texto:', text);
+        
         if (!text || text.length < 2) {
+            console.warn('Texto muy corto para traducir:', text);
             return;
         }
         
         // Mostrar tooltip de carga
+        console.log('Mostrando tooltip de carga');
         this.showTooltip(text, 'Traduciendo...', true);
         
         // Hacer petición de traducción
-        fetch('translate.php', {
+        fetch('traducion_api/translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'text=' + encodeURIComponent(text)
         })
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json();
+        })
         .then(data => {
             if (data.translation) {
                 this.showTooltip(text, data.translation, false);
                 
                 // Guardar palabra traducida si el usuario está logueado
-                if (typeof saveTranslatedWord === 'function') {
+                if (typeof window.saveTranslatedWord === 'function') {
                     const sentence = this.findSentenceContainingWords();
-                    saveTranslatedWord(text, data.translation, sentence);
+                    window.saveTranslatedWord(text, data.translation, sentence);
                 }
             } else {
                 this.showTooltip(text, 'No se encontró traducción', false);
             }
         })
         .catch((error) => {
+            console.error('Error al traducir:', error);
             this.showTooltip(text, 'Error en la traducción', false);
         });
     }
@@ -481,37 +509,58 @@ class MultiWordSelector {
     }
     
     showTooltip(originalText, translation, isLoading = false) {
+        console.log('showTooltip llamado:', { originalText, translation, isLoading });
         this.hideTooltip();
         
         this.tooltip = document.createElement('div');
-      //  this.tooltip.className = 'multi-word-tooltip';
+        this.tooltip.className = 'multi-word-tooltip';
         
         if (isLoading) {
             this.tooltip.innerHTML = `
-                <div class="original-text">"${originalText}"</div>
+                <div class="original-text">${originalText}</div>
                 <div class="translation loading">${translation}</div>
             `;
         } else {
             this.tooltip.innerHTML = `
-                <div class="original-text">"${originalText}"</div>
+                <div class="original-text">${originalText}</div>
                 <div class="translation">${translation}</div>
             `;
         }
         
-        // Agregar al contenedor de la página de prueba si existe
-        const testContainer = document.querySelector('.text-example');
-        if (testContainer) {
-            testContainer.appendChild(this.tooltip);
-        } else {
-            document.body.appendChild(this.tooltip);
-        }
+        // Agregar al body para que esté siempre visible
+        document.body.appendChild(this.tooltip);
+        console.log('Tooltip añadido al DOM');
         
         // Posicionar tooltip
         this.positionTooltip();
+        console.log('Tooltip posicionado');
     }
     
     positionTooltip() {
-        if (!this.tooltip || this.selectedWords.length === 0) {
+        if (!this.tooltip) {
+            console.warn('No hay tooltip para posicionar');
+            return;
+        }
+        
+        if (this.selectedWords.length === 0) {
+            // Si no hay palabras seleccionadas pero hay un tooltip, usar posición del mouse
+            const tooltipRect = this.tooltip.getBoundingClientRect();
+            const tooltipWidth = tooltipRect.width || 200;
+            const tooltipHeight = tooltipRect.height || 100;
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            const padding = 10;
+            
+            // Posicionar en el centro de la pantalla como fallback
+            const left = (windowWidth - tooltipWidth) / 2;
+            const top = (windowHeight - tooltipHeight) / 2;
+            
+            this.tooltip.style.position = 'fixed';
+            this.tooltip.style.left = Math.max(padding, left) + 'px';
+            this.tooltip.style.top = Math.max(padding, top) + 'px';
+            this.tooltip.style.display = 'block';
+            this.tooltip.style.visibility = 'visible';
+            this.tooltip.style.opacity = '1';
             return;
         }
         
@@ -521,31 +570,49 @@ class MultiWordSelector {
         const firstRect = firstWord.getBoundingClientRect();
         const lastRect = lastWord.getBoundingClientRect();
         
-        // Posicionamiento mejorado - dentro del contenedor
+        // Calcular posición centrada debajo de la selección
         const centerX = (firstRect.left + lastRect.right) / 2;
         const top = lastRect.bottom + 10;
         
-        // Obtener el contenedor de la página de prueba
-        const testContainer = document.querySelector('.text-example');
-        if (testContainer) {
-            const containerRect = testContainer.getBoundingClientRect();
-            
-            // Posicionar dentro del contenedor
-            const relativeLeft = centerX - containerRect.left - 100;
-            const relativeTop = top - containerRect.top;
-            
-            this.tooltip.style.position = 'absolute';
-            this.tooltip.style.left = relativeLeft + 'px';
-            this.tooltip.style.top = relativeTop + 'px';
-        } else {
-            // Fallback para otras páginas
-            this.tooltip.style.left = (centerX - 100) + 'px';
-            this.tooltip.style.top = top + 'px';
+        // Obtener dimensiones del tooltip
+        const tooltipRect = this.tooltip.getBoundingClientRect();
+        const tooltipWidth = tooltipRect.width || 200;
+        const tooltipHeight = tooltipRect.height || 100;
+        
+        // Calcular posición horizontal (centrado, pero ajustado si se sale de la pantalla)
+        let left = centerX - (tooltipWidth / 2);
+        const windowWidth = window.innerWidth;
+        const padding = 10;
+        
+        // Ajustar si se sale por la izquierda
+        if (left < padding) {
+            left = padding;
+        }
+        // Ajustar si se sale por la derecha
+        if (left + tooltipWidth > windowWidth - padding) {
+            left = windowWidth - tooltipWidth - padding;
         }
         
-        // Asegurar que esté visible
+        // Calcular posición vertical (debajo de la selección, pero ajustado si se sale)
+        let tooltipTop = top;
+        const windowHeight = window.innerHeight;
+        
+        // Si no cabe debajo, mostrar arriba
+        if (tooltipTop + tooltipHeight > windowHeight - padding) {
+            tooltipTop = firstRect.top - tooltipHeight - 10;
+            // Si tampoco cabe arriba, centrar verticalmente
+            if (tooltipTop < padding) {
+                tooltipTop = (windowHeight - tooltipHeight) / 2;
+            }
+        }
+        
+        // Aplicar posición fija (relativa al viewport)
+        this.tooltip.style.position = 'fixed';
+        this.tooltip.style.left = left + 'px';
+        this.tooltip.style.top = tooltipTop + 'px';
         this.tooltip.style.display = 'block';
         this.tooltip.style.visibility = 'visible';
+        this.tooltip.style.opacity = '1';
     }
     
     hideTooltip() {
@@ -565,7 +632,7 @@ class MultiWordSelector {
 }
 
 // Inicializar solo en páginas de lectura, no en práctica
-document.addEventListener('DOMContentLoaded', () => {
+window.initializeMultiWordSelector = function initializeMultiWordSelector() {
     // Solo inicializar si estamos en una página de lectura (no práctica)
     const isPracticePage = window.location.href.includes('practice') || 
                           document.querySelector('.practice-area') ||
@@ -577,10 +644,57 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentTab = document.querySelector('.tab-btn.active');
     const isPracticeTab = currentTab && currentTab.textContent.includes('Práctica');
     
-    if (!isPracticePage && !isPracticeTab) {
+    // Verificar si existe el panel de lectura
+    const panelLectura = document.getElementById('panelLectura');
+    const hasReadingContent = panelLectura && panelLectura.querySelector('.clickable-word');
+    
+    if (!isPracticePage && !isPracticeTab && !window.multiWordSelector) {
         window.multiWordSelector = new MultiWordSelector();
     }
+}
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.initializeMultiWordSelector) {
+        window.initializeMultiWordSelector();
+    }
 });
+
+// También inicializar cuando se carga contenido dinámicamente
+// Esto se ejecutará después de que lectura.js cargue el contenido
+if (typeof window !== 'undefined') {
+    // Observar cuando se añaden palabras clickeables al DOM
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.addedNodes.length > 0) {
+                const hasClickableWords = Array.from(mutation.addedNodes).some(node => {
+                    if (node.nodeType === 1) { // Element node
+                        return node.classList && (node.classList.contains('clickable-word') || 
+                               node.classList.contains('word-clickable') ||
+                               node.querySelector('.clickable-word, .word-clickable'));
+                    }
+                    return false;
+                });
+                
+                if (hasClickableWords && !window.multiWordSelector) {
+                    // Esperar un poco para que el DOM se estabilice
+                    setTimeout(window.initializeMultiWordSelector, 100);
+                }
+            }
+        });
+    });
+    
+    // Observar cambios en el panel de lectura
+    document.addEventListener('DOMContentLoaded', () => {
+        const panelLectura = document.getElementById('panelLectura');
+        if (panelLectura) {
+            observer.observe(panelLectura, {
+                childList: true,
+                subtree: true
+            });
+        }
+    });
+}
 
 // Exportar para uso global
 window.MultiWordSelector = MultiWordSelector;

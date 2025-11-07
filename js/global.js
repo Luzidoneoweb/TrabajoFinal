@@ -127,21 +127,39 @@
         // Función para cerrar sesión
         async function cerrarSesion() {
             try {
-                const response = await fetch('php/login_seguridad/logout.php');
-                const data = await response.json();
+                const response = await fetch('php/login_seguridad/logout.php', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                });
                 
-                if (data.success) {
-                    usuarioLogueado = false;
-                    rememberedIdentifier = null; // Limpiar el identificador recordado al cerrar sesión
-                    mostrarInterfazNoLogueada();
-                    // Opcional: mostrar mensaje de confirmación
-                    console.log(data.message);
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        usuarioLogueado = false;
+                        rememberedIdentifier = null; // Limpiar el identificador recordado al cerrar sesión
+                        mostrarInterfazNoLogueada();
+                        // Opcional: mostrar mensaje de confirmación
+                        console.log(data.message);
+                    } else {
+                        console.error('Error cerrando sesión:', data.message);
+                        // Aún así, intentar cerrar la sesión localmente
+                        usuarioLogueado = false;
+                        rememberedIdentifier = null;
+                        mostrarInterfazNoLogueada();
+                    }
                 } else {
-                    console.error('Error cerrando sesión:', data.message);
+                    // Si la respuesta no es OK, cerrar sesión localmente
+                    usuarioLogueado = false;
+                    rememberedIdentifier = null;
+                    mostrarInterfazNoLogueada();
                 }
             } catch (error) {
+                // Error de red o conexión - cerrar sesión localmente de todas formas
                 console.error('Error cerrando sesión:', error);
-                // Aún así, intentar cerrar la sesión localmente
                 usuarioLogueado = false;
                 rememberedIdentifier = null;
                 mostrarInterfazNoLogueada();
@@ -194,12 +212,13 @@
             document.body.style.msOverflowStyle = '';
             document.body.style.scrollbarWidth = '';
             
-            // Activar la pestaña seleccionada
-            const pestanaElemento = document.querySelector(`[data-pestana="${nombrePestana}"]`);
-            if (pestanaElemento) {
-                pestanaElemento.classList.add('activa');
-            } else {
-                console.warn(`Elemento de pestaña con data-pestana="${nombrePestana}" no encontrado.`);
+            // Activar la pestaña seleccionada (solo si existe un botón para ella)
+            // La pestaña "lectura" no tiene botón en el menú, se accede desde "Mis Textos"
+            if (nombrePestana !== 'lectura') {
+                const pestanaElemento = document.querySelector(`[data-pestana="${nombrePestana}"]`);
+                if (pestanaElemento) {
+                    pestanaElemento.classList.add('activa');
+                }
             }
             
             // Mostrar el panel correspondiente

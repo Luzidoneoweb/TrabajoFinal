@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../db/conexion.php';
+require_once 'db/connection.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -10,17 +10,11 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Obtener palabras guardadas del usuario, con título del texto
-global $pdo; // Asegúrate de que la conexión PDO esté disponible
-
-try {
-    $stmt = $pdo->prepare("SELECT sw.word, sw.translation, sw.context, sw.created_at, sw.text_id, t.title as text_title FROM saved_words sw LEFT JOIN texts t ON sw.text_id = t.id WHERE sw.user_id = ? ORDER BY t.title, sw.created_at DESC");
-    $stmt->execute([$user_id]);
-    $words = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    // Manejo de errores, por ejemplo, loguear el error y mostrar un mensaje amigable
-    error_log("Error al obtener palabras guardadas: " . $e->getMessage());
-    $words = []; // Asegurarse de que $words sea un array vacío en caso de error
-}
+$stmt = $conn->prepare("SELECT sw.word, sw.translation, sw.context, sw.created_at, sw.text_id, t.title as text_title FROM saved_words sw LEFT JOIN texts t ON sw.text_id = t.id WHERE sw.user_id = ? ORDER BY t.title, sw.created_at DESC");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$words = $result->fetch_all(MYSQLI_ASSOC);
 
 // Agrupar palabras por texto
 $words_by_text = [];
@@ -45,22 +39,22 @@ foreach ($words as $word) {
   <meta name="description" content="Aprende inglés leyendo textos con traducciones instantáneas">
   <title>Mis palabras guardadas - LeerEntender</title>
   <!-- CSS Principal -->
-  <link rel="stylesheet" href="../css/modern-styles.css">
-  <link rel="stylesheet" href="../css/color-theme.css">
-  <link rel="stylesheet" href="../css/header-redesign.css">
+  <link rel="stylesheet" href="css/modern-styles.css">
+  <link rel="stylesheet" href="css/color-theme.css">
+  <link rel="stylesheet" href="css/header-redesign.css">
   <!-- CSS de Componentes -->
-  <link rel="stylesheet" href="../css/text-styles.css">
-  <link rel="stylesheet" href="../css/floating-menu.css">
-  <link rel="stylesheet" href="../css/reading-styles.css">
-  <link rel="stylesheet" href="../css/practice-styles.css">
-  <link rel="stylesheet" href="../css/modal-styles.css">
+  <link rel="stylesheet" href="css/text-styles.css">
+  <link rel="stylesheet" href="css/floating-menu.css">
+  <link rel="stylesheet" href="css/reading-styles.css">
+  <link rel="stylesheet" href="css/practice-styles.css">
+  <link rel="stylesheet" href="css/modal-styles.css">
   <!-- CSS Optimizado para Móvil -->
-  <link rel="stylesheet" href="../css/mobile-ready.css">
+  <link rel="stylesheet" href="css/mobile-ready.css">
   <!-- CSS Landing Page -->
-  <link rel="stylesheet" href="../css/landing-page.css">
+  <link rel="stylesheet" href="css/landing-page.css">
   <!-- Favicon -->
-  <link rel="icon" href="../img/aprender_ingles.gif" type="image/gif">
-  <link rel="stylesheet" href="../css/saved-words-styles.css">
+  <link rel="icon" href="img/aprender_ingles.gif" type="image/gif">
+  <link rel="stylesheet" href="css/saved-words-styles.css">
 </head>
 <body>
   <!-- Header consistente con el resto de la aplicación -->
@@ -68,8 +62,8 @@ foreach ($words as $word) {
     <div class="nav-container">
       <div class="nav-left">
         <div class="brand-container">
-          <a href="../index.php" class="logo">
-            <img src="../img/aprendiendoIngles.png" alt="Logo" class="logo-img">
+          <a href="index.php" class="logo">
+            <img src="img/aprendiendoIngles.png" alt="Logo" class="logo-img">
           </a>
         </div>
         <div class="brand-text">
@@ -80,11 +74,11 @@ foreach ($words as $word) {
         </div>
       </div>
       <div class="nav-right" id="nav-menu">
-        <a href="../index.php" class="nav-btn">🏠 Inicio</a>
-        <a href="../my_texts.php" class="nav-btn">📚 Mis textos</a>
-        <a href="../index.php?show_progress=1" class="nav-btn">📊 Progreso</a>
-        <a href="../index.php?show_upload=1" class="nav-btn primary">⬆ Subir texto</a>
-        <a href="../logout.php" class="user-name" title="Cerrar sesión">Hola <?= htmlspecialchars($_SESSION['username']) ?></a>
+        <a href="index.php" class="nav-btn">🏠 Inicio</a>
+        <a href="my_texts.php" class="nav-btn">📚 Mis textos</a>
+        <a href="index.php?show_progress=1" class="nav-btn">📊 Progreso</a>
+        <a href="index.php?show_upload=1" class="nav-btn primary">⬆ Subir texto</a>
+        <a href="logout.php" class="user-name" title="Cerrar sesión">Hola <?= htmlspecialchars($_SESSION['username']) ?></a>
       </div>
       <button class="mobile-menu-toggle" id="mobile-toggle">☰</button>
     </div>
@@ -92,13 +86,13 @@ foreach ($words as $word) {
   <main class="main-container" style="max-width: 900px; margin: 20px auto; padding: 0 20px;">
     <div class="reading-area" style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
       <div style="display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap;">
-        <a href="../index.php?show_upload=1" class="nav-btn primary" style="text-decoration: none;">
+        <a href="index.php?show_upload=1" class="nav-btn primary" style="text-decoration: none;">
           ⬆ Subir nuevo texto
         </a>
-        <a href="../my_texts.php" class="nav-btn" style="text-decoration: none;">
+        <a href="my_texts.php" class="nav-btn" style="text-decoration: none;">
           📚 Mis textos
         </a>
-        <a href="../index.php?practice=1" class="nav-btn" style="text-decoration: none;">
+        <a href="index.php?practice=1" class="nav-btn" style="text-decoration: none;">
           🎯 Practicar vocabulario
         </a>
       </div>
@@ -303,6 +297,9 @@ document.addEventListener('DOMContentLoaded', function() {
 </html>
 
 <?php
+$stmt->close();
+$conn->close();
+
 // Al final del archivo o en un include, define la función de traducción (puede ser dummy o real)
 function translate_title_to_spanish($title) {
     // Aquí deberías llamar a tu API de traducción o lógica real

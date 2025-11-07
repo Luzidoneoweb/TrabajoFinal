@@ -1,13 +1,18 @@
 // Función para cargar textos
 function cargarTextos() {
-    console.log('Cargando textos...');
+    // console.log('Cargando textos...'); // Eliminado para limpiar consola
     
     // Mostrar mensaje de carga
     if (typeof window.showLoadingMessage === 'function') {
         window.showLoadingMessage();
     }
     
-    fetch('pestanas/php/get_textos.php', { credentials: 'include' })
+    fetch('pestanas/php/get_textos.php', { 
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    })
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -15,7 +20,7 @@ function cargarTextos() {
             return response.json();
         })
         .then(data => {
-            console.log('Datos recibidos:', data);
+            // console.log('Datos recibidos:', data); // Eliminado para limpiar consola
             if (data.success) {
                 const listaTextos = document.querySelector('.lista-textos');
                 const visor = document.querySelector('.visor-texto');
@@ -141,10 +146,22 @@ function cargarTextos() {
             }
         })
         .catch(error => {
-            console.error('Error en la petición fetch:', error);
+            // Solo mostrar error si es un error real, no un error silencioso de red
+            // Los errores de "Failed to fetch" pueden ocurrir si el servidor no responde
+            // pero no necesariamente son críticos si el usuario está offline
+            if (error.name !== 'TypeError' || !error.message.includes('Failed to fetch')) {
+                console.error('Error en la petición fetch:', error);
+            }
+            
             const listaTextos = document.querySelector('.lista-textos');
             if (listaTextos) {
-                listaTextos.innerHTML = `<p style="color: red; padding: 1rem;">Error de conexión: ${error.message}</p>`;
+                // Mostrar mensaje de error amigable
+                listaTextos.innerHTML = `
+                    <div class="sin-textos" style="text-align: center; padding: 3rem 1rem; color: #6b7280;">
+                        <p style="font-size: 1.2rem; margin-bottom: 1rem;">Error al cargar textos</p>
+                        <p style="margin-bottom: 1.5rem; color: #9ca3af;">Por favor, verifica tu conexión y recarga la página</p>
+                    </div>
+                `;
             }
             
             // Ocultar mensaje de carga en caso de error
@@ -155,30 +172,30 @@ function cargarTextos() {
 }
 
 // Cargar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
-    // Esperar un poco para que el panel esté visible
-    setTimeout(() => {
+    document.addEventListener('DOMContentLoaded', function() {
+        // Esperar un poco para que el panel esté visible
+        setTimeout(() => {
+            const panelTextos = document.getElementById('panelTextos');
+            if (panelTextos && panelTextos.classList.contains('activo')) {
+                cargarTextos();
+            }
+        }, 100);
+        
+        // Observar cambios en el panel para recargar cuando se active
         const panelTextos = document.getElementById('panelTextos');
-        if (panelTextos && panelTextos.classList.contains('activo')) {
-            cargarTextos();
-        }
-    }, 100);
-    
-    // Observar cambios en el panel para recargar cuando se active
-    const panelTextos = document.getElementById('panelTextos');
-    if (panelTextos) {
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                    if (panelTextos.classList.contains('activo')) {
-                        console.log('Panel de textos activado, cargando...');
-                        cargarTextos();
+        if (panelTextos) {
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        if (panelTextos.classList.contains('activo')) {
+                            // console.log('Panel de textos activado, cargando...'); // Eliminado para limpiar consola
+                            cargarTextos();
+                        }
                     }
-                }
+                });
             });
-        });
-        observer.observe(panelTextos, { attributes: true });
-    }
+            observer.observe(panelTextos, { attributes: true });
+        }
 
     // Manejo del botón de eliminar textos
     const btnEliminarTextos = document.getElementById('btn-eliminar-textos');

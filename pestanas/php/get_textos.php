@@ -25,7 +25,7 @@ try {
 
     $response['success'] = true;
     $response['data'] = $texts;
-    $response['user_id'] = $user_id; // Para debugging
+    // $response['user_id'] = $user_id; // Para debugging - Eliminado para limpiar consola
 
 } catch (PDOException $e) {
     $response['error'] = "Error al obtener los textos: " . $e->getMessage();

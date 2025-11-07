@@ -2,6 +2,7 @@
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/pestanas/php/loading_message.php'; ?>
 <link rel="stylesheet" href="pestanas/css/loading_message.css">
 <script src="pestanas/js/loading_message.js"></script>
+<link rel="stylesheet" href="css/floating-menu.css">
 
 <div class="lectura" aria-label="Lector de texto">
     <div class="contenedor-lectura">
@@ -82,4 +83,5 @@
 <script src="traducion_api/lectura-translation-functions.js"></script>
 <!-- Script para la lógica de carga y visualización de la lectura -->
 <script src="pestanas/js/lectura.js"></script>
+<script src="traducion_api/palabras/multi-word-selection.js"></script>
 <!-- Script del modal de finalización (cargado después para no bloquear) -->

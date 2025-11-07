@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM Content Loaded in subir_texto.js');
+    // console.log('DOM Content Loaded in subir_texto.js'); // Eliminado para limpiar consola
     const titulo = document.getElementById('titulo');
     const contenido = document.getElementById('contenido');
     const texto_publico = document.getElementById('texto_publico');
@@ -59,14 +59,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Función para cargar categorías
     function cargarCategorias() {
         const urlCategorias = '/trabajoFinal/pestanas/php/get_categoria.php'; // Ruta corregida
-        console.log('Fetching categories from:', urlCategorias);
+        // console.log('Fetching categories from:', urlCategorias); // Eliminado para limpiar consola
         fetch(urlCategorias, {
             credentials: 'include' // Incluir cookies de sesión
         })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    console.log('Categories loaded successfully:', data.categories);
+                    // console.log('Categories loaded successfully:', data.categories); // Eliminado para limpiar consola
                     categoria.innerHTML = '<option value="">-- Selecciona categoría --</option>'; // Limpiar y añadir opción por defecto
                     data.categories.forEach(cat => {
                         const option = document.createElement('option');
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if(categoria.value) formData.append('categoria', categoria.value);
 
         const urlSubirTexto = '/trabajoFinal/pestanas/php/subirTextoFuncion.php'; // Ruta corregida
-        console.log('Submitting text to:', urlSubirTexto);
+        // console.log('Submitting text to:', urlSubirTexto); // Eliminado para limpiar consola
         fetch(urlSubirTexto, {
             method: 'POST',
             body: formData,

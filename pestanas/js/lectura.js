@@ -39,7 +39,7 @@ window.guardarTextoCompletoTraducido = function() { // Exponer globalmente
             if (textoCompletoTraducido) {
                 // Guardar en BD (asíncrono, no esperamos)
                 window.guardarTraduccionCompletaEnBD(window.currentTextId, textoCompletoTraducido);
-                console.log('Texto completo traducido guardado en BD');
+                // console.log('Texto completo traducido guardado en BD'); // Eliminado para limpiar consola
             }
         }
     }, 2000); // Esperar 2 segundos antes de guardar
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
             mutations.forEach(function(mutation) {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
                     if (panelLectura.classList.contains('activo')) {
-                        console.log('Panel de lectura activado, cargando texto...');
+                        // console.log('Panel de lectura activado, cargando texto...'); // Eliminado para limpiar consola
                         // Asegurar que el body tenga la clase para ocultar scrollbar
                         document.body.classList.add('lectura-activa');
                         cargarContenidoLectura();
@@ -173,7 +173,16 @@ document.addEventListener('DOMContentLoaded', function() {
             // Crear párrafo con clase .paragraph para que MotorLectura lo encuentre
             const parrafo = document.createElement('p');
             parrafo.classList.add('paragraph'); // Clase necesaria para MotorLectura
-            parrafo.textContent = fraseOriginal;
+            
+            // Dividir la frase en palabras y envolver cada una en un span clickeable
+            const palabras = fraseOriginal.split(/\s+/);
+            palabras.forEach(word => {
+                const span = document.createElement('span');
+                span.classList.add('clickable-word', 'word-clickable');
+                span.setAttribute('tabindex', '0'); // Para accesibilidad
+                span.textContent = word + ' '; // Añadir espacio después de cada palabra
+                parrafo.appendChild(span);
+            });
             
             divFraseOriginal.innerHTML = `
                 <div class="contenido-texto">
@@ -200,6 +209,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Actualizar estado de paginación (números y botones)
         actualizarEstadoPaginacion();
+        
+        // Inicializar MultiWordSelector después de mostrar la página
+        // Esperar un poco para que el DOM se estabilice
+        setTimeout(() => {
+            if (typeof window.initializeMultiWordSelector === 'function') {
+                window.initializeMultiWordSelector();
+            } else if (typeof window.MultiWordSelector !== 'undefined' && !window.multiWordSelector) {
+                // Si la función no está disponible pero la clase sí, inicializar directamente
+                const isPracticePage = document.querySelector('.practice-area') ||
+                                      document.querySelector('#practice-container') ||
+                                      document.querySelector('.text-selector-container') ||
+                                      document.querySelector('#text-selector');
+                const currentTab = document.querySelector('.tab-btn.active');
+                const isPracticeTab = currentTab && currentTab.textContent.includes('Práctica');
+                
+                if (!isPracticePage && !isPracticeTab) {
+                    window.multiWordSelector = new window.MultiWordSelector();
+                }
+            }
+        }, 200);
     }
 
     // Función para calcular dinámicamente cuántas frases caben en la pantalla
@@ -275,18 +304,43 @@ document.addEventListener('DOMContentLoaded', function() {
         tempContainer.appendChild(divFraseWrapper);
 
         // Forzar reflow múltiples veces para medidas precisas
+        // Esperar un poco para que los estilos CSS se apliquen
         void tempContainer.offsetHeight;
         void tempContainer.offsetHeight;
+        void tempContainer.offsetWidth; // Forzar otro reflow
         
-        // Calcular altura total de una frase completa (incluyendo margin-bottom)
-        const alturaFraseCompleta = divFraseWrapper.offsetHeight;
+        // Usar getBoundingClientRect para obtener medidas más precisas
+        const rect = divFraseWrapper.getBoundingClientRect();
+        let alturaFraseCompleta = rect.height;
+        
+        // Si getBoundingClientRect no da resultado, usar offsetHeight
+        if (alturaFraseCompleta === 0 || isNaN(alturaFraseCompleta)) {
+            alturaFraseCompleta = divFraseWrapper.offsetHeight;
+        }
+        
+        // Si aún no hay altura, intentar con computed styles
+        if (alturaFraseCompleta === 0 || isNaN(alturaFraseCompleta)) {
+            const styles = window.getComputedStyle(divFraseWrapper);
+            const marginTop = parseFloat(styles.marginTop) || 0;
+            const marginBottom = parseFloat(styles.marginBottom) || 0;
+            const paddingTop = parseFloat(styles.paddingTop) || 0;
+            const paddingBottom = parseFloat(styles.paddingBottom) || 0;
+            alturaFraseCompleta = divFraseWrapper.scrollHeight + marginTop + marginBottom + paddingTop + paddingBottom;
+        }
         
         // Limpiar elemento temporal
-        zonaFrases.removeChild(tempContainer);
+        if (zonaFrases.contains(tempContainer)) {
+            zonaFrases.removeChild(tempContainer);
+        }
 
-        // Validaciones de seguridad
-        if (alturaFraseCompleta === 0 || isNaN(alturaFraseCompleta) || !isFinite(alturaFraseCompleta)) {
-            console.warn('No se pudo calcular altura de frase, usando valor por defecto');
+        // Validaciones de seguridad - si aún no hay altura válida, usar valor por defecto
+        if (alturaFraseCompleta === 0 || isNaN(alturaFraseCompleta) || !isFinite(alturaFraseCompleta) || alturaFraseCompleta < 50) {
+            // No mostrar warning si es porque el panel no está visible aún
+            const panelLectura = document.getElementById('panelLectura');
+            if (panelLectura && panelLectura.classList.contains('activo')) {
+                // Solo mostrar warning si el panel está activo pero aún no podemos calcular
+                console.warn('No se pudo calcular altura de frase, usando valor por defecto');
+            }
             return 1;
         }
 
@@ -303,13 +357,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Asegurar al menos 1 frase por página
         const resultado = Math.max(1, frasesQueCaben);
         
-        console.log('Cálculo de frases por página:', {
-            alturaDisponible: alturaDisponible.toFixed(2),
-            alturaFraseCompleta: alturaFraseCompleta.toFixed(2),
-            frasesQueCaben: frasesQueCaben,
-            resultado: resultado,
-            espacioDisponible: (alturaDisponible / alturaFraseCompleta).toFixed(2)
-        });
+        // console.log('Cálculo de frases por página:', { // Eliminado para limpiar consola
+        //     alturaDisponible: alturaDisponible.toFixed(2),
+        //     alturaFraseCompleta: alturaFraseCompleta.toFixed(2),
+        //     frasesQueCaben: frasesQueCaben,
+        //     resultado: resultado,
+        //     espacioDisponible: (alturaDisponible / alturaFraseCompleta).toFixed(2)
+        // });
         
         return resultado;
     }
@@ -345,11 +399,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Similar al comportamiento de get_lectura_data.php en realdlan
     async function cargarContenidoLectura() {
         if (isContentLoading) {
-            console.warn('cargarContenidoLectura() ya está en progreso. Ignorando llamada duplicada.');
+            // console.warn('cargarContenidoLectura() ya está en progreso. Ignorando llamada duplicada.'); // Eliminado para limpiar consola
             return;
         }
         isContentLoading = true;
-        console.log('Iniciando cargarContenidoLectura()...');
+        // console.log('Iniciando cargarContenidoLectura()...'); // Eliminado para limpiar consola
 
         // Reiniciar la bandera de listo para leer al inicio de la carga
         isPageReadyForReading = false;
@@ -515,7 +569,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 isPageReadyForReading = true; // La página está lista para la lectura
                 isContentLoading = false; // La carga ha finalizado
-                console.log('Texto cargado y estructurado por frases:', texto.title);
+                // console.log('Texto cargado y estructurado por frases:', texto.title); // Eliminado para limpiar consola
             } else {
                 console.error('Error al cargar el texto:', data.error);
                 isContentLoading = false; // La carga ha finalizado (con error)
@@ -583,7 +637,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } finally {
             isContentLoading = false; // Asegurar que la bandera se resetee incluso si hay errores inesperados
-            console.log('Finalizando cargarContenidoLectura().');
+            // console.log('Finalizando cargarContenidoLectura().'); // Eliminado para limpiar consola
         }
     }
 
@@ -694,7 +748,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Actualizar el botón y los encabezados después de cambiar el estado
                 setTimeout(actualizarBotonPlay, 100);
             } else if (!isPageReadyForReading) {
-                console.warn('Intento de iniciar lectura antes de que la página esté lista.');
+                // console.warn('Intento de iniciar lectura antes de que la página esté lista.'); // Eliminado para limpiar consola
             }
         });
     }
