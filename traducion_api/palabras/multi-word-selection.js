@@ -11,6 +11,7 @@ class MultiWordSelector {
         this.endElement = null;
         this.selectionHighlight = null;
         this.tooltip = null;
+        this.tooltipTimeout = null; // Timeout para ocultar automáticamente el tooltip
         this.hasDragged = false;
         this.startPosition = null;
         
@@ -462,6 +463,7 @@ class MultiWordSelector {
         })
         .then(data => {
             if (data.translation) {
+                // Mostrar la traducción final (se ocultará automáticamente después de 3 segundos)
                 this.showTooltip(text, data.translation, false);
                 
                 // Guardar palabra traducida si el usuario está logueado
@@ -470,6 +472,7 @@ class MultiWordSelector {
                     window.saveTranslatedWord(text, data.translation, sentence);
                 }
             } else {
+                // Mostrar mensaje de error (también se ocultará automáticamente)
                 this.showTooltip(text, 'No se encontró traducción', false);
             }
         })
@@ -512,17 +515,22 @@ class MultiWordSelector {
         console.log('showTooltip llamado:', { originalText, translation, isLoading });
         this.hideTooltip();
         
+        // Limpiar timeout anterior si existe
+        if (this.tooltipTimeout) {
+            clearTimeout(this.tooltipTimeout);
+            this.tooltipTimeout = null;
+        }
+        
         this.tooltip = document.createElement('div');
         this.tooltip.className = 'multi-word-tooltip';
         
+        // Solo mostrar la traducción, sin el texto original
         if (isLoading) {
             this.tooltip.innerHTML = `
-                <div class="original-text">${originalText}</div>
                 <div class="translation loading">${translation}</div>
             `;
         } else {
             this.tooltip.innerHTML = `
-                <div class="original-text">${originalText}</div>
                 <div class="translation">${translation}</div>
             `;
         }
@@ -534,6 +542,13 @@ class MultiWordSelector {
         // Posicionar tooltip
         this.positionTooltip();
         console.log('Tooltip posicionado');
+        
+        // Si no está cargando, ocultar automáticamente después de 3 segundos
+        if (!isLoading) {
+            this.tooltipTimeout = setTimeout(() => {
+                this.hideTooltip();
+            }, 3000); // 3 segundos
+        }
     }
     
     positionTooltip() {
@@ -616,9 +631,24 @@ class MultiWordSelector {
     }
     
     hideTooltip() {
+        // Limpiar timeout si existe
+        if (this.tooltipTimeout) {
+            clearTimeout(this.tooltipTimeout);
+            this.tooltipTimeout = null;
+        }
+        
         if (this.tooltip) {
-            this.tooltip.remove();
-            this.tooltip = null;
+            // Añadir animación de desvanecimiento antes de eliminar
+            this.tooltip.style.opacity = '0';
+            this.tooltip.style.transition = 'opacity 0.6s ease-in-out';
+            
+            // Eliminar después de la animación
+            setTimeout(() => {
+                if (this.tooltip) {
+                    this.tooltip.remove();
+                    this.tooltip = null;
+                }
+            }, 500);
         }
     }
     
