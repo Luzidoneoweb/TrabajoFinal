@@ -15,6 +15,7 @@
  * @param {boolean} liberarFlag - Si es true, libera el flag isReadingInProgress (opcional)
  */
 function mostrarModalFinalizacion(urlRedireccion, liberarFlag) {
+    console.log('DEBUG: Se ha llamado a mostrarModalFinalizacion.'); // Añadir log para depuración
     // Valores por defecto
     urlRedireccion = urlRedireccion || "index.php?tab=textos";
     liberarFlag = liberarFlag !== false;
@@ -114,4 +115,3 @@ window.mostrarModalFinalizacion = mostrarModalFinalizacion;
         };
     }
 })();
-

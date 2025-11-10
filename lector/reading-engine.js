@@ -272,6 +272,11 @@
       if (controlesLectura) controlesLectura.style.display = 'none';
       if (paginacion) paginacion.style.display = 'none';
       if (btnPlay) btnPlay.style.display = 'block';
+
+      // Mostrar modal de finalización
+      if (typeof window.mostrarModalFinalizacion === 'function') {
+        window.mostrarModalFinalizacion();
+      }
     }
   };
 

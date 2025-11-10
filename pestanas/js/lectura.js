@@ -800,7 +800,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             } else {
                 // No hay más páginas - la lectura ha terminado completamente
-                this.detener();
+                this.finalizarLecturaNatural();
                 lecturaContinua = false;
                 actualizarBotonPlay();
             }

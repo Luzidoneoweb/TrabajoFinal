@@ -74,7 +74,6 @@
 </div>
 
 <!-- Scripts del sistema de voz -->
- <script src="js/modalFinalizacion.js"></script>
 <script src="lector/electron-voice-integration.js"></script>
 <script src="lector/reading-engine.js"></script>
 
@@ -87,3 +86,4 @@
 <script src="pestanas/js/lectura.js"></script>
 <script src="traducion_api/palabras/multi-word-selection.js"></script>
 <!-- Script del modal de finalización (cargado después para no bloquear) -->
+<script src="pestanas/js/modalFinalizacion.js"></script>
