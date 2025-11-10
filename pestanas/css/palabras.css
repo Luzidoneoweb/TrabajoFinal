@@ -1,12 +1,12 @@
 /* Estilos generales para el contenedor de palabras */
-.contenedor-palabras {
+#palabras-guardadas-container {
     padding: 2rem 1rem;
     max-width: 1200px;
     margin: 0 auto;
 }
 
-/* Encabezado principal de la sección de palabras */
-.encabezado-palabras {
+/* Contenedor de acciones en lote */
+.bulk-actions-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -15,19 +15,142 @@
     gap: 1rem;
 }
 
-.contador-palabras {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--texto-principal);
+/* Estilos para el mensaje de éxito/error */
+.message {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 16px;
 }
 
-/* Estilos para el botón de acción en lote */
-.acciones-lote {
+/* Estilos para las tarjetas de texto */
+.card {
+    background-color: var(--fondo-principal);
+    border: 1px solid var(--borde-general);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background-color: #f9fafb; /* Fondo ligeramente gris para el encabezado de categoría */
+    border-bottom: 1px solid var(--borde-general);
+    gap: 10px;
+}
+
+.card-header .text-checkbox {
+    margin-right: 0.5rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    accent-color: var(--color-primario);
+}
+
+.card-header .text-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1B263B;
+    flex-grow: 1;
+}
+
+.card-header .text-title span {
+    font-size: 0.9em;
+    color: #64748b;
+    font-weight: 400;
+    margin-left: 8px;
+}
+
+/* Estilos para la lista de palabras */
+.text-list {
+    list-style: none;
+    padding: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.text-item {
+    display: flex;
+    align-items: flex-start; /* Alineación al inicio para el contexto */
+    padding: 15px 20px;
+    border-bottom: 1px solid #f1f3f4;
+    gap: 15px;
+    transition: all 0.2s ease;
+    flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
+}
+
+.text-item:last-child {
+    border-bottom: none;
+}
+
+.text-item:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.text-item .text-checkbox {
+    margin-right: 10px;
+    margin-top: 0.25rem; /* Ajuste para alinear con el texto */
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: var(--color-primario);
+}
+
+.text-item .text-title {
+    flex-grow: 1;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.text-item .text-title:hover {
+    color: #4A90E2;
+}
+
+.text-item .word-translation {
+    color: #3b82f6;
+    font-style: italic;
+    margin-left: 10px;
+}
+
+.text-item .word-context {
+    background: #f3f4f6;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #6b7280;
+    margin-top: 8px;
+    flex-basis: 100%; /* Ocupar todo el ancho disponible */
+}
+
+.text-item .context-translation {
+    color: #ca7c20d6;
+    font-size: 0.95em;
+    margin-top: 2px;
+    flex-basis: 100%; /* Ocupar todo el ancho disponible */
+}
+
+.text-item .word-date {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 8px;
+    white-space: nowrap; /* Evitar que la fecha se rompa */
+}
+
+/* Estilos para el dropdown de acciones en lote */
+.dropdown {
     position: relative;
     display: inline-block;
 }
 
-.acciones-lote .btn-desplegable {
+.nav-btn {
     background-color: var(--fondo-principal);
     border: 1px solid var(--borde-general);
     border-radius: 8px;
@@ -41,236 +164,164 @@
     transition: all 0.2s ease;
 }
 
-.acciones-lote .btn-desplegable:hover {
+.nav-btn:hover {
     background-color: var(--gris-hover-fondo);
     border-color: var(--gris-borde);
 }
 
-.acciones-lote .contenido-desplegable {
+.dropdown-content {
     display: none;
     position: absolute;
-    background-color: var(--fondo-principal);
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    border-radius: 8px;
-    overflow: hidden;
+    right: 0;
     top: 100%;
-    right: 0; /* Alineado a la derecha */
-    margin-top: 0.5rem;
-}
-
-.acciones-lote .contenido-desplegable a {
-    color: var(--texto-principal);
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    font-size: 0.9rem;
-}
-
-.acciones-lote .contenido-desplegable a:hover {
-    background-color: var(--gris-hover-fondo);
-}
-
-.acciones-lote:hover .contenido-desplegable {
-    display: block;
-}
-
-/* Estilos para la lista de categorías de palabras */
-.lista-categorias-palabras {
-    background-color: var(--fondo-principal);
-    border: 1px solid var(--borde-general);
+    background: white;
+    min-width: 220px;
+    border: 1px solid #e5e7eb;
     border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
     overflow: hidden;
+    margin-top: 8px;
 }
 
-.categoria-palabras {
-    border-bottom: 1px solid var(--borde-general);
+.dropdown.show .dropdown-content {
+    display: block;
+    animation: dropdownFadeIn 0.2s ease-out;
 }
 
-.categoria-palabras:last-child {
-    border-bottom: none;
-}
-
-.encabezado-categoria {
+.dropdown-content button {
+    color: #374151;
+    padding: 14px 18px;
+    text-decoration: none;
     display: flex;
     align-items: center;
-    padding: 1rem 1.5rem;
-    background-color: #f9fafb; /* Fondo ligeramente gris para el encabezado de categoría */
-    border-bottom: 1px solid var(--borde-general);
+    gap: 10px;
+    width: 100%;
+    border: none;
+    background: white;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f3f4f6;
 }
 
-.encabezado-categoria .chk-categoria {
-    margin-right: 1rem;
-    width: 1.25rem;
-    height: 1.25rem;
-    accent-color: var(--color-primario);
-}
-
-.encabezado-categoria .titulo-categoria {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--texto-principal);
-    flex-grow: 1;
-}
-
-.encabezado-categoria .num-palabras {
-    font-size: 0.9rem;
-    color: var(--texto-secundario);
-    margin-left: 0.5rem;
-}
-
-.contenido-categoria {
-    padding: 0.5rem 1.5rem;
-}
-
-/* Estilos para cada palabra individual */
-.item-palabra {
-    display: flex;
-    align-items: flex-start; /* Alineación al inicio para el contexto */
-    padding: 0.75rem 0;
-    border-bottom: 1px dashed var(--borde-general); /* Línea discontinua */
-}
-
-.item-palabra:last-child {
+.dropdown-content button:last-child {
     border-bottom: none;
 }
 
-.item-palabra .chk-palabra {
-    margin-right: 1rem;
-    margin-top: 0.25rem; /* Ajuste para alinear con el texto */
-    width: 1.1rem;
-    height: 1.1rem;
-    accent-color: var(--color-primario);
+.dropdown-content button:hover {
+    background: #f8fafc;
+    color: #1f2937;
+    transform: translateX(2px);
 }
 
-.item-palabra .info-palabra {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+.dropdown-content button[style*='color: #dc2626'] {
+    color: #dc2626 !important;
 }
 
-.item-palabra .palabra-original {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--texto-principal);
+.dropdown-content button[style*='color: #dc2626']:hover {
+    background: #fef2f2;
+    color: #b91c1c !important;
 }
 
-.item-palabra .traduccion-palabra {
-    font-weight: 400;
-    color: var(--color-primario); /* Naranja para la traducción */
-}
-
-.item-palabra .contexto-palabra {
-    font-size: 0.9rem;
-    color: var(--texto-secundario);
-    margin-top: 0.25rem;
-    line-height: 1.4;
-}
-
-.item-palabra .traduccion-contexto {
-    font-size: 0.9rem;
-    color: var(--texto-secundario);
-    font-style: italic;
-    line-height: 1.4;
-}
-
-.item-palabra .fecha-subida {
-    font-size: 0.8rem;
-    color: var(--texto-secundario);
-    margin-left: 1rem;
-    white-space: nowrap; /* Evitar que la fecha se rompa */
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .encabezado-palabras {
+    .bulk-actions-container {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .acciones-lote {
+    .bulk-actions {
         width: 100%;
     }
 
-    .acciones-lote .contenido-desplegable {
+    .dropdown-content {
         right: auto;
         left: 0;
         width: 100%;
     }
 
-    .encabezado-categoria {
+    .card-header {
         padding: 0.75rem 1rem;
     }
 
-    .encabezado-categoria .chk-categoria {
+    .card-header .text-checkbox {
         margin-right: 0.5rem;
     }
 
-    .encabezado-categoria .titulo-categoria {
+    .card-header .text-title {
         font-size: 1rem;
     }
 
-    .encabezado-categoria .num-palabras {
+    .card-header .text-title span {
         font-size: 0.8rem;
     }
 
-    .contenido-categoria {
-        padding: 0.5rem 1rem;
-    }
-
-    .item-palabra {
+    .text-item {
         flex-wrap: wrap;
         justify-content: space-between;
         gap: 0.5rem;
+        padding: 10px 15px;
     }
 
-    .item-palabra .chk-palabra {
+    .text-item .text-checkbox {
         margin-right: 0.5rem;
         margin-top: 0;
     }
 
-    .item-palabra .info-palabra {
+    .text-item .text-title {
         flex-basis: 100%;
         order: -1; /* Mover la palabra y traducción arriba */
+        font-size: 1rem;
     }
 
-    .item-palabra .fecha-subida {
+    .text-item .word-date {
         margin-left: 0;
         margin-top: 0.5rem;
     }
 }
 
 @media (max-width: 480px) {
-    .contenedor-palabras {
+    #palabras-guardadas-container {
         padding: 1rem 0.5rem;
     }
 
-    .contador-palabras {
+    .bulk-actions-container > div:first-child {
         font-size: 1rem;
     }
 
-    .acciones-lote .btn-desplegable {
+    .nav-btn {
         padding: 0.6rem 0.8rem;
         font-size: 0.85rem;
     }
 
-    .encabezado-categoria .titulo-categoria {
+    .card-header .text-title {
         font-size: 0.9rem;
     }
 
-    .item-palabra .palabra-original {
+    .text-item .text-title {
         font-size: 0.9rem;
     }
 
-    .item-palabra .contexto-palabra,
-    .item-palabra .traduccion-contexto {
+    .text-item .word-context,
+    .text-item .context-translation {
         font-size: 0.8rem;
     }
 
-    .item-palabra .fecha-subida {
+    .text-item .word-date {
         font-size: 0.7rem;
     }
 }
