@@ -1,35 +1,18 @@
-// voice-test.js
-// Script de prueba para verificar el sistema de voz unificado
-
-// Función para probar el sistema de voz
+// voice-test.js - Pruebas del sistema de voz
 async function probarSistemaVoz() {
-    // Esperar a que el sistema esté listo
     if (typeof window.obtenerSistemaVozListo === 'function') {
         await window.obtenerSistemaVozListo();
     }
-    
-    // Verificar estado
     if (typeof window.obtenerEstadoVoz === 'function') {
         const estado = window.obtenerEstadoVoz();
-        
-        if (estado.responsiveVoiceDisponible) {
-            // Probar funciones básicas
-            if (typeof window.leerTexto === 'function') {
-                const textoPrueba = "Hello, this is a test of the voice system.";
-                window.leerTexto(textoPrueba, 1.0);
-            }
-            
-            // Verificar voces disponibles
-            if (typeof window.obtenerVoces === 'function') {
-                void window.obtenerVoces();
-            }
+        if (estado.responsiveVoiceDisponible && typeof window.leerTexto === 'function') {
+            window.leerTexto("Hello, this is a test of the voice system.", 1.0);
         }
     }
 }
 
-// Función para mostrar información del entorno
+// Información del entorno
 function mostrarInfoEntorno() {
-    // Información disponible vía funciones; evitamos logs
     return {
         electron: typeof window.electronAPI !== 'undefined',
         responsiveVoice: typeof responsiveVoice !== 'undefined',
@@ -37,15 +20,12 @@ function mostrarInfoEntorno() {
     };
 }
 
-// Ejecutar pruebas cuando el DOM esté listo
+// Ejecutar pruebas al cargar
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(probarSistemaVoz, 1000); // Esperar un poco para que se cargue todo
-    });
+    document.addEventListener('DOMContentLoaded', () => setTimeout(probarSistemaVoz, 1000));
 } else {
     setTimeout(probarSistemaVoz, 1000);
 }
 
-// Exponer función de prueba globalmente
 window.probarSistemaVoz = probarSistemaVoz;
 window.mostrarInfoEntorno = mostrarInfoEntorno;

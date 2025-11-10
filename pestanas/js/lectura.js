@@ -83,57 +83,8 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(panelLectura, { attributes: true });
     }
 
-    // Función para dividir texto en fragmentos de máximo 20 palabras o hasta punto final ". "
-    // Divide el texto respetando límite de palabras y puntos finales de oración
-    // Retorna array de frases que se mostrarán una por una en la interfaz
-    function dividirEnFrases(texto, limitePalabras = 20) {
-        if (!texto || texto.trim() === '') return [];
-        
-        const frases = [];
-        let textoRestante = texto.trim();
-        
-        while (textoRestante.length > 0) {
-            const palabras = textoRestante.split(/\s+/);
-            
-            if (palabras.length <= limitePalabras) {
-                const indicePunto = textoRestante.search(/\.\s+/);
-                
-                if (indicePunto !== -1) {
-                    const fragmento = textoRestante.substring(0, indicePunto + 1).trim();
-                    frases.push(fragmento);
-                    textoRestante = textoRestante.substring(indicePunto + 2).trim();
-                } else {
-                    frases.push(textoRestante);
-                    textoRestante = '';
-                }
-            } else {
-                const fragmento20Palabras = palabras.slice(0, limitePalabras).join(' ');
-                const indicePunto = fragmento20Palabras.search(/\.\s+/);
-                
-                if (indicePunto !== -1) {
-                    const fragmento = textoRestante.substring(0, indicePunto + 1).trim();
-                    frases.push(fragmento);
-                    textoRestante = textoRestante.substring(indicePunto + 2).trim();
-                } else {
-                    frases.push(fragmento20Palabras);
-                    textoRestante = palabras.slice(limitePalabras).join(' ').trim();
-                }
-            }
-        }
-        
-        return frases.filter(f => f.length > 0);
-    }
-
-    // Función para truncar texto a un máximo de palabras especificado
-    // NOTA: Ya no se usa para truncar traducciones, se mantiene por compatibilidad
-    function truncarTexto(texto, limitePalabras) {
-        if (!texto || texto.trim() === '') return '';
-        const palabras = texto.trim().split(/\s+/);
-        if (palabras.length > limitePalabras) {
-            return palabras.slice(0, limitePalabras).join(' ') + '...';
-        }
-        return texto.trim();
-    }
+    // Usar funciones del módulo text-utils.js
+    // Las funciones dividirEnFrases y truncarTexto se usan del objeto window
 
     // Las funciones de traducción están en traducion_api/lectura-translation-functions.js
     // Se usan: window.traducirFrase, window.guardarTraduccionEnBD, window.cargarCacheTraducciones
@@ -497,7 +448,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 // Preparar contenido original: convertir saltos de línea en espacios y limpiar
-                window.todasLasFrasesOriginales = dividirEnFrases((texto.content || '').replace(/\n/g, ' ').trim(), 20);
+                window.todasLasFrasesOriginales = window.dividirEnFrases((texto.content || '').replace(/\n/g, ' ').trim(), 20);
 
                 // Inicializar array de traducciones (puede estar vacío si no hay traducciones guardadas)
                 window.todasLasFrasesTraduccion = [];
@@ -506,7 +457,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 let frasesTraduccionCompletas = [];
                 if (texto.content_translation) {
                     const contenidoTraduccion = (texto.content_translation || '').replace(/\n/g, ' ').trim();
-                    frasesTraduccionCompletas = dividirEnFrases(contenidoTraduccion, 20);
+                    frasesTraduccionCompletas = window.dividirEnFrases(contenidoTraduccion, 20);
                 }
                 
                 // Mapear traducciones: prioridad 1) caché, 2) traducción completa, 3) se traducirá después

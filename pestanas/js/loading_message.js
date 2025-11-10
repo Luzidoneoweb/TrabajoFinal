@@ -6,10 +6,9 @@ window.showLoadingMessage = function() {
         const loadingMsg = document.getElementById('loading-message');
         if (loadingMsg) {
             loadingMsg.style.display = 'flex';
-            // console.log('Mensaje de carga mostrado'); // Eliminado para limpiar consola
         } else if (attempts < 10) {
             attempts++;
-            setTimeout(tryShow, 50); // Reintentar cada 50ms
+            setTimeout(tryShow, 50);
         } else {
             console.warn('No se pudo encontrar el elemento loading-message');
         }
@@ -21,15 +20,5 @@ window.hideLoadingMessage = function() {
     const loadingMsg = document.getElementById('loading-message');
     if (loadingMsg) {
         loadingMsg.style.display = 'none';
-        // console.log('Mensaje de carga ocultado'); // Eliminado para limpiar consola
     }
 };
-
-// Funciones locales también (para compatibilidad)
-function showLoadingMessage() {
-    window.showLoadingMessage();
-}
-
-function hideLoadingMessage() {
-    window.hideLoadingMessage();
-}
