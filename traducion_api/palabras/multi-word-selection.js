@@ -725,6 +725,3 @@ if (typeof window !== 'undefined') {
         }
     });
 }
-
-// Exportar para uso global
-window.MultiWordSelector = MultiWordSelector;

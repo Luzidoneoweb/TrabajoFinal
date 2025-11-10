@@ -81,6 +81,8 @@
 
 <!-- Scripts de traducción (debe cargarse antes de lectura.js) -->
 <script src="traducion_api/lectura-translation-functions.js"></script>
+<!-- Script de gestión de palabras guardadas -->
+<script src="traducion_api/palabras/text-management.js"></script>
 <!-- Script para la lógica de carga y visualización de la lectura -->
 <script src="pestanas/js/lectura.js"></script>
 <script src="traducion_api/palabras/multi-word-selection.js"></script>

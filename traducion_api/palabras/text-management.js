@@ -13,6 +13,7 @@ window.saveTranslatedWord = async function(word, translation, sentence = '') {
     try {
         // Priorizar window.currentTextId establecido por pestanas/js/lectura.js
         let textId = window.currentTextId;
+        
         // Si no está disponible, intentar obtenerlo de AppState o del DOM como fallback
         if (!textId && window.AppState && window.AppState.currentTextId) {
             textId = window.AppState.currentTextId;
@@ -22,6 +23,9 @@ window.saveTranslatedWord = async function(word, translation, sentence = '') {
                 textId = textContainer.dataset.textId;
             }
         }
+        
+        console.log('saveTranslatedWord:', { word, translation, textId });
+        
         const formData = new FormData();
         formData.append('word', word);
         formData.append('translation', translation);
@@ -29,17 +33,23 @@ window.saveTranslatedWord = async function(word, translation, sentence = '') {
         if (textId) {
             formData.append('text_id', textId);
         }
-        const response = await fetch('save_translated_word.php', {
+        
+        const response = await fetch('traducion_api/palabras/save_translated_word.php', {
             method: 'POST',
             body: formData
         });
+        
         const data = await response.json();
+        console.log('saveTranslatedWord response:', data);
+        
         if (data.success) {
             return true;
         } else {
+            console.error('Error guardando palabra:', data.error);
             return false;
         }
     } catch (error) {
+        console.error('Error en saveTranslatedWord:', error);
         return false;
     }
 };
