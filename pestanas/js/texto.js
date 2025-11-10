@@ -36,6 +36,11 @@ function cargarTextos() {
                 if (contador) {
                     contador.textContent = `${data.data.length} texto${data.data.length !== 1 ? 's' : ''} encontrado${data.data.length !== 1 ? 's' : ''}`;
                 }
+                
+                // Actualizar la tarjeta de estadística en Progreso
+                if (typeof window.cargarTextosSubidos === 'function') {
+                    window.cargarTextosSubidos();
+                }
 
                 // Si no hay textos, mostrar mensaje y botón para subir
                 if (data.data.length === 0) {
@@ -245,6 +250,10 @@ function manejarEliminacionTextos() {
         if (data.success) {
             mostrarNotificacion(data.message, 'exito');
             cargarTextos(); // Recargar la lista de textos para actualizar la UI
+            // Actualizar la tarjeta de estadística en Progreso
+            if (typeof window.cargarTextosSubidos === 'function') {
+                window.cargarTextosSubidos();
+            }
         } else {
             // Si data.error no está definido, proporcionar un mensaje genérico
             mostrarNotificacion('Error al eliminar textos: ' + (data.error || 'Error desconocido en el servidor.'), 'error');

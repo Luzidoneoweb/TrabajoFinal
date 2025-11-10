@@ -190,6 +190,8 @@
     <!-- JavaScript para funcionalidad básica -->
     <script src="js/global.js"></script>
     <script src="js/login_registos/auth_auntentif.js"></script>
+    <!-- Script para cargar estadísticas -->
+    <script src="pestanas/js/cargar-estadisticas.js"></script>
     
 </body>
 </html>

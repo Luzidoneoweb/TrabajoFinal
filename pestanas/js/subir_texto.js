@@ -110,6 +110,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 texto_publico.checked = true;
                 categoria.value = '';
                 
+                // Actualizar la tarjeta de estadística en Progreso
+                if (typeof window.cargarTextosSubidos === 'function') {
+                    window.cargarTextosSubidos();
+                }
+                
                 // Cambiar a la pestaña "Mis textos" después de 1 segundo
                 setTimeout(() => {
                     cambiarPestana('textos');

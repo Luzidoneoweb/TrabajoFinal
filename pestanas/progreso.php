@@ -1,7 +1,7 @@
 <div class="contenedor-estadisticas">
     <div class="tarjeta-estadistica">
         <span class="icono-estadistica">📄</span> <!-- Icono de documento -->
-        <p class="valor-estadistica">0</p>
+        <p class="valor-estadistica" id="textos-subidos">0</p>
         <p class="nombre-estadistica">TEXTOS SUBIDOS</p>
     </div>
     <div class="tarjeta-estadistica">
