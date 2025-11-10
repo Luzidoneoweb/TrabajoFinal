@@ -1,5 +1,10 @@
 <?php
-session_start();
+// Verificar sesión
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+header('Content-Type: application/json; charset=utf-8');
 require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/db/connection.php';
 
 if (!isset($_SESSION['user_id'])) {
@@ -41,19 +46,6 @@ if (isset($_GET['get_words_by_text']) && isset($_GET['text_id'])) {
     exit();
 }
 
-// Procesar eliminación de palabra individual
-if (isset($_POST['delete_word'])) {
-    $word_to_delete = $_POST['word_to_delete'];
-    $stmt = $conn->prepare("DELETE FROM saved_words WHERE user_id = ? AND word = ?");
-    $stmt->bind_param("is", $user_id, $word_to_delete);
-    if ($stmt->execute()) {
-        $success_message = "Palabra eliminada correctamente.";
-    } else {
-        $error_message = "Error al eliminar la palabra.";
-    }
-    $stmt->close();
-}
-
 // Procesar acción en lote para eliminar palabras seleccionadas via AJAX
 if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['selected_words'])) {
     $deleted_count = 0;
@@ -79,17 +71,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['se
     exit();
 }
 
-// Obtener palabras guardadas del usuario, con título del texto
-$stmt = $conn->prepare("SELECT sw.word, sw.translation, sw.context, sw.created_at, sw.text_id, t.title as text_title FROM saved_words sw LEFT JOIN texts t ON sw.text_id = t.id WHERE sw.user_id = ? ORDER BY t.title, sw.created_at DESC");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$words = $result->fetch_all(MYSQLI_ASSOC);
-
-// Agrupar palabras por texto
-$words_by_text = [];
-foreach ($words as $word) {
-    $title = $word['text_title'] ?? 'Sin texto asociado';
-    $words_by_text[$title][] = $word;
-}
+// Si no hay endpoint AJAX, retornar error
+echo json_encode(['error' => 'Endpoint no válido']);
 ?>

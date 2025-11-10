@@ -1,3 +1,49 @@
+/* Contenedor principal de palabras */
+.contenedor-palabras {
+    padding: 2rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Barra de acciones */
+.barra-acciones-palabras {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+/* Botón eliminar */
+.btn-eliminar-palabras {
+    padding: 8px 16px;
+    border-radius: 6px;
+    background: #dc2626;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-eliminar-palabras:hover:not(:disabled) {
+    background: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3);
+}
+
+.btn-eliminar-palabras:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Contador */
+.contador-palabras {
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+}
+
 /* Estilos generales para el contenedor de palabras */
 #palabras-guardadas-container {
     padding: 2rem 1rem;
