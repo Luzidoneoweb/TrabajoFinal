@@ -129,6 +129,7 @@
     padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--borde-general);
     transition: background-color 0.2s ease;
+        cursor: pointer;
 }
 
 .item-texto:last-child {

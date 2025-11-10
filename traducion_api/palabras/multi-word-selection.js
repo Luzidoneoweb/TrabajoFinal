@@ -29,9 +29,6 @@ class MultiWordSelector {
         
         // Limpiar selección al hacer clic fuera (pero no en palabras clickeables)
         document.addEventListener('click', (e) => this.onDocumentClick(e));
-        
-        // Debug: Verificar inicialización
-        console.log('MultiWordSelector inicializado');
     }
     
     addStyles() {
@@ -64,8 +61,6 @@ class MultiWordSelector {
             !target.closest('.reading-area, .text-example')) {
             return;
         }
-        
-        // Debug: MouseDown en elemento clickeable
         
         this.isSelecting = true;
         this.startElement = target;
@@ -133,13 +128,8 @@ class MultiWordSelector {
         
         this.endElement = target;
         
-        // Debug: MouseUp completado
-        
         // Si el usuario no arrastró, es un clic simple
         if (!this.hasDragged) {
-            // Para clic simple, traducir la palabra individual
-            const wordText = target.textContent.trim();
-            console.log('Clic simple en palabra:', wordText);
             this.selectedWords = [target];
             this.highlightWord(target, 'single');
             this.translateSelection();
@@ -438,16 +428,10 @@ class MultiWordSelector {
     translateSelection() {
         const text = this.selectedWords.map(word => word.textContent.trim()).join(' ');
         
-        console.log('Traduciendo texto:', text);
-        
         if (!text || text.length < 2) {
             console.warn('Texto muy corto para traducir:', text);
             return;
         }
-        
-        // Mostrar tooltip de carga
-        console.log('Mostrando tooltip de carga');
-        this.showTooltip(text, 'Traduciendo...', true);
         
         // Hacer petición de traducción
         fetch('traducion_api/translate.php', {
@@ -463,8 +447,8 @@ class MultiWordSelector {
         })
         .then(data => {
             if (data.translation) {
-                // Mostrar la traducción final (se ocultará automáticamente después de 3 segundos)
-                this.showTooltip(text, data.translation, false);
+                // Mostrar la traducción directamente
+                this.showTooltip(text, data.translation);
                 
                 // Guardar palabra traducida si el usuario está logueado
                 if (typeof window.saveTranslatedWord === 'function') {
@@ -472,13 +456,12 @@ class MultiWordSelector {
                     window.saveTranslatedWord(text, data.translation, sentence);
                 }
             } else {
-                // Mostrar mensaje de error (también se ocultará automáticamente)
-                this.showTooltip(text, 'No se encontró traducción', false);
+                this.showTooltip(text, 'No se encontró traducción');
             }
         })
         .catch((error) => {
             console.error('Error al traducir:', error);
-            this.showTooltip(text, 'Error en la traducción', false);
+            this.showTooltip(text, 'Error en la traducción');
         });
     }
     
@@ -511,8 +494,7 @@ class MultiWordSelector {
         return this.selectedWords.map(w => w.textContent.trim()).join(' ') + '.';
     }
     
-    showTooltip(originalText, translation, isLoading = false) {
-        console.log('showTooltip llamado:', { originalText, translation, isLoading });
+    showTooltip(originalText, translation) {
         this.hideTooltip();
         
         // Limpiar timeout anterior si existe
@@ -523,37 +505,22 @@ class MultiWordSelector {
         
         this.tooltip = document.createElement('div');
         this.tooltip.className = 'multi-word-tooltip';
-        
-        // Solo mostrar la traducción, sin el texto original
-        if (isLoading) {
-            this.tooltip.innerHTML = `
-                <div class="translation loading">${translation}</div>
-            `;
-        } else {
-            this.tooltip.innerHTML = `
-                <div class="translation">${translation}</div>
-            `;
-        }
+        this.tooltip.innerHTML = `<div class="translation">${translation}</div>`;
         
         // Agregar al body para que esté siempre visible
         document.body.appendChild(this.tooltip);
-        console.log('Tooltip añadido al DOM');
         
         // Posicionar tooltip
         this.positionTooltip();
-        console.log('Tooltip posicionado');
         
-        // Si no está cargando, ocultar automáticamente después de 3 segundos
-        if (!isLoading) {
-            this.tooltipTimeout = setTimeout(() => {
-                this.hideTooltip();
-            }, 3000); // 3 segundos
-        }
+        // Ocultar automáticamente después de 3 segundos
+        this.tooltipTimeout = setTimeout(() => {
+            this.hideTooltip();
+        }, 3000);
     }
     
     positionTooltip() {
         if (!this.tooltip) {
-            console.warn('No hay tooltip para posicionar');
             return;
         }
         
@@ -638,17 +605,8 @@ class MultiWordSelector {
         }
         
         if (this.tooltip) {
-            // Añadir animación de desvanecimiento antes de eliminar
-            this.tooltip.style.opacity = '0';
-            this.tooltip.style.transition = 'opacity 0.6s ease-in-out';
-            
-            // Eliminar después de la animación
-            setTimeout(() => {
-                if (this.tooltip) {
-                    this.tooltip.remove();
-                    this.tooltip = null;
-                }
-            }, 500);
+            this.tooltip.remove();
+            this.tooltip = null;
         }
     }
     
