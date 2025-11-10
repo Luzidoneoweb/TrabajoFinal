@@ -111,7 +111,7 @@ window.mostrarModalFinalizacion = mostrarModalFinalizacion;
         // Crear función stub para evitar errores
         window.mostrarModalFinalizacion = function() {
             console.warn('Modal de finalización no disponible, redirigiendo directamente...');
-            window.location.href = "index.php?tab=practice";
+            window.location.href = "index.php?tab=textos";
         };
     }
 })();

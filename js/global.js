@@ -37,9 +37,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             verificarEstadoSesion();
 
-            // Comprobar si hay un parámetro 'pestana' en la URL
+            // Comprobar si hay un parámetro 'tab' en la URL
             const urlParams = new URLSearchParams(window.location.search);
-            const pestanaParam = urlParams.get('pestana');
+            const pestanaParam = urlParams.get('tab');
             const storedPestana = localStorage.getItem('activeTabAfterRedirect');
 
             if (pestanaParam) {
@@ -47,6 +47,9 @@
             } else if (storedPestana) {
                 window.cambiarPestana(storedPestana);
                 localStorage.removeItem('activeTabAfterRedirect'); // Limpiar después de usar
+            } else {
+                // Si no hay parámetro en la URL ni en localStorage, activar "progreso" por defecto
+                window.cambiarPestana('progreso');
             }
         });
 
@@ -100,17 +103,6 @@
             if (contenedorBotonCerrarSesion) { // Mostrar el botón de cerrar sesión en el encabezado
                 contenedorBotonCerrarSesion.classList.remove('oculto');
             }
-		// Activar por defecto la pestaña Progreso
-		const pestañaProgreso = document.querySelector('.pestana[data-pestana="progreso"]');
-		if (pestañaProgreso) {
-			// Limpiar estados previos
-			document.querySelectorAll('.pestana').forEach(p => p.classList.remove('activa'));
-			document.querySelectorAll('.panel-pestana').forEach(panel => panel.classList.remove('activo'));
-			// Activar progreso
-			pestañaProgreso.classList.add('activa');
-			const panelProgreso = document.getElementById('panelProgreso');
-			if (panelProgreso) panelProgreso.classList.add('activo');
-		}
         }
         
         // Función para mostrar interfaz de usuario no logueado
