@@ -11,7 +11,7 @@ function loadSavedWords() {
             return response.text();
         })
         .then(html => {
-            document.getElementById('palabras-guardadas-container').innerHTML = html;
+            document.getElementById('palabras-dinamicas-container').innerHTML = html;
             // Después de cargar el HTML, inicializar la traducción de contextos
             initializeContextTranslations();
         })
@@ -54,17 +54,17 @@ function initializeContextTranslations() {
 
 // Funciones para las acciones en lote y el dropdown (copiadas de ajax_saved_words_content.php)
 function toggleDropdown() {
-    document.getElementById("dropdownContent").classList.toggle("show");
+    const dropdownContent = document.querySelector('.acciones-lote .btn-desplegable .contenido-desplegable');
+    if (dropdownContent) {
+        dropdownContent.classList.toggle("show");
+    }
 }
 
 window.onclick = function(event) {
-    if (!event.target.matches('.nav-btn')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        for (var i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-            }
+    if (!event.target.matches('.btn-desplegable') && !event.target.closest('.contenido-desplegable')) {
+        const dropdownContent = document.querySelector('.acciones-lote .btn-desplegable .contenido-desplegable');
+        if (dropdownContent && dropdownContent.classList.contains('show')) {
+            dropdownContent.classList.remove('show');
         }
     }
 }

@@ -169,11 +169,11 @@
     border-color: var(--gris-borde);
 }
 
-.dropdown-content {
+.acciones-lote .btn-desplegable .contenido-desplegable {
     display: none;
     position: absolute;
     right: 0;
-    top: 100%;
+    top: 100%; /* Posicionar debajo del botón */
     background: white;
     min-width: 220px;
     border: 1px solid #e5e7eb;
@@ -184,7 +184,7 @@
     margin-top: 8px;
 }
 
-.dropdown.show .dropdown-content {
+.acciones-lote .btn-desplegable .contenido-desplegable.show {
     display: block;
     animation: dropdownFadeIn 0.2s ease-out;
 }
