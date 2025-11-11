@@ -18,7 +18,7 @@ function cargarTextosSubidos() {
         return;
     }
     
-    fetch('pestanas/php/get_textos.php', {
+    fetch('/trabajoFinal/pestanas/php/get_textos.php', {
         credentials: 'include',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -45,10 +45,18 @@ function cargarTextosSubidos() {
     });
 }
 
-// Ejecutar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
-    cargarTextosSubidos();
-});
+// Ejecutar cuando el DOM esté listo (solo si el elemento existe)
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        if (document.getElementById('textos-subidos')) {
+            cargarTextosSubidos();
+        }
+    });
+} else {
+    if (document.getElementById('textos-subidos')) {
+        cargarTextosSubidos();
+    }
+}
 
 /**
  * Carga el número total de palabras guardadas por el usuario.
@@ -62,7 +70,7 @@ function cargarPalabrasGuardadas() {
         return;
     }
 
-    fetch('pestanas/php/get_total_words.php', {
+    fetch('/trabajoFinal/pestanas/php/get_total_words.php', {
         credentials: 'include',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -88,11 +96,18 @@ function cargarPalabrasGuardadas() {
     });
 }
 
-// Ejecutar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
-    cargarTextosSubidos();
-    cargarPalabrasGuardadas(); // Llamar a la nueva función
-});
+// Ejecutar cuando el DOM esté listo (solo si los elementos existen)
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        if (document.getElementById('palabras-guardadas')) {
+            cargarPalabrasGuardadas();
+        }
+    });
+} else {
+    if (document.getElementById('palabras-guardadas')) {
+        cargarPalabrasGuardadas();
+    }
+}
 
 // Exportar funciones para poder llamarlas manualmente
 window.cargarTextosSubidos = cargarTextosSubidos;

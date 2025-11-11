@@ -58,6 +58,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Función para cargar categorías
     function cargarCategorias() {
+        // Verificar si el elemento existe antes de continuar
+        if (!categoria) {
+            return; // No es admin, no cargar categorías
+        }
+        
         const urlCategorias = '/trabajoFinal/pestanas/php/get_categoria.php'; // Ruta corregida
         // console.log('Fetching categories from:', urlCategorias); // Eliminado para limpiar consola
         fetch(urlCategorias, {
@@ -81,8 +86,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(err => console.error('Error de conexión al cargar categorías:', err));
     }
 
-    // Cargar categorías al iniciar
-    cargarCategorias();
+    // Cargar categorías al iniciar (solo si el elemento existe)
+    if (categoria) {
+        cargarCategorias();
+    }
 
     btnSubirTexto.addEventListener('click', function() {
         const formData = new FormData();

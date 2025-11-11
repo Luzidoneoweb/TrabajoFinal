@@ -34,9 +34,9 @@ if (isset($_SESSION['user_id'])) {
         <p class="nombre-estadistica">TEXTOS LEÍDOS</p>
     </div>
     <div class="tarjeta-estadistica">
-        <span class="icono-estadistica">📚</span> <!-- Icono de libros -->
-        <p class="valor-estadistica"><?= $total_words_saved ?></p>
-        <p class="nombre-estadistica">PALABRAS GUARDADAS</p>
+    <span class="icono-estadistica">📚</span> <!-- Icono de libros -->
+    <p class="valor-estadistica" id="palabras-guardadas"><?= $total_words_saved ?></p>
+    <p class="nombre-estadistica">PALABRAS GUARDADAS</p>
     </div>
     <div class="tarjeta-estadistica">
         <span class="icono-estadistica">🎯</span> <!-- Icono de diana -->
