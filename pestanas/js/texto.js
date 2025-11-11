@@ -254,6 +254,10 @@ function manejarEliminacionTextos() {
             if (typeof window.cargarTextosSubidos === 'function') {
                 window.cargarTextosSubidos();
             }
+            // Llamar a la función global para recargar las palabras
+            if (typeof window.cargarPalabras === 'function') {
+                window.cargarPalabras();
+            }
         } else {
             // Si data.error no está definido, proporcionar un mensaje genérico
             mostrarNotificacion('Error al eliminar textos: ' + (data.error || 'Error desconocido en el servidor.'), 'error');

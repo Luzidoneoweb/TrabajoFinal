@@ -15,8 +15,6 @@
                 <div class="contenido-desplegable">
                     <a href="#">Marcar como leído</a>
                     <a href="#">Marcar como no leído</a>
-                    <a href="#">Hacer público</a>
-                    <a href="#">Hacer privado</a>
                     <a href="#" id="btn-eliminar-textos">Eliminar</a>
                 </div>
             </div>

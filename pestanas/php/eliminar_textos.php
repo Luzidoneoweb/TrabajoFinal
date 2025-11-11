@@ -31,34 +31,56 @@ try {
 
     $ids_a_eliminar = $data['ids'];
 
-    // Preparar la consulta DELETE usando PDO
-    // Usamos un marcador de posición para cada ID para evitar inyección SQL
-    $placeholders = implode(',', array_fill(0, count($ids_a_eliminar), '?'));
-    $sql = "DELETE FROM texts WHERE id IN ($placeholders) AND user_id = ?";
+    // Iniciar una transacción para asegurar la atomicidad
+    $pdo->beginTransaction();
 
-    $stmt = $pdo->prepare($sql);
+    try {
+        // 1. Eliminar palabras asociadas a los textos
+        $placeholders_words = implode(',', array_fill(0, count($ids_a_eliminar), '?'));
+        $sql_delete_words = "DELETE FROM saved_words WHERE text_id IN ($placeholders_words) AND user_id = ?";
+        $stmt_words = $pdo->prepare($sql_delete_words);
 
-    if ($stmt === false) {
-        throw new Exception('Error al preparar la consulta: ' . implode(" ", $pdo->errorInfo()));
-    }
+        if ($stmt_words === false) {
+            throw new Exception('Error al preparar la consulta de eliminación de palabras: ' . implode(" ", $pdo->errorInfo()));
+        }
 
-    // Combinar los IDs de los textos y el user_id en un solo array para bindear
-    $params = array_merge($ids_a_eliminar, [$user_id]);
+        $params_words = array_merge($ids_a_eliminar, [$user_id]);
+        $stmt_words->execute($params_words);
+        $words_deleted_count = $stmt_words->rowCount();
 
-    // Ejecutar la consulta
-    if ($stmt->execute($params)) {
-        if ($stmt->rowCount() > 0) {
-            $response = ['success' => true, 'message' => $stmt->rowCount() . ' texto(s) eliminado(s) correctamente.'];
+        // 2. Eliminar los textos
+        $placeholders_texts = implode(',', array_fill(0, count($ids_a_eliminar), '?'));
+        $sql_delete_texts = "DELETE FROM texts WHERE id IN ($placeholders_texts) AND user_id = ?";
+        $stmt_texts = $pdo->prepare($sql_delete_texts);
+
+        if ($stmt_texts === false) {
+            throw new Exception('Error al preparar la consulta de eliminación de textos: ' . implode(" ", $pdo->errorInfo()));
+        }
+
+        $params_texts = array_merge($ids_a_eliminar, [$user_id]);
+        $stmt_texts->execute($params_texts);
+        $texts_deleted_count = $stmt_texts->rowCount();
+
+        if ($texts_deleted_count > 0) {
+            $pdo->commit(); // Confirmar la transacción
+            $response = [
+                'success' => true,
+                'message' => "$texts_deleted_count texto(s) y $words_deleted_count palabra(s) asociada(s) eliminado(s) correctamente."
+            ];
         } else {
+            $pdo->rollBack(); // Revertir si no se eliminaron textos
             $response = ['success' => false, 'error' => 'No se encontraron textos para eliminar o no tienes permiso para eliminarlos.'];
         }
-    } else {
-        throw new Exception('Error al ejecutar la eliminación: ' . implode(" ", $stmt->errorInfo()));
+
+    } catch (Exception $e) {
+        $pdo->rollBack(); // Revertir la transacción en caso de error
+        error_log('Error en eliminar_textos.php: ' . $e->getMessage());
+        $response = ['success' => false, 'error' => $e->getMessage()];
     }
 
 } catch (Exception $e) {
     // Capturar cualquier excepción y devolver un error JSON
-    error_log('Error en eliminar_textos.php: ' . $e->getMessage());
+    error_log('Error en eliminar_textos.php (fuera de transacción): ' . $e->getMessage());
     $response = ['success' => false, 'error' => $e->getMessage()];
 }
 

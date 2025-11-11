@@ -71,6 +71,28 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['se
     exit();
 }
 
+// Endpoint para obtener todas las palabras guardadas del usuario, agrupadas por texto
+if (isset($_GET['get_all_words'])) {
+    $stmt = $conn->prepare("SELECT sw.word, sw.translation, sw.context, sw.created_at, sw.text_id, t.title as text_title FROM saved_words sw LEFT JOIN texts t ON sw.text_id = t.id WHERE sw.user_id = ? ORDER BY t.title, sw.created_at DESC");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $words = $result->fetch_all(MYSQLI_ASSOC);
+
+    $words_by_text = [];
+    $total_words_saved = 0;
+    foreach ($words as $word) {
+        $title = $word['text_title'] ?? 'Sin texto asociado';
+        $words_by_text[$title][] = $word;
+        $total_words_saved++;
+    }
+    
+    echo json_encode(['success' => true, 'words_by_text' => $words_by_text, 'total_words_saved' => $total_words_saved]);
+    $stmt->close();
+    $conn->close();
+    exit();
+}
+
 // Si no hay endpoint AJAX, retornar error
 echo json_encode(['error' => 'Endpoint no válido']);
 ?>
