@@ -1,5 +1,11 @@
 <?php
-// Incluir cualquier archivo PHP necesario aquí
+// Verificar sesión
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Validar si es admin
+$es_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 ?>
 
 <div class="contenedor-subir-texto">
@@ -20,18 +26,20 @@
                 <textarea id="contenido" name="contenido"></textarea>
             </div>
 
-            <div class="campo-checkbox">
-                <input type="checkbox" id="texto_publico" name="texto_publico" checked>
-                <label for="texto_publico">Texto público</label>
-            </div>
+            <!-- Campos solo para admin -->
+            <?php if ($es_admin): ?>
+                <div class="campo-checkbox">
+                    <input type="checkbox" id="texto_publico" name="texto_publico" checked>
+                    <label for="texto_publico">Texto público</label>
+                </div>
 
-            <div class="campo" id="campo_categoria">
-                <label for="categoria">Categoría:</label>
-                <select id="categoria" name="categoria">
-                    <option value="">-- Selecciona categoría --</option>
-                    <!-- Las opciones de categoría se cargarán aquí -->
-                </select>
-            </div>
+                <div class="campo" id="campo_categoria">
+                    <label for="categoria">Categoría:</label>
+                    <select id="categoria" name="categoria">
+                        <option value="">-- Selecciona categoría --</option>
+                    </select>
+                </div>
+            <?php endif; ?>
 
             <button type="button" id="btn_subir_texto">Subir</button>
         </div>

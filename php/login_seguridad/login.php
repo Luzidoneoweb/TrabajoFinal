@@ -38,7 +38,7 @@ if($mysqli->connect_errno){
 }
 $mysqli->set_charset('utf8mb4');
 
-$stmt = $mysqli->prepare("SELECT id, password, username, email FROM users WHERE username=? OR email=? LIMIT 1");
+$stmt = $mysqli->prepare("SELECT id, password, username, email, is_admin FROM users WHERE username=? OR email=? LIMIT 1");
 $stmt->bind_param("ss", $identifier, $identifier);
 $stmt->execute();
 $res = $stmt->get_result();
@@ -49,7 +49,8 @@ if($row = $res->fetch_assoc()){
         session_regenerate_id(true);
         $_SESSION['user_id'] = $row['id'];
         $_SESSION['username'] = $row['username'];
-        $_SESSION['email'] = $row['email']; // Usar el email de la DB
+        $_SESSION['email'] = $row['email'];
+        $_SESSION['is_admin'] = (bool)$row['is_admin'];
         
 
         // Si el usuario marcó "Recordarme"
