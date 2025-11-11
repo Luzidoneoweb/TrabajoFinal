@@ -10,7 +10,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/db/connection.php';
 // Verificar autenticación
 if (!isset($_SESSION['user_id'])) {
     echo '<div class="no-words-message">No autenticado</div>';
-    exit;
+    // Importante: en archivos incluidos NO debemos finalizar todo el script.
+    // Devolvemos el control al archivo que hizo el include.
+    return;
 }
 
 $user_id = $_SESSION['user_id'];
