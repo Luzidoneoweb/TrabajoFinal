@@ -3,11 +3,7 @@
 /* El contenido se adapta siempre a la pantalla, incluso con zoom amplio, manteniendo su estructura */
 
 /* Reset general para asegurar consistencia en todos los navegadores */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+
 
 /* Ocultar scrollbar cuando el panel de lectura está activo */
 #panelLectura.panel-pestana.activo,

@@ -1,9 +1,61 @@
 /* Estilos para el contenedor principal de la biblioteca */
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* Estilos generales para el contenedor */
+.seccion-categoria {
+    display: flex;
+    justify-content: space-between; /* Distribuye los elementos en las secciones */
+    align-items: center; /* Alinea los elementos verticalmente */
+    flex-wrap: wrap; /* Permite que los elementos se ajusten al ancho disponible */
 }
+
+/* Bloques individuales dentro del contenedor */
+.categoria-titulo,
+.categoria-descripcion,
+.numero-textos {
+    flex: 1; /* Hace que cada contenedor ocupe el mismo espacio disponible */
+    margin: 0 10px; /* Agrega un pequeño margen entre los bloques */
+}
+
+/* Ajustes específicos para los elementos dentro de cada bloque */
+.categoria-titulo h3,
+.categoria-descripcion p,
+.numero-textos p {
+    margin: 0; /* Elimina márgenes por defecto */
+}
+
+/* Opcional: Si necesitas una pequeña separación entre las columnas */
+.categoria-titulo {
+    padding-right: 10px;
+}
+
+.categoria-descripcion {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.numero-textos {
+    text-align: right; /* Alinea el número de textos a la derecha */
+}
+
+/* Estilos para móviles */
+@media (max-width: 768px) {
+    .encabezado-categoria {
+        flex-direction: column; /* Apila los elementos verticalmente */
+        align-items: flex-start; /* Alinea los elementos a la izquierda */
+    }
+    
+    .categoria-titulo,
+    .categoria-descripcion,
+    .numero-textos {
+        flex: none; /* Cada bloque tomará el tamaño que necesite */
+        margin: 5px 0; /* Agrega margen entre los bloques cuando están apilados */
+        width: 100%; /* Hace que cada bloque ocupe todo el ancho disponible */
+    }
+    
+    .numero-textos {
+        text-align: left; /* Alinea el número de textos a la izquierda en pantallas pequeñas */
+    }
+}
+
 /* Estilo básico para el acordeón */
 .lista-textos-categoria {
     display: none;

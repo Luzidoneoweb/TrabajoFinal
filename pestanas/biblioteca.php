@@ -8,6 +8,14 @@
     <div class="seccion-categoria">
         <div class="encabezado-categoria">
             <h3 class="nombre-categoria"></h3>
+             <p class="traduccion-categoria">Science</p>
+                    </div>
+                    <div class="categoria-descripcion">
+                        <p class="descripcion-categoria">Descripción del tema</p>
+                        <p class="descripcion-traducida">Topic description</p>
+                    </div>
+                    <div class="numero-textos">
+                    <p class="total-textos">10 Textos</p>
         </div>
         <div class="lista-textos-categoria" style="display: none;"></div>
     </div>
