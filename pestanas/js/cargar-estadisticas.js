@@ -11,6 +11,10 @@
  * Obtiene los datos de get_textos.php
  */
 function cargarTextosSubidos() {
+    const elementoTextos = document.getElementById('textos-subidos');
+    
+    if (!elementoTextos) {
+        console.warn('Elemento #textos-subidos no encontrado');
         return;
     }
     
