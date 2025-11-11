@@ -26,21 +26,28 @@ $words = $result->fetch_all(MYSQLI_ASSOC);
 
 // Agrupar palabras por texto
 $words_by_text = [];
+$total_words_saved = 0; // Inicializar contador total de palabras
 foreach ($words as $word) {
     $title = $word['text_title'] ?? 'Sin texto asociado';
     $words_by_text[$title][] = $word;
+    $total_words_saved++; // Incrementar por cada palabra
 }
 ?>
 
 <div class="contenedor-palabras">
     <!-- Barra de acciones -->
     <div class="barra-acciones-palabras" <?= empty($words_by_text) ? 'style="display: none;"' : '' ?>>
-        <button id="delete-selected-words-btn" class="btn-eliminar-palabras" disabled>
-            Eliminar seleccionadas
-        </button>
-        <span class="contador-palabras">
-            <span id="selected-count">0</span> seleccionada(s)
+        <span class="total-palabras-guardadas">
+            Total de palabras guardadas: <span id="total-words-count"><?= $total_words_saved ?></span>
         </span>
+        <div class="acciones-derecha">
+            <button id="delete-selected-words-btn" class="btn-eliminar-palabras" disabled>
+                Eliminar seleccionadas
+            </button>
+            <span class="contador-palabras">
+                <span id="selected-count">0</span> seleccionada(s)
+            </span>
+        </div>
     </div>
 
     <!-- Contenedor de palabras -->
