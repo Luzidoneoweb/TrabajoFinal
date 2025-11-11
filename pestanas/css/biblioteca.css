@@ -60,15 +60,20 @@
     margin-top: 0.5rem;
 }
 
-.desplegable-categorias .contenido-desplegable-categorias a {
+.desplegable-categorias .contenido-desplegable-categorias button {
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
     color: var(--texto-principal);
     padding: 12px 16px;
     text-decoration: none;
     display: block;
     font-size: 0.9rem;
+    cursor: pointer;
 }
 
-.desplegable-categorias .contenido-desplegable-categorias a:hover {
+.desplegable-categorias .contenido-desplegable-categorias button:hover {
     background-color: var(--gris-hover-fondo);
 }
 
