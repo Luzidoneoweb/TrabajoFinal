@@ -3,8 +3,17 @@
  */
 function cargarBiblioteca() {
     const contenedorTextos = document.getElementById('bulkForm');
+    const templateCategoria = document.getElementById('template-categoria');
+    const templateTexto = document.getElementById('template-texto');
     
-    if (!contenedorTextos) {
+    console.log('Templates encontrados:', {
+        contenedor: !!contenedorTextos,
+        templateCategoria: !!templateCategoria,
+        templateTexto: !!templateTexto
+    });
+    
+    if (!contenedorTextos || !templateCategoria || !templateTexto) {
+        console.error('Falta contenedor o templates');
         return;
     }
     
@@ -18,42 +27,31 @@ function cargarBiblioteca() {
         return response.json();
     })
     .then(data => {
+        console.log('Datos recibidos:', data);
+        
         if (data.success && data.categorias.length > 0) {
             contenedorTextos.innerHTML = '';
             
             data.categorias.forEach(categoria => {
-                // Crear sección de categoría
-                const seccionCategoria = document.createElement('div');
-                seccionCategoria.className = 'seccion-categoria';
+                // Clonar template de categoría
+                const clonCategoria = templateCategoria.content.cloneNode(true);
+                clonCategoria.querySelector('.nombre-categoria').textContent = categoria.nombre;
                 
-                const encabezadoCategoria = document.createElement('div');
-                encabezadoCategoria.className = 'encabezado-categoria';
-                encabezadoCategoria.innerHTML = `<h3>${categoria.nombre}</h3>`;
-                
-                seccionCategoria.appendChild(encabezadoCategoria);
-                
-                // Crear lista de textos
-                const listaTextos = document.createElement('div');
-                listaTextos.className = 'lista-textos-categoria';
+                const listaTextosContenedor = clonCategoria.querySelector('.lista-textos-categoria');
                 
                 categoria.textos.forEach(texto => {
-                    const itemTexto = document.createElement('div');
-                    itemTexto.className = 'item-texto';
-                    itemTexto.innerHTML = `
-                        <div class="encabezado-texto">
-                            <h4>${texto.title}</h4>
-                            ${texto.title_translation ? `<p class="traduccion-titulo">${texto.title_translation}</p>` : ''}
-                        </div>
-                        <div class="contenido-texto-preview">
-                            <p>${texto.content.substring(0, 200)}${texto.content.length > 200 ? '...' : ''}</p>
-                        </div>
-                        <button class="btn-leer-texto" data-texto-id="${texto.id}">Leer</button>
-                    `;
-                    listaTextos.appendChild(itemTexto);
+                    // Clonar template de texto
+                    const clonTexto = templateTexto.content.cloneNode(true);
+                    clonTexto.querySelector('.titulo-texto').textContent = texto.title;
+                    clonTexto.querySelector('.traduccion-titulo').textContent = texto.title_translation || '';
+                    clonTexto.querySelector('.preview-contenido').textContent = 
+                        texto.content.substring(0, 200) + (texto.content.length > 200 ? '...' : '');
+                    clonTexto.querySelector('.btn-leer-texto').setAttribute('data-texto-id', texto.id);
+                    
+                    listaTextosContenedor.appendChild(clonTexto);
                 });
                 
-                seccionCategoria.appendChild(listaTextos);
-                contenedorTextos.appendChild(seccionCategoria);
+                contenedorTextos.appendChild(clonCategoria);
             });
             
             // Agregar manejador de eventos para botones "Leer"
@@ -63,16 +61,34 @@ function cargarBiblioteca() {
                     abrirTextoLectura(textoId);
                 });
             });
+
+            // Acordeón biblioteca: Añadir manejador de eventos después de cargar las categorías
+            const categoriasAcordeon = document.querySelectorAll('.nombre-categoria');
+            categoriasAcordeon.forEach(categoria => {
+                categoria.addEventListener('click', () => {
+                    const listaTextos = categoria.closest('.seccion-categoria').querySelector('.lista-textos-categoria');
+                    const isVisible = listaTextos.style.display === 'block';
+                    listaTextos.style.display = isVisible ? 'none' : 'block';
+                });
+            });
             
         } else {
-            contenedorTextos.innerHTML = '<p class="sin-contenido">No hay textos disponibles.</p>';
+            console.log('Sin categorías. Success:', data.success, 'Categorías:', data.categorias);
+            const parrafo = document.createElement('p');
+            parrafo.className = 'sin-contenido';
+            parrafo.textContent = 'No hay textos disponibles.';
+            contenedorTextos.appendChild(parrafo);
         }
     })
     .catch(error => {
         console.error('Error al cargar biblioteca:', error);
-        contenedorTextos.innerHTML = '<p class="sin-contenido">Error al cargar los textos.</p>';
+        const parrafo = document.createElement('p');
+        parrafo.className = 'sin-contenido';
+        parrafo.textContent = 'Error al cargar los textos.';
+        contenedorTextos.appendChild(parrafo);
     });
 }
+
 
 /**
  * Abre un texto para lectura

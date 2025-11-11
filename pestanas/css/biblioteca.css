@@ -1,12 +1,66 @@
 /* Estilos para el contenedor principal de la biblioteca */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/* Estilo básico para el acordeón */
+.lista-textos-categoria {
+    display: none;
+    margin-top: 10px;
+}
+
+.seccion-categoria .nombre-categoria {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.seccion-categoria .lista-textos-categoria {
+    margin-left: 20px;
+    padding: 10px;
+    border-left: 2px solid #ccc;
+    background-color: #f9f9f9;
+}
+
+.item-texto {
+    margin-bottom: 10px;
+    padding: 5px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+}
+
+.item-texto .titulo-texto {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.item-texto .btn-leer-texto {
+    margin-top: 5px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.item-texto .btn-leer-texto:hover {
+    background-color: #0056b3;
+}
+
 .contenedor-biblioteca {
     padding: 2rem 1rem;
     max-width: 1200px;
     margin: 0 auto;
 }
+.contenido-panel{
+    padding: 2rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 
 /* Encabezado de la sección de la biblioteca */
-.encabezado-biblioteca {
+.encabezado-categoria {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -82,7 +136,7 @@
 }
 
 /* Lista de textos de la biblioteca */
-.lista-textos-biblioteca {
+.lista-textos-categoria {
     background-color: var(--fondo-principal);
     border: 1px solid var(--borde-general);
     border-radius: 12px;
@@ -90,7 +144,7 @@
     overflow: hidden;
 }
 
-.item-texto-biblioteca {
+.item-texto {
     display: flex;
     align-items: center;
     padding: 1rem 1.5rem;
@@ -113,7 +167,7 @@
     gap: 0.25rem;
 }
 
-.titulo-texto-biblioteca {
+.encabezado-texto {
     font-size: 1rem;
     font-weight: 600;
     color: var(--texto-principal);
