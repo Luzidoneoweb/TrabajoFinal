@@ -1,3 +1,27 @@
+<?php
+// Inicializar sesión y conexión si es necesario
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Obtener total de palabras guardadas
+require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/db/connection.php';
+
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+    
+    // Consultar total de palabras guardadas
+    $stmt_words = $conn->prepare("SELECT COUNT(*) as total FROM saved_words WHERE user_id = ?");
+    $stmt_words->bind_param("i", $user_id);
+    $stmt_words->execute();
+    $result_words = $stmt_words->get_result();
+    $total_words_saved = $result_words->fetch_assoc()['total'] ?? 0;
+    $stmt_words->close();
+} else {
+    $total_words_saved = 0;
+}
+?>
+
 <div class="contenedor-estadisticas">
     <div class="tarjeta-estadistica">
         <span class="icono-estadistica">📄</span> <!-- Icono de documento -->
@@ -11,7 +35,7 @@
     </div>
     <div class="tarjeta-estadistica">
         <span class="icono-estadistica">📚</span> <!-- Icono de libros -->
-        <p class="valor-estadistica">0</p>
+        <p class="valor-estadistica"><?= $total_words_saved ?></p>
         <p class="nombre-estadistica">PALABRAS GUARDADAS</p>
     </div>
     <div class="tarjeta-estadistica">
