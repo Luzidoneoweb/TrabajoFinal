@@ -1,10 +1,13 @@
 /* Estilos para el contenedor principal de la biblioteca */
 /* Estilos generales para el contenedor */
 .seccion-categoria {
+    justify-content: space-between;
+    flex-wrap: wrap;
     display: flex;
-    justify-content: space-between; /* Distribuye los elementos en las secciones */
-    align-items: center; /* Alinea los elementos verticalmente */
-    flex-wrap: wrap; /* Permite que los elementos se ajusten al ancho disponible */
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--borde-general);
+    transition: background-color 0.2s ease;
 }
 
 /* Bloques individuales dentro del contenedor */
@@ -113,12 +116,14 @@
 
 /* Encabezado de la sección de la biblioteca */
 .encabezado-categoria {
-    display: flex;
+       display: flex
+;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
     flex-wrap: wrap;
     gap: 1rem;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    transition: background-color 0.2s ease;
 }
 
 .contador-textos-biblioteca {
