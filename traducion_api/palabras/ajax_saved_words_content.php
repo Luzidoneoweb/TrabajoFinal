@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 header('Content-Type: application/json; charset=utf-8');
-require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/db/connection.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/db/conexion.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['error' => 'No autorizado']);

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../db/connection.php';
+require_once __DIR__ . '/../db/conexion.php';
 
 $has_category = isset($_GET['category_id']) && intval($_GET['category_id']) > 0;
 $category_id = $has_category ? intval($_GET['category_id']) : 0;

@@ -24,7 +24,7 @@ if (!in_array($mode, $valid_modes)) {
     exit;
 }
 
-require_once 'db/connection.php';
+require_once 'db/conexion.php';
 
 $stmt = $conn->prepare("INSERT INTO practice_time (user_id, mode, duration_seconds) VALUES (?, ?, ?)");
 $stmt->bind_param('isi', $user_id, $mode, $duration);

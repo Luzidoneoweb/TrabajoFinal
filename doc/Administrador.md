@@ -67,7 +67,7 @@ Keeping the todo list updated helps track progress and ensures nothing is missed
 db/proyecto.sql
 
 # VSCode Open Tabs
-../copias/connection.php
+../copias/conexion.php
 db/conexion.php
 db/proyecto.sql
 index.php
@@ -280,7 +280,7 @@ Keeping the todo list updated helps track progress and ensures nothing is missed
 db/proyecto.sql
 
 # VSCode Open Tabs
-../copias/connection.php
+../copias/conexion.php
 db/conexion.php
 db/proyecto.sql
 index.php
@@ -408,7 +408,7 @@ Keeping the todo list updated helps track progress and ensures nothing is missed
 db/proyecto.sql
 
 # VSCode Open Tabs
-../copias/connection.php
+../copias/conexion.php
 db/conexion.php
 db/proyecto.sql
 index.php
@@ -605,7 +605,7 @@ Keeping the todo list updated helps track progress and ensures nothing is missed
 php/login_seguridad/create_admin.php
 
 # VSCode Open Tabs
-../copias/connection.php
+../copias/conexion.php
 db/conexion.php
 db/proyecto.sql
 php/login_seguridad/create_admin.php
@@ -742,7 +742,7 @@ Keeping the todo list updated helps track progress and ensures nothing is missed
 php/login_seguridad/create_admin.php
 
 # VSCode Open Tabs
-../copias/connection.php
+../copias/conexion.php
 db/conexion.php
 db/proyecto.sql
 php/login_seguridad/create_admin.php
@@ -907,7 +907,7 @@ Keeping the todo list updated helps track progress and ensures nothing is missed
 php/login_seguridad/create_admin.php
 
 # VSCode Open Tabs
-../copias/connection.php
+../copias/conexion.php
 db/conexion.php
 db/proyecto.sql
 php/login_seguridad/create_admin.php
@@ -1014,7 +1014,7 @@ Keeping the todo list updated helps track progress and ensures nothing is missed
 php/login_seguridad/create_admin.php
 
 # VSCode Open Tabs
-../copias/connection.php
+../copias/conexion.php
 db/conexion.php
 db/proyecto.sql
 php/login_seguridad/create_admin.php
