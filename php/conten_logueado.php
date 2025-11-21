@@ -55,3 +55,4 @@
             </div>
         </section>
     </main>
+    <script src="pestanas/js/global.js"></script>

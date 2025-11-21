@@ -99,12 +99,13 @@ function cargarPalabras() {
 // Función auxiliar para escapar HTML
 function escapeHtml(unsafe) {
     return unsafe
-         .replace(/&/g, "&")
-         .replace(/</g, "<")
-         .replace(/>/g, ">")
-         .replace(/"/g, """)
-         .replace(/'/g, "&#039;");
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")   // Línea corregida
+        .replace(/'/g, "&#039;");
 }
+
 
 // Función auxiliar para formatear fecha
 function formatDate(dateString) {
