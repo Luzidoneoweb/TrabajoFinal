@@ -20,9 +20,7 @@ function cargarTextosSubidos() {
     
     fetch('/trabajoFinal/pestanas/php/get_textos.php', {
         credentials: 'include',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
+       
     })
     .then(response => {
         if (!response.ok) {

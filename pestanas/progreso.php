@@ -248,3 +248,6 @@ if (isset($_SESSION['user_id'])) {
         </div>
     </div>
 </div>
+
+
+  <script src="js/cargar-estadisticas.js"></script>
