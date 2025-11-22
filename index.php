@@ -1,5 +1,3 @@
-  <?php include 'php/menuMovil.php';
- require_once 'php/login_seguridad/seguridad.php'; ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,9 +7,15 @@
     <link rel="stylesheet" href="css/global_estilos.css">
     <link rel="stylesheet" href="pestanas/css/global_pestanas.css" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* CSS crítico para renderización rápida */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .oculto { display: none !important; }
+    </style>
 </head>
 <body>
-
+    <?php require_once 'php/login_seguridad/seguridad.php'; ?>
     <!-- Encabezado principal de la aplicación  -->
     <header class="encabezado-principal">
         <div class="contenedor-encabezado">
@@ -40,7 +44,7 @@
                 <button class="boton-login" id="botonLogin">Iniciar Sesión</button>
             </nav>
              
-           
+            
 
              
 
@@ -171,29 +175,31 @@
             </section>
         </section>
         <!-- Contenido de usuario logueado Pestañas-->
-         <section id="contenidoLogueado" class="oculto">
-            <?php include 'php/conten_logueado.php'; ?>
-        </section> 
+        <div id="contenidoLogueado" class="oculto"></div>
+            
+        
 
     <!-- Pie de página -->
     <footer class="pie-pagina">
-        <div class="contenedor-pie">
-            <p>&copy; 2024 MiApp. Todos los derechos reservados.</p>
-            <div class="enlaces-pie">
-                <a href="#privacidad">Privacidad</a>
-                <a href="#terminos">Términos</a>
-                <a href="#contacto">Contacto</a>
-            </div>
-        </div>
+    <div class="contenedor-pie">
+    <p>&copy; 2024 MiApp. Todos los derechos reservados.</p>
+    <div class="enlaces-pie">
+    <a href="#privacidad">Privacidad</a>
+    <a href="#terminos">Términos</a>
+    <a href="#contacto">Contacto</a>
+    </div>
+    </div>
     </footer>
     
+       <!-- Incluir después del contenido principal -->
+     <?php include 'php/menuMovil.php'; ?>
     <?php include 'php/login_seguridad/modal_login.php'; ?>
 
     <!-- JavaScript para funcionalidad básica -->
     <script src="js/global.js" defer></script>
-    <script src="js/login_registos/auth_auntentif.js"defer></script>
+    <script src="js/login_registos/auth_auntentif.js" defer></script>
     <!-- Script para cargar estadísticas -->
-    <!-- <script src="pestanas/js/cargar-estadisticas.js"></script> -->
-    
+     <!-- <script src="pestanas/js/cargar-estadisticas.js"></script> -->
+     <script src="pestanas/js/global.js" defer></script>
 </body>
 </html>

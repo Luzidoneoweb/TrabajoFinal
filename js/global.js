@@ -35,22 +35,8 @@
         
         // Verificar estado de sesión al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
-            verificarEstadoSesion();
-
-            // Comprobar si hay un parámetro 'tab' en la URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const pestanaParam = urlParams.get('tab');
-            const storedPestana = localStorage.getItem('activeTabAfterRedirect');
-
-            if (pestanaParam) {
-                window.cambiarPestana(pestanaParam);
-            } else if (storedPestana) {
-                window.cambiarPestana(storedPestana);
-                localStorage.removeItem('activeTabAfterRedirect'); // Limpiar después de usar
-            } else {
-                // Si no hay parámetro en la URL ni en localStorage, activar "progreso" por defecto
-                window.cambiarPestana('progreso');
-            }
+        verificarEstadoSesion();
+             // Nota: cambiarPestana se ejecutará desde pestanas/js/global.js después de cargar el contenido
         });
 
         // Función global para alternar la visibilidad del encabezado principal
@@ -96,24 +82,24 @@
         
         // Función para mostrar interfaz de usuario logueado
         function mostrarInterfazLogueada() {
-            navegacionPrincipal.classList.add('oculto');
-            navegacionUsuario.classList.remove('oculto');
-            paginaInicio.classList.add('oculto');
-            contenidoAplicacion.classList.remove('oculto');
-            if (contenedorBotonCerrarSesion) { // Mostrar el botón de cerrar sesión en el encabezado
-                contenedorBotonCerrarSesion.classList.remove('oculto');
-            }
+        if (navegacionPrincipal) navegacionPrincipal.classList.add('oculto');
+        if (paginaInicio) paginaInicio.classList.add('oculto');
+        if (contenidoAplicacion) contenidoAplicacion.classList.remove('oculto');
+        if (contenedorBotonCerrarSesion) { // Mostrar el botón de cerrar sesión en el encabezado
+        contenedorBotonCerrarSesion.classList.remove('oculto');
+        }
+        // La manipulación de navegacionUsuario se hará en pestanas/js/global.js después de cargar el contenido dinámico
         }
         
         // Función para mostrar interfaz de usuario no logueado
         function mostrarInterfazNoLogueada() {
-            navegacionPrincipal.classList.remove('oculto');
-            navegacionUsuario.classList.add('oculto');
-            paginaInicio.classList.remove('oculto');
-            contenidoAplicacion.classList.add('oculto');
-            if (contenedorBotonCerrarSesion) { // Ocultar el botón de cerrar sesión en el encabezado
-                contenedorBotonCerrarSesion.classList.add('oculto');
-            }
+        if (navegacionPrincipal) navegacionPrincipal.classList.remove('oculto');
+        if (navegacionUsuario) navegacionUsuario.classList.add('oculto');
+        if (paginaInicio) paginaInicio.classList.remove('oculto');
+        if (contenidoAplicacion) contenidoAplicacion.classList.add('oculto');
+        if (contenedorBotonCerrarSesion) { // Ocultar el botón de cerrar sesión en el encabezado
+        contenedorBotonCerrarSesion.classList.add('oculto');
+        }
         }
         
         // Función para cerrar sesión

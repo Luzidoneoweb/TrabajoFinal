@@ -1,3 +1,63 @@
+// SOLO SE CARGA CUANDO USUARIO ESTÁ LOGUEADO
+
+async function mostrarInterfazLogueada() {
+    const navPrincipal = document.getElementById('navegacionPrincipal');
+    const pagInicio = document.getElementById('paginaInicio');
+    const contLogueado = document.getElementById('contenidoLogueado');
+    const btnCerrar = document.getElementById('contenedorBotonCerrarSesion');
+    
+    if (navPrincipal) navPrincipal.classList.add('oculto');
+    if (pagInicio) pagInicio.classList.add('oculto');
+    if (contLogueado) contLogueado.classList.remove('oculto');
+    if (btnCerrar) btnCerrar.classList.remove('oculto');
+
+    // Cargar el contenido de contenido_logueado.php dinámicamente
+    const contenidoLogueadoDiv = document.getElementById('contenidoLogueado');
+    if (contenidoLogueadoDiv) {
+        try {
+            const response = await fetch('php/conten_logueado.php');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const htmlContent = await response.text();
+            contenidoLogueadoDiv.innerHTML = htmlContent;
+
+            // Después de que el contenido se haya cargado, inicializamos los event listeners de las pestañas
+            inicializarPestanas(); 
+            
+            // Comprobar si hay un parámetro 'tab' en la URL o en localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            const pestanaParam = urlParams.get('tab');
+            const storedPestana = localStorage.getItem('activeTabAfterRedirect');
+            
+            let pestanaAActivar = 'progreso'; // Por defecto
+             
+             if (pestanaParam) {
+                 pestanaAActivar = pestanaParam;
+             } else if (storedPestana) {
+                 pestanaAActivar = storedPestana;
+                 localStorage.removeItem('activeTabAfterRedirect');
+             }
+             
+             // Activar la pestaña
+             if (window.cambiarPestana) {
+                 window.cambiarPestana(pestanaAActivar);
+             }
+
+        } catch (error) {
+            console.error('Error al cargar el contenido logueado:', error);
+            // Opcional: mostrar un mensaje de error al usuario
+        }
+    }
+}
+
+async function cerrarSesion() {
+    await fetch('php/login_seguridad/logout.php', { method: 'POST', credentials: 'include' });
+    location.reload(); // Recarga y vuelve al modo no logueado
+}
+
+
+// Resto del código que quitaste de global.js
 // Función para mostrar notificaciones flotantes
 function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
     const notificacionFlotante = document.getElementById('notificacion-flotante');
@@ -106,6 +166,7 @@ function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
             }
 
             // Cerrar el menú móvil después de seleccionar una pestaña si está abierto
+            const navegacionUsuario = document.getElementById('navegacionUsuario'); // Obtener localmente
             if (navegacionUsuario && navegacionUsuario.classList.contains('menu-abierto')) {
                 navegacionUsuario.classList.remove('menu-abierto');
             }
@@ -115,10 +176,24 @@ function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
             // el mensaje cuando su contenido esté completamente cargado
         }
         
-        // Event listeners para las pestañas
-        document.querySelectorAll('.pestana').forEach(pestana => {
-            pestana.addEventListener('click', (e) => {
-                const nombrePestana = e.target.getAttribute('data-pestana');
-                cambiarPestana(nombrePestana);
-            });
+// Función para inicializar los event listeners de las pestañas
+function inicializarPestanas() {
+    const navegacionUsuario = document.getElementById('navegacionUsuario'); // Obtener localmente
+    const botonMenuMovil = document.getElementById('botonMenuMovil');
+
+    if (botonMenuMovil && navegacionUsuario) {
+        botonMenuMovil.addEventListener('click', () => {
+            navegacionUsuario.classList.toggle('menu-abierto');
         });
+    } else if (!navegacionUsuario) {
+        console.warn('navegacionUsuario no encontrado al inicializar el menú móvil.');
+    }
+
+
+    document.querySelectorAll('.pestana').forEach(pestana => {
+        pestana.addEventListener('click', (e) => {
+            const nombrePestana = e.target.getAttribute('data-pestana');
+            cambiarPestana(nombrePestana);
+        });
+    });
+}
