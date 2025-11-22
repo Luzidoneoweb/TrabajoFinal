@@ -1,5 +1,3 @@
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/php/login_seguridad/seguridad.php'; ?>
-
 <div class="contenedor-principal-practicas">
     
     <div class="tarjeta-practicar-vocabulario">

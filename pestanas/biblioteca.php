@@ -33,6 +33,3 @@
         <button class="btn-leer-texto" data-texto-id="">Leer</button>
     </div>
 </template>
-
-
-<script src="pestanas/js/cargar_biblioteca.js"></script>

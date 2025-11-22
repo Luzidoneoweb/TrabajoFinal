@@ -1,5 +1,5 @@
  <!-- Contenido de la aplicación - visible cuando está logueado -->
-  <?php include 'php/menu_logueado.php'; ?>
+  <?php include 'menu_logueado.php'; ?>
         <section class="contenido-aplicacion" id="contenidoAplicacion">
              
         <!-- Pestaña: Progreso -->
@@ -54,5 +54,4 @@
                 </div>
             </div>
         </section>
-    </main>
-    <script src="pestanas/js/global.js" ></script>
+        </main>

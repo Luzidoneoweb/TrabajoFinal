@@ -17,7 +17,7 @@ function cargarBiblioteca() {
         return;
     }
     
-    fetch('/trabajoFinal/pestanas/php/get_biblioteca_contenido.php', {
+    fetch('pestanas/php/get_biblioteca_contenido.php', {
         credentials: 'include'
     })
     .then(response => {
@@ -100,12 +100,6 @@ function abrirTextoLectura(textoId) {
     alert('Abriendo texto ' + textoId);
 }
 
-// Cargar biblioteca cuando el DOM esté listo
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', cargarBiblioteca);
-} else {
-    cargarBiblioteca();
-}
-
 // Exportar función para llamadas manuales
 window.cargarBiblioteca = cargarBiblioteca;
+window.abrirTextoLectura = abrirTextoLectura;

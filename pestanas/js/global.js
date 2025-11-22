@@ -22,8 +22,18 @@ async function mostrarInterfazLogueada() {
             const htmlContent = await response.text();
             contenidoLogueadoDiv.innerHTML = htmlContent;
 
-            // Después de que el contenido se haya cargado, inicializamos los event listeners de las pestañas
-            inicializarPestanas(); 
+            // Cargar script de biblioteca después de que el contenido esté en el DOM
+            const scriptBiblioteca = document.createElement('script');
+             scriptBiblioteca.src = 'pestanas/js/cargar_biblioteca.js';
+             scriptBiblioteca.onload = function() {
+                 if (typeof cargarBiblioteca === 'function') {
+                     cargarBiblioteca();
+                 }
+             };
+             document.body.appendChild(scriptBiblioteca);
+
+             // Después de que el contenido se haya cargado, inicializamos los event listeners de las pestañas
+             inicializarPestanas();
             
             // Comprobar si hay un parámetro 'tab' en la URL o en localStorage
             const urlParams = new URLSearchParams(window.location.search);
