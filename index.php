@@ -1,3 +1,5 @@
+  <?php include 'php/menuMovil.php';
+ require_once 'php/login_seguridad/seguridad.php'; ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,7 +11,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <?php require_once 'php/login_seguridad/seguridad.php'; ?>
+
     <!-- Encabezado principal de la aplicación  -->
     <header class="encabezado-principal">
         <div class="contenedor-encabezado">
@@ -38,7 +40,7 @@
                 <button class="boton-login" id="botonLogin">Iniciar Sesión</button>
             </nav>
              
-             <?php include 'php/menuMovil.php'; ?>
+           
 
              
 
@@ -48,7 +50,7 @@
     </header>
 
     <!-- Contenido principal de la aplicación -->
-     <?php include 'php/menu_logueado.php'; ?>
+     
     <main class="contenido-principal" style="padding-top: 70px;">
         <!-- Página de inicio - visible cuando no está logueado -->
         <section class="pagina-inicio oculto" id="paginaInicio">
@@ -169,9 +171,9 @@
             </section>
         </section>
         <!-- Contenido de usuario logueado Pestañas-->
-        <section id="contenidoLogueado" class="oculto">
+         <section id="contenidoLogueado" class="oculto">
             <?php include 'php/conten_logueado.php'; ?>
-        </section>
+        </section> 
 
     <!-- Pie de página -->
     <footer class="pie-pagina">
@@ -188,8 +190,8 @@
     <?php include 'php/login_seguridad/modal_login.php'; ?>
 
     <!-- JavaScript para funcionalidad básica -->
-    <script src="js/global.js"></script>
-    <script src="js/login_registos/auth_auntentif.js"></script>
+    <script src="js/global.js" defer></script>
+    <script src="js/login_registos/auth_auntentif.js"defer></script>
     <!-- Script para cargar estadísticas -->
     <!-- <script src="pestanas/js/cargar-estadisticas.js"></script> -->
     
