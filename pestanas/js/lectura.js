@@ -46,11 +46,15 @@ window.guardarTextoCompletoTraducido = function() { // Exponer globalmente
 };
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Referencias y variables locales
-    const panelLectura = document.getElementById('panelLectura');
-    let totalPaginas = 0; // Total de páginas según el número de frases y capacidad de pantalla
-    let timeoutResize = null; // Timeout para optimizar el evento resize
+// Función que inicializa la funcionalidad de lectura
+// Se ejecuta cuando el script se carga (sin esperar DOMContentLoaded)
+function inicializarLectura() {
+// Referencias y variables locales
+const panelLectura = document.getElementById('panelLectura');
+     let totalPaginas = 0; // Total de páginas según el número de frases y capacidad de pantalla
+     let timeoutResize = null; // Timeout para optimizar el evento resize
+     
+     console.log('[lectura.js] inicializarLectura() ejecutándose');
     
     // Observar cambios en el panel de lectura para cargar el texto cuando se active
     // Esto permite cargar el contenido solo cuando el panel es visible
@@ -59,10 +63,10 @@ document.addEventListener('DOMContentLoaded', function() {
             mutations.forEach(function(mutation) {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
                     if (panelLectura.classList.contains('activo')) {
-                        // console.log('Panel de lectura activado, cargando texto...'); // Eliminado para limpiar consola
-                        // Asegurar que el body tenga la clase para ocultar scrollbar
-                        document.body.classList.add('lectura-activa');
-                        cargarContenidoLectura();
+                    console.log('[MutationObserver] Panel de lectura activado, llamando cargarContenidoLectura()');
+                    // Asegurar que el body tenga la clase para ocultar scrollbar
+                    document.body.classList.add('lectura-activa');
+                    cargarContenidoLectura();
                     } else {
                         // Remover la clase cuando el panel se desactiva
                         document.body.classList.remove('lectura-activa');
@@ -349,12 +353,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Obtiene el texto completo, lo divide en frases y configura la paginación inicial
     // Similar al comportamiento de get_lectura_data.php en realdlan
     async function cargarContenidoLectura() {
-        if (isContentLoading) {
-            // console.warn('cargarContenidoLectura() ya está en progreso. Ignorando llamada duplicada.'); // Eliminado para limpiar consola
-            return;
-        }
-        isContentLoading = true;
-        // console.log('Iniciando cargarContenidoLectura()...'); // Eliminado para limpiar consola
+    if (isContentLoading) {
+    console.warn('[cargarContenidoLectura] Ya está en progreso, ignorando llamada duplicada');
+    return;
+    }
+    isContentLoading = true;
+    console.log('[cargarContenidoLectura] Iniciando carga de contenido...');
 
         // Reiniciar la bandera de listo para leer al inicio de la carga
         isPageReadyForReading = false;
@@ -391,18 +395,21 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Realizar petición fetch al endpoint PHP para obtener los datos del texto
-            const response = await fetch(`pestanas/php/get_lectura_data.php?id=${textId}`, { credentials: 'include' });
+            console.log(`[cargarContenidoLectura] Haciendo fetch para ID: ${textId}`);
+             const response = await fetch(`pestanas/php/get_lectura_data.php?id=${textId}`, { credentials: 'include' });
             
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
+             console.log('[cargarContenidoLectura] Respuesta del servidor:', data.success ? 'SUCCESS' : 'ERROR', data.error || '');
 
             // Esperar a que se cargue el caché
-            await cachePromise;
+             await cachePromise;
 
-            if (data.success) {
+             if (data.success) {
+                 console.log('[cargarContenidoLectura] Contenido recibido, título:', data.data.title);
                 const texto = data.data;
                 
                 // Actualizar título del texto en el encabezado (ambos encabezados)
@@ -501,18 +508,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Mostrar el contenido de lectura ahora que está listo
                 const panelLectura = document.getElementById('panelLectura');
                 if (panelLectura) {
-                    const contenedorLectura = panelLectura.querySelector('.contenedor-lectura');
-                    if (contenedorLectura) {
-                        contenedorLectura.style.visibility = 'visible';
-                        contenedorLectura.style.opacity = '1';
-                        contenedorLectura.style.transition = 'opacity 0.3s ease-in';
+                const contenedorLectura = panelLectura.querySelector('.contenedor-lectura');
+                if (contenedorLectura) {
+                contenedorLectura.style.visibility = 'visible';
+                contenedorLectura.style.opacity = '1';
+                contenedorLectura.style.transition = 'opacity 0.3s ease-in';
+                    console.log('[cargarContenidoLectura] ✓ Contenido visible en pantalla');
                     }
                 }
                 
                 // Ocultar mensaje de carga cuando el contenido esté listo
                 if (typeof window.hideLoadingMessage === 'function') {
                     window.hideLoadingMessage();
-                }
+                 }
+                 console.log('[cargarContenidoLectura] ✓ Carga completada exitosamente');
 
                 // Habilitar el botón de play una vez que la carga ha finalizado
                 if (btnPlay) {
@@ -592,7 +601,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Event Listeners para los botones de paginación
+     // Event Listeners para los botones de paginación
     // Comportamiento: navegación entre páginas con validación de límites
     const btnAnterior = document.querySelector('.btn-anterior');
     const btnSiguiente = document.querySelector('.btn-siguiente');
@@ -828,4 +837,19 @@ document.addEventListener('DOMContentLoaded', function() {
             actualizarBotonPlay();
         }
     });
-});
+    
+    // Exponer la función globalmente para que pueda ser llamada desde otros scripts
+    window.cargarContenidoLectura = cargarContenidoLectura;
+    console.log('[lectura.js] Función cargarContenidoLectura expuesta globalmente');
+}
+
+// Ejecutar inicialización inmediatamente
+// Si el DOMContentLoaded ya pasó (scripts dinámicos), esto se ejecutará directamente
+// Si aún no ha pasado, se ejecutará cuando sea posible
+if (document.readyState === 'loading') {
+    // El DOM aún se está cargando, esperar a DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', inicializarLectura);
+} else {
+    // El DOM ya está completo, ejecutar inmediatamente
+    inicializarLectura();
+}

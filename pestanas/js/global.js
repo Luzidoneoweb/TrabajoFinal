@@ -24,13 +24,31 @@ async function mostrarInterfazLogueada() {
 
             // Cargar script de biblioteca después de que el contenido esté en el DOM
             const scriptBiblioteca = document.createElement('script');
-             scriptBiblioteca.src = 'pestanas/js/cargar_biblioteca.js';
-             scriptBiblioteca.onload = function() {
-                 if (typeof cargarBiblioteca === 'function') {
-                     cargarBiblioteca();
+            scriptBiblioteca.src = 'pestanas/js/cargar_biblioteca.js';
+            scriptBiblioteca.onload = function() {
+            if (typeof cargarBiblioteca === 'function') {
+            cargarBiblioteca();
+            }
+            };
+            document.body.appendChild(scriptBiblioteca);
+
+             // Cargar scripts para textos
+             const scriptTextUtils = document.createElement('script');
+             scriptTextUtils.src = 'pestanas/js/text-utils.js';
+             document.body.appendChild(scriptTextUtils);
+
+             const scriptLecturaTranslation = document.createElement('script');
+             scriptLecturaTranslation.src = 'traducion_api/lectura-translation-functions.js';
+             document.body.appendChild(scriptLecturaTranslation);
+
+             const scriptTexto = document.createElement('script');
+             scriptTexto.src = 'pestanas/js/texto.js';
+             scriptTexto.onload = function() {
+                 if (typeof cargarTextos === 'function') {
+                     cargarTextos();
                  }
              };
-             document.body.appendChild(scriptBiblioteca);
+             document.body.appendChild(scriptTexto);
 
              // Después de que el contenido se haya cargado, inicializamos los event listeners de las pestañas
              inicializarPestanas();
@@ -149,27 +167,78 @@ function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
             // Mostrar el panel correspondiente
             const panelElemento = document.getElementById(`panel${nombrePestana.charAt(0).toUpperCase() + nombrePestana.slice(1)}`);
             if (panelElemento) {
-                panelElemento.classList.add('activo');
-                
-                // Si es el panel de lectura, añadir clase al body para ocultar scroll
-                if (panelElemento.id === 'panelLectura') {
-                    document.body.classList.add('lectura-activa');
-                    // Ocultar scroll en html y body cuando se activa lectura
-                    if (document.documentElement) {
-                        document.documentElement.style.overflowY = 'hidden';
-                        document.documentElement.style.msOverflowStyle = 'none';
-                        document.documentElement.style.scrollbarWidth = 'none';
+            panelElemento.classList.add('activo');
+            
+            // Si es el panel de lectura, cargar sus scripts y configurar
+            if (panelElemento.id === 'panelLectura') {
+            document.body.classList.add('lectura-activa');
+            // Ocultar scroll en html y body cuando se activa lectura
+            if (document.documentElement) {
+            document.documentElement.style.overflowY = 'hidden';
+            document.documentElement.style.msOverflowStyle = 'none';
+            document.documentElement.style.scrollbarWidth = 'none';
+            }
+            document.body.style.overflowY = 'hidden';
+            document.body.style.msOverflowStyle = 'none';
+            document.body.style.scrollbarWidth = 'none';
+            
+            // Ocultar el contenido de lectura mientras se carga
+            const contenedorLectura = panelElemento.querySelector('.contenedor-lectura');
+            if (contenedorLectura) {
+            contenedorLectura.style.visibility = 'hidden';
+            contenedorLectura.style.opacity = '0';
+            }
+
+                    // Cargar scripts de lectura si aún no están cargados
+                    if (!window.scriptLecturasCargados) {
+                    // Cargar dependencias en orden
+                    const scriptLoadingMessage = document.createElement('script');
+                    scriptLoadingMessage.src = 'pestanas/js/loading_message.js';
+                    document.body.appendChild(scriptLoadingMessage);
+
+                        const scriptElectronVoice = document.createElement('script');
+                    scriptElectronVoice.src = 'lector/electron-voice-integration.js';
+                    document.body.appendChild(scriptElectronVoice);
+
+                        const scriptReadingEngine = document.createElement('script');
+                    scriptReadingEngine.src = 'lector/reading-engine.js';
+                    document.body.appendChild(scriptReadingEngine);
+
+                        const scriptTextManagement = document.createElement('script');
+                    scriptTextManagement.src = 'traducion_api/palabras/text-management.js';
+                    document.body.appendChild(scriptTextManagement);
+
+                        const scriptMultiWordSelection = document.createElement('script');
+                    scriptMultiWordSelection.src = 'traducion_api/palabras/multi-word-selection.js';
+                    document.body.appendChild(scriptMultiWordSelection);
+
+                        const scriptLectura = document.createElement('script');
+                    scriptLectura.src = 'pestanas/js/lectura.js';
+                    document.body.appendChild(scriptLectura);
+
+                    const scriptModalFinalizacion = document.createElement('script');
+                    scriptModalFinalizacion.src = 'pestanas/js/modalFinalizacion.js';
+                    document.body.appendChild(scriptModalFinalizacion);
+
+                    window.scriptLecturasCargados = true;
                     }
-                    document.body.style.overflowY = 'hidden';
-                    document.body.style.msOverflowStyle = 'none';
-                    document.body.style.scrollbarWidth = 'none';
                     
-                    // Ocultar el contenido de lectura mientras se carga
-                    const contenedorLectura = panelElemento.querySelector('.contenedor-lectura');
-                    if (contenedorLectura) {
-                        contenedorLectura.style.visibility = 'hidden';
-                        contenedorLectura.style.opacity = '0';
-                    }
+                    // Asegurarse de que cargarContenidoLectura se llama siempre que se activa el panel
+                    // Esperar hasta que esté disponible (máximo 3 segundos)
+                    let intentosRestantes = 60; // 60 intentos * 50ms = 3000ms
+                    const intentarCargarContenido = () => {
+                        console.log('Intento de llamar cargarContenidoLectura, tipo:', typeof window.cargarContenidoLectura);
+                        if (typeof window.cargarContenidoLectura === 'function') {
+                            console.log('[global.js] ✓ Llamando cargarContenidoLectura()');
+                            window.cargarContenidoLectura();
+                        } else if (intentosRestantes > 0) {
+                            intentosRestantes--;
+                            setTimeout(intentarCargarContenido, 50);
+                        } else {
+                            console.error('[global.js] ✗ Timeout: cargarContenidoLectura no disponible');
+                        }
+                    };
+                    intentarCargarContenido();
                 }
             } else {
                 console.warn(`Panel de pestaña con ID "panel${nombrePestana.charAt(0).toUpperCase() + nombrePestana.slice(1)}" no encontrado.`);

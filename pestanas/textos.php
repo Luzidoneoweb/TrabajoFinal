@@ -26,13 +26,6 @@
     </div>
 
     <div class="visor-texto">
-        <!-- Aquí se mostrará el contenido del texto seleccionado -->
+    <!-- Aquí se mostrará el contenido del texto seleccionado -->
     </div>
-</div>
-
-<script src="pestanas/js/global.js"></script>
-<!-- Scripts de traducción (debe cargarse antes de texto.js) -->
-<script src="traducion_api/lectura-translation-functions.js"></script>
-<!-- Script de utilidades de texto -->
-<script src="pestanas/js/text-utils.js"></script>
-<script src="pestanas/js/texto.js"></script>
+    </div>
