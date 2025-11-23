@@ -57,6 +57,7 @@
             <div class="loading-spinner"></div>
             <p>Cargando contenido...</p>
         </div>
+        <script src="pestanas/js/loading_message.js" ></script> 
         
         <!-- Página de inicio - visible cuando no está logueado -->
         <section class="pagina-inicio oculto" id="paginaInicio">
@@ -179,7 +180,7 @@
         <!-- Contenido de usuario logueado Pestañas-->
         <div id="contenidoLogueado" class="oculto"></div>
             
-        
+        <link rel="stylesheet" href="pestanas/css/loading_message.css">
 
     <!-- Pie de página -->
     <footer class="pie-pagina">
@@ -203,6 +204,6 @@
     <!-- Script para cargar estadísticas -->
      <!-- <script src="pestanas/js/cargar-estadisticas.js"></script> -->
      <script src="pestanas/js/global.js" defer></script>
-    <script src="pestanas/js/loading_message.js" defer></script>
+    <script src="pestanas/js/loading_message.js" ></script>
 </body>
 </html>

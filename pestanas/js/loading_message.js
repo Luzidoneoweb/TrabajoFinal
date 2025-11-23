@@ -1,26 +1,34 @@
-// Hacer las funciones disponibles globalmente
+// Crear el div de loading dinámicamente cuando se necesite
+function ensureLoadingDiv() {
+    if (!document.getElementById('loading-message')) {
+        const loadingDiv = document.createElement('div');
+        loadingDiv.id = 'loading-message';
+        loadingDiv.innerHTML = '<div class="loading-spinner"></div><p>Cargando contenido...</p>';
+        document.body.appendChild(loadingDiv);
+    }
+}
+
 window.showLoadingMessage = function() {
-    // Intentar múltiples veces si el elemento no está disponible inmediatamente
-    let attempts = 0;
-    const tryShow = () => {
-        const loadingMsg = document.getElementById('loading-message');
-        if (loadingMsg) {
-            loadingMsg.style.display = 'flex';
-        } else if (attempts < 10) {
-            attempts++;
-            setTimeout(tryShow, 50);
-        } else {
-            console.warn('No se pudo encontrar el elemento loading-message');
-        }
-    };
-    tryShow();
+    ensureLoadingDiv();
+    const loadingMsg = document.getElementById('loading-message');
+    if (loadingMsg) {
+        loadingMsg.style.display = 'flex';
+    }
+    // Ocultar el footer mientras carga
+    const footer = document.querySelector('.pie-pagina');
+    if (footer) {
+        footer.style.display = 'none';
+    }
 };
 
 window.hideLoadingMessage = function() {
     const loadingMsg = document.getElementById('loading-message');
     if (loadingMsg) {
-        setTimeout(() => {
-            loadingMsg.style.display = 'none';
-        }, 300);
+        loadingMsg.style.display = 'none';
+    }
+    // Mostrar el footer nuevamente
+    const footer = document.querySelector('.pie-pagina');
+    if (footer) {
+        footer.style.display = '';
     }
 };

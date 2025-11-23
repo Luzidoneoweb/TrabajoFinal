@@ -84,20 +84,29 @@ async function mostrarInterfazLogueada() {
                  localStorage.removeItem('activeTabAfterRedirect');
              }
              
-             // Activar la pestaña
+             // Activar la pestaña y ocultar loading después
              if (window.cambiarPestana) {
-                 window.cambiarPestana(pestanaAActivar);
-             }
+             window.cambiarPestana(pestanaAActivar);
+                 // Ocultar loading después de que se active la pestaña
+                  setTimeout(() => {
+                          if (typeof window.hideLoadingMessage === 'function') {
+                          window.hideLoadingMessage();
+                      }
+                      }, 500);
+              } else {
+                  // Si no hay cambiarPestana, ocultar loading directamente
+              if (typeof window.hideLoadingMessage === 'function') {
+                      window.hideLoadingMessage();
+                      }
+              }
 
-        } catch (error) {
-            console.error('Error al cargar el contenido logueado:', error);
-            // Opcional: mostrar un mensaje de error al usuario
-        } finally {
-            // Ocultar mensaje de carga después de la petición (éxito o error)
-            if (typeof window.hideLoadingMessage === 'function') {
-                window.hideLoadingMessage();
-            }
-        }
+         } catch (error) {
+             console.error('Error al cargar el contenido logueado:', error);
+             // Ocultar loading en caso de error
+             if (typeof window.hideLoadingMessage === 'function') {
+                 window.hideLoadingMessage();
+             }
+         }
     }
 }
 
@@ -210,10 +219,6 @@ function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
                     // Cargar scripts de lectura si aún no están cargados
                     if (!window.scriptLecturasCargados) {
                     // Cargar dependencias en orden
-                    const scriptLoadingMessage = document.createElement('script');
-                    scriptLoadingMessage.src = 'pestanas/js/loading_message.js';
-                    document.body.appendChild(scriptLoadingMessage);
-
                         const scriptElectronVoice = document.createElement('script');
                     scriptElectronVoice.src = 'lector/electron-voice-integration.js';
                     document.body.appendChild(scriptElectronVoice);
