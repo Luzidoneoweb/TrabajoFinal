@@ -191,6 +191,7 @@ button:hover {
 .contenido-principal {
     min-height: calc(100vh - 70px);
     padding: 0px !important;
+    position: relative;
 }
 
 /* ===== SECCIÓN HERO ===== */

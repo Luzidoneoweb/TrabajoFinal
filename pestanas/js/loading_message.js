@@ -19,6 +19,8 @@ window.showLoadingMessage = function() {
 window.hideLoadingMessage = function() {
     const loadingMsg = document.getElementById('loading-message');
     if (loadingMsg) {
-        loadingMsg.style.display = 'none';
+        setTimeout(() => {
+            loadingMsg.style.display = 'none';
+        }, 300);
     }
 };

@@ -1,6 +1,10 @@
 // SOLO SE CARGA CUANDO USUARIO ESTÁ LOGUEADO
+let interfazLogueadaMostrada = false;
 
 async function mostrarInterfazLogueada() {
+    // Si ya se mostró antes, no mostrar loading de nuevo
+    if (interfazLogueadaMostrada) return;
+    
     const navPrincipal = document.getElementById('navegacionPrincipal');
     const pagInicio = document.getElementById('paginaInicio');
     const contLogueado = document.getElementById('contenidoLogueado');
@@ -8,8 +12,15 @@ async function mostrarInterfazLogueada() {
     
     if (navPrincipal) navPrincipal.classList.add('oculto');
     if (pagInicio) pagInicio.classList.add('oculto');
-    if (contLogueado) contLogueado.classList.remove('oculto');
     if (btnCerrar) btnCerrar.classList.remove('oculto');
+
+    // Asegurarse de que el contenido logueado esté oculto antes de cargar
+    if (contLogueado) contLogueado.classList.add('oculto');
+
+    // Mostrar mensaje de carga antes de la petición (solo la primera vez)
+    if (typeof window.showLoadingMessage === 'function') {
+        window.showLoadingMessage();
+    }
 
     // Cargar el contenido de contenido_logueado.php dinámicamente
     const contenidoLogueadoDiv = document.getElementById('contenidoLogueado');
@@ -21,6 +32,12 @@ async function mostrarInterfazLogueada() {
             }
             const htmlContent = await response.text();
             contenidoLogueadoDiv.innerHTML = htmlContent;
+
+            // Mostrar el contenido logueado solo después de que se haya cargado
+            if (contLogueado) contLogueado.classList.remove('oculto');
+            
+            // Marcar que la interfaz ya se mostró
+            interfazLogueadaMostrada = true;
 
             // Cargar script de biblioteca después de que el contenido esté en el DOM
             const scriptBiblioteca = document.createElement('script');
@@ -75,6 +92,11 @@ async function mostrarInterfazLogueada() {
         } catch (error) {
             console.error('Error al cargar el contenido logueado:', error);
             // Opcional: mostrar un mensaje de error al usuario
+        } finally {
+            // Ocultar mensaje de carga después de la petición (éxito o error)
+            if (typeof window.hideLoadingMessage === 'function') {
+                window.hideLoadingMessage();
+            }
         }
     }
 }
@@ -111,12 +133,8 @@ function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
 }
  // Función para cambiar entre pestañas (disponible globalmente)
         window.cambiarPestana = async function cambiarPestana(nombrePestana) {
-            // Mostrar mensaje de carga solo para ciertas pestañas
-            // Para lectura, el mensaje ya se muestra en texto.js cuando se hace clic,
-            // pero lo mostramos aquí también por si se accede directamente a lectura
-            if (window.showLoadingMessage && (nombrePestana === 'textos' || nombrePestana === 'practicas' || nombrePestana === 'lectura')) {
-                window.showLoadingMessage();
-            }
+            // Solo mostrar loading al entrar en lectura directamente
+            // Las demás pestañas no muestran loading
 
             // Detener la lectura si está activa antes de cambiar de pestaña
             if (window.MotorLectura && window.MotorLectura.estado !== 'inactivo') {
@@ -223,19 +241,24 @@ function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
                     window.scriptLecturasCargados = true;
                     }
                     
-                    // Asegurarse de que cargarContenidoLectura se llama siempre que se activa el panel
-                    // Esperar hasta que esté disponible (máximo 3 segundos)
-                    let intentosRestantes = 60; // 60 intentos * 50ms = 3000ms
+                    // Mostrar loading cuando se entra a lectura
+                    if (window.showLoadingMessage) {
+                        window.showLoadingMessage();
+                    }
+                    
+                    // Esperar a que cargarContenidoLectura esté disponible (máximo 5 segundos)
+                    let intentosRestantes = 100; // 100 intentos * 50ms = 5000ms
                     const intentarCargarContenido = () => {
-                        console.log('Intento de llamar cargarContenidoLectura, tipo:', typeof window.cargarContenidoLectura);
                         if (typeof window.cargarContenidoLectura === 'function') {
-                            console.log('[global.js] ✓ Llamando cargarContenidoLectura()');
                             window.cargarContenidoLectura();
                         } else if (intentosRestantes > 0) {
                             intentosRestantes--;
                             setTimeout(intentarCargarContenido, 50);
                         } else {
-                            console.error('[global.js] ✗ Timeout: cargarContenidoLectura no disponible');
+                            console.error('[global.js] cargarContenidoLectura no disponible después de 5s');
+                            if (window.hideLoadingMessage) {
+                                window.hideLoadingMessage();
+                            }
                         }
                     };
                     intentarCargarContenido();

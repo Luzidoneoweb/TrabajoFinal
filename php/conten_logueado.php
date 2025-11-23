@@ -1,4 +1,5 @@
  <!-- Contenido de la aplicación - visible cuando está logueado -->
+  <link rel="stylesheet" href="pestanas/css/loading_message.css">
   <?php include 'menu_logueado.php'; ?>
         <section class="contenido-aplicacion" id="contenidoAplicacion">
              

@@ -6,6 +6,7 @@
     <title>MiApp - Aprende idiomas leyendo</title>
     <link rel="stylesheet" href="css/global_estilos.css">
     <link rel="stylesheet" href="pestanas/css/global_pestanas.css" />
+    <link rel="stylesheet" href="pestanas/css/loading_message.css" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         /* CSS crítico para renderización rápida */
@@ -49,8 +50,14 @@
     </header>
 
     <!-- Contenido principal de la aplicación -->
-     
+    
     <main class="contenido-principal" style="padding-top: 70px;">
+    <!-- Contenedor del mensaje de carga -->
+    <div id="loading-message" class="loading-message" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p>Cargando contenido...</p>
+        </div>
+        
         <!-- Página de inicio - visible cuando no está logueado -->
         <section class="pagina-inicio oculto" id="paginaInicio">
             <!-- Sección hero principal -->
@@ -196,5 +203,6 @@
     <!-- Script para cargar estadísticas -->
      <!-- <script src="pestanas/js/cargar-estadisticas.js"></script> -->
      <script src="pestanas/js/global.js" defer></script>
+    <script src="pestanas/js/loading_message.js" defer></script>
 </body>
 </html>
