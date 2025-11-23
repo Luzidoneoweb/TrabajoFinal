@@ -1,6 +1,12 @@
 <link rel="stylesheet" href="pestanas/css/loading_message.css">
 <link rel="stylesheet" href="css/floating-menu.css">
 
+<!-- Contenedor del mensaje de carga -->
+<div id="loading-message" class="loading-message" style="display: none;">
+    <div class="loading-spinner"></div>
+    <p>Cargando contenido...</p>
+</div>
+
 <div class="lectura" aria-label="Lector de texto">
     <div class="contenedor-lectura">
         <!-- Encabezado de lectura -->
@@ -69,3 +75,5 @@
         </footer>
     </div>
     </div>
+
+<script src="pestanas/js/loading_message.js" defer></script>
