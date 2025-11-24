@@ -1,10 +1,12 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // console.log('DOM Content Loaded in subir_texto.js'); // Eliminado para limpiar consola
+// Función de inicialización para la pestaña "Subir Texto"
+function inicializarSubirTexto() {
+    console.log('inicializarSubirTexto() ejecutado.'); // Log de inicialización
     const titulo = document.getElementById('titulo');
     const contenido = document.getElementById('contenido');
     const texto_publico = document.getElementById('texto_publico');
     const categoria = document.getElementById('categoria');
     const btnSubirTexto = document.getElementById('btn_subir_texto');
+    console.log('subir_texto.js cargado.'); // Confirmar que el script se carga
 
     // Función para mostrar mensajes elegantes
     function mostrarMensaje(mensaje, tipo = 'info') {
@@ -58,20 +60,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Función para cargar categorías
     function cargarCategorias() {
+        console.log('Intentando cargar categorías...'); // Log de inicio de función
         // Verificar si el elemento existe antes de continuar
         if (!categoria) {
+            console.log('Elemento "categoria" no encontrado. El usuario no es admin o hay un problema en el DOM.');
             return; // No es admin, no cargar categorías
         }
-        
+        console.log('Elemento "categoria" encontrado. Realizando fetch...');
+
         const urlCategorias = '/trabajoFinal/pestanas/php/get_categoria.php'; // Ruta corregida
-        // console.log('Fetching categories from:', urlCategorias); // Eliminado para limpiar consola
         fetch(urlCategorias, {
             credentials: 'include' // Incluir cookies de sesión
         })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Respuesta de get_categoria.php:', response);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log('Datos recibidos de categorías:', data);
                 if (data.success) {
-                    // console.log('Categories loaded successfully:', data.categories); // Eliminado para limpiar consola
                     categoria.innerHTML = '<option value="">-- Selecciona categoría --</option>'; // Limpiar y añadir opción por defecto
                     data.categories.forEach(cat => {
                         const option = document.createElement('option');
@@ -83,30 +93,39 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.error('Error al cargar categorías:', data.error);
                 }
             })
-            .catch(err => console.error('Error de conexión al cargar categorías:', err));
+            .catch(err => console.error('Error de conexión o parseo al cargar categorías:', err));
     }
 
     // Cargar categorías al iniciar (solo si el elemento existe)
     if (categoria) {
         cargarCategorias();
+    } else {
+        console.log('El elemento "categoria" no existe en el DOM. No se cargarán las categorías.');
     }
 
     btnSubirTexto.addEventListener('click', function() {
+        console.log('Botón "Subir Texto" clickeado.'); // Log de clic
         const formData = new FormData();
         formData.append('titulo', titulo.value);
         formData.append('contenido', contenido.value);
-        if(texto_publico.checked) formData.append('texto_publico', 'on');
-        if(categoria.value) formData.append('categoria', categoria.value);
+        if(texto_publico && texto_publico.checked) formData.append('texto_publico', 'on'); // Verificar si texto_publico existe
+        if(categoria && categoria.value) formData.append('categoria', categoria.value); // Verificar si categoria existe
 
         const urlSubirTexto = '/trabajoFinal/pestanas/php/subirTextoFuncion.php'; // Ruta corregida
-        // console.log('Submitting text to:', urlSubirTexto); // Eliminado para limpiar consola
         fetch(urlSubirTexto, {
             method: 'POST',
             body: formData,
             credentials: 'include' // Incluir cookies de sesión
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log('Respuesta de subirTextoFuncion.php:', response);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log('Datos recibidos de subirTextoFuncion.php:', data);
             if(data.success) {
                 // Mostrar mensaje de éxito
                 mostrarMensaje('Texto subido correctamente', 'success');
@@ -133,4 +152,13 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(err => mostrarMensaje('Error al conectar con el servidor: ' + err, 'error'));
     });
+}
+
+// Si el script se carga de forma tradicional (no AJAX), ejecutar en DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Solo ejecutar si no estamos en un entorno donde se llama explícitamente
+    // Esto es una salvaguarda, la idea es que se llame vía inicializarPestanasGlobal
+    if (document.getElementById('panelSubirTexto') && document.getElementById('panelSubirTexto').classList.contains('activo')) {
+        inicializarSubirTexto();
+    }
 });

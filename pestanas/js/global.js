@@ -206,60 +206,78 @@ function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
             
             // Si es el panel de lectura, cargar sus scripts y configurar
             if (panelElemento.id === 'panelLectura') {
-            document.body.classList.add('lectura-activa');
-            // Ocultar scroll en html y body cuando se activa lectura
-            if (document.documentElement) {
-            document.documentElement.style.overflowY = 'hidden';
-            document.documentElement.style.msOverflowStyle = 'none';
-            document.documentElement.style.scrollbarWidth = 'none';
-            }
-            document.body.style.overflowY = 'hidden';
-            document.body.style.msOverflowStyle = 'none';
-            document.body.style.scrollbarWidth = 'none';
-            
-            // Ocultar el contenido de lectura mientras se carga
-            const contenedorLectura = panelElemento.querySelector('.contenedor-lectura');
-            if (contenedorLectura) {
-            contenedorLectura.style.visibility = 'hidden';
-            contenedorLectura.style.opacity = '0';
-            }
+                document.body.classList.add('lectura-activa');
+                // Ocultar scroll en html y body cuando se activa lectura
+                if (document.documentElement) {
+                    document.documentElement.style.overflowY = 'hidden';
+                    document.documentElement.style.msOverflowStyle = 'none';
+                    document.documentElement.style.scrollbarWidth = 'none';
+                }
+                document.body.style.overflowY = 'hidden';
+                document.body.style.msOverflowStyle = 'none';
+                document.body.style.scrollbarWidth = 'none';
+                
+                // Ocultar el contenido de lectura mientras se carga
+                const contenedorLectura = panelElemento.querySelector('.contenedor-lectura');
+                if (contenedorLectura) {
+                    contenedorLectura.style.visibility = 'hidden';
+                    contenedorLectura.style.opacity = '0';
+                }
 
-                    // Cargar scripts de lectura si aún no están cargados
-                    if (!window.scriptLecturasCargados) {
-                        try {
-                            // Cargar dependencias en orden usando Promises
-                            await loadScriptPromise('lector/electron-voice-integration.js');
-                            await loadScriptPromise('lector/reading-engine.js');
-                            await loadScriptPromise('pestanas/js/text-management.js');
-                            await loadScriptPromise('pestanas/js/multi-word-selection.js');
-                            await loadScriptPromise('pestanas/js/lectura.js');
-                            await loadScriptPromise('pestanas/js/modalFinalizacion.js');
-                            window.scriptLecturasCargados = true;
-                            console.log('[global.js] Todos los scripts de lectura cargados exitosamente.');
-                        } catch (error) {
-                            console.error('[global.js] Error al cargar scripts de lectura:', error);
-                            if (window.hideLoadingMessage) {
-                                window.hideLoadingMessage();
-                            }
-                            return; // Salir si hay un error en la carga de scripts
-                        }
-                    }
-                    
-                    // Mostrar loading cuando se entra a lectura
-                    if (window.showLoadingMessage) {
-                        window.showLoadingMessage();
-                    }
-                    
-                    // Llamar a cargarContenidoLectura directamente, ya que los scripts están garantizados de estar cargados
-                    if (typeof window.cargarContenidoLectura === 'function') {
-                        window.cargarContenidoLectura();
-                    } else {
-                        console.error('[global.js] cargarContenidoLectura no disponible después de la carga de scripts.');
+                // Cargar scripts de lectura si aún no están cargados
+                if (!window.scriptLecturasCargados) {
+                    try {
+                        // Cargar dependencias en orden usando Promises
+                        await loadScriptPromise('lector/electron-voice-integration.js');
+                        await loadScriptPromise('lector/reading-engine.js');
+                        await loadScriptPromise('pestanas/js/text-management.js');
+                        await loadScriptPromise('pestanas/js/multi-word-selection.js');
+                        await loadScriptPromise('pestanas/js/lectura.js');
+                        await loadScriptPromise('pestanas/js/modalFinalizacion.js');
+                        window.scriptLecturasCargados = true;
+                        console.log('[global.js] Todos los scripts de lectura cargados exitosamente.');
+                    } catch (error) {
+                        console.error('[global.js] Error al cargar scripts de lectura:', error);
                         if (window.hideLoadingMessage) {
                             window.hideLoadingMessage();
                         }
+                        return; // Salir si hay un error en la carga de scripts
                     }
                 }
+                
+                // Mostrar loading cuando se entra a lectura
+                if (window.showLoadingMessage) {
+                    window.showLoadingMessage();
+                }
+                
+                // Llamar a cargarContenidoLectura directamente, ya que los scripts están garantizados de estar cargados
+                if (typeof window.cargarContenidoLectura === 'function') {
+                    window.cargarContenidoLectura();
+                } else {
+                    console.error('[global.js] cargarContenidoLectura no disponible después de la carga de scripts.');
+                    if (window.hideLoadingMessage) {
+                        window.hideLoadingMessage();
+                    }
+                }
+            } else if (panelElemento.id === 'panelSubirTexto') { // Lógica para la pestaña Subir Texto
+                // Cargar el script de subir_texto.js si aún no está cargado
+                if (!window.scriptSubirTextoCargado) {
+                    try {
+                        await loadScriptPromise('pestanas/js/subir_texto.js');
+                        window.scriptSubirTextoCargado = true;
+                        console.log('[global.js] Script de subir_texto.js cargado exitosamente.');
+                    } catch (error) {
+                        console.error('[global.js] Error al cargar script de subir_texto.js:', error);
+                        return;
+                    }
+                }
+                // Inicializar la lógica de subir_texto.js
+                if (typeof window.inicializarSubirTexto === 'function') {
+                    window.inicializarSubirTexto();
+                } else {
+                    console.error('[global.js] inicializarSubirTexto no disponible después de la carga del script.');
+                }
+            }
             } else {
                 console.warn(`Panel de pestaña con ID "panel${nombrePestana.charAt(0).toUpperCase() + nombrePestana.slice(1)}" no encontrado.`);
             }
