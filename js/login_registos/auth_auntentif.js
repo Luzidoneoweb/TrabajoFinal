@@ -1,4 +1,7 @@
 /* auth.js - vincula #botonLogin con el modal y envía login/registro sin recargar */
+// Proteger para que solo se ejecute una vez
+if (!window.authAuntentifLoaded) {
+  window.authAuntentifLoaded = true;
 (() => {
   const modal = document.getElementById('authModal');
   const btnOpen = document.getElementById('botonLogin');
@@ -48,8 +51,9 @@
     const form = new FormData(loginForm);
     // No es necesario cambiar el nombre del campo aquí, ya que FormData usa los atributos 'name' del HTML
     // El campo en el HTML ya se cambió a 'identifier'
-    const res = await fetch('php/login_seguridad/login.php', { method:'POST', body:form });
+    const res = await fetch('php/login_seguridad/login.php', { method:'POST', body:form, credentials: 'same-origin' });
     const json = await res.json();
+    console.log('Respuesta de login:', json); // Añadir log para depuración
 
     if(json.success){
       showMsg(msg, json.message, true);
@@ -57,8 +61,6 @@
       if (typeof verificarEstadoSesion === 'function') {
         await verificarEstadoSesion(); // Esperar a que la UI se actualice
         modal.style.display = 'none'; // Cerrar modal después de la actualización
-      } else {
-        location.reload();
       }
     } else {
       showMsg(msg, json.message);
@@ -125,3 +127,4 @@
   });
 
 })();
+} // Fin del if protector

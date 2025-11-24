@@ -10,6 +10,7 @@
 		try {
 			const response = await fetch('php/login_seguridad/verificar_sesion.php', { credentials: 'same-origin' });
 			const data = await response.json();
+            console.log('Estado de sesión verificado:', data); // Añadir log para depuración
 
 			usuarioLogueado = !!data.logged_in;
 			// Exponer el identificador recordado para el modal (si llega username del backend)
@@ -22,10 +23,12 @@
 			}
 
 			if (usuarioLogueado) {
-				mostrarInterfazLogueada();
+			console.log('[verificarEstadoSesion] Llamando a mostrarInterfazLogueada()');
+			 mostrarInterfazLogueada(); // Esta función ya carga el contenido logueado
 			} else {
-				mostrarInterfazNoLogueada();
-			}
+			 console.log('[verificarEstadoSesion] Llamando a mostrarInterfazNoLogueada()');
+			mostrarInterfazNoLogueada();
+		}
 		} catch (error) {
 			console.error('Error verificando sesión:', error);
 			usuarioLogueado = false;
@@ -75,21 +78,67 @@
         const contenidoAplicacion = document.getElementById('contenidoLogueado'); // Apunta al nuevo contenedor
         const botonMenuMovil = document.getElementById('botonMenuMovil');
 
-        // Event listeners para todos los botones de cerrar sesión (menú y encabezado)
-        document.querySelectorAll('.boton-cerrar-sesion').forEach(function(btn) {
-            btn.addEventListener('click', cerrarSesion);
-        });
+        // Event delegation para botones de cerrar sesión (dinámicos)
+        document.addEventListener('click', function(e) {
+             const btn = e.target.closest('.boton-cerrar-sesion');
+        if (btn) {
+            cerrarSesion(e);
+            }
+         });
         
+        // Función para cargar el contenido de usuario logueado
+        async function cargarContenidoLogueado() {
+            if (contenidoAplicacion) {
+                try {
+                    showLoadingMessage(); // Mostrar mensaje de carga
+                    const response = await fetch('php/conten_logueado.php', { credentials: 'same-origin' });
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const html = await response.text();
+                    contenidoAplicacion.innerHTML = html;
+                    hideLoadingMessage(); // Ocultar mensaje de carga
+                    // Aquí puedes inicializar cualquier JS específico del contenido logueado si es necesario
+                    // Por ejemplo, si pestanas/js/global.js tiene una función de inicialización:
+                    if (typeof inicializarPestanasGlobal === 'function') {
+                        inicializarPestanasGlobal();
+                    }
+                } catch (error) {
+                    console.error('Error cargando contenido logueado:', error);
+                    contenidoAplicacion.innerHTML = '<p>Error al cargar el contenido. Por favor, recargue la página.</p>';
+                    hideLoadingMessage(); // Ocultar mensaje de carga incluso si hay error
+                }
+            }
+        }
+
         // Función para mostrar interfaz de usuario logueado
         function mostrarInterfazLogueada() {
-        if (navegacionPrincipal) navegacionPrincipal.classList.add('oculto');
-        if (paginaInicio) paginaInicio.classList.add('oculto');
-        if (contenidoAplicacion) contenidoAplicacion.classList.remove('oculto');
-        if (contenedorBotonCerrarSesion) { // Mostrar el botón de cerrar sesión en el encabezado
-        contenedorBotonCerrarSesion.classList.remove('oculto');
-        }
-        // La manipulación de navegacionUsuario se hará en pestanas/js/global.js después de cargar el contenido dinámico
-        }
+        console.log('[mostrarInterfazLogueada] Iniciando...');
+        console.log('navegacionPrincipal:', navegacionPrincipal);
+        console.log('paginaInicio:', paginaInicio);
+        console.log('contenidoAplicacion:', contenidoAplicacion);
+        console.log('contenedorBotonCerrarSesion:', contenedorBotonCerrarSesion);
+        
+        if (navegacionPrincipal) {
+            navegacionPrincipal.classList.add('oculto');
+                console.log('✓ navegacionPrincipal oculta');
+             }
+             if (paginaInicio) {
+                 paginaInicio.classList.add('oculto');
+                 console.log('✓ paginaInicio oculta');
+             }
+             if (contenidoAplicacion) {
+                 contenidoAplicacion.classList.remove('oculto');
+                 console.log('✓ contenidoAplicacion mostrada');
+             }
+             if (contenedorBotonCerrarSesion) { // Mostrar el botón de cerrar sesión en el encabezado
+                 contenedorBotonCerrarSesion.classList.remove('oculto');
+                 console.log('✓ contenedorBotonCerrarSesion mostrada');
+             }
+             console.log('[mostrarInterfazLogueada] Llamando a cargarContenidoLogueado()');
+             cargarContenidoLogueado(); // Cargar el contenido dinámicamente
+             // La manipulación de navegacionUsuario se hará en pestanas/js/global.js después de cargar el contenido dinámico
+         }
         
         // Función para mostrar interfaz de usuario no logueado
         function mostrarInterfazNoLogueada() {
@@ -103,46 +152,53 @@
         }
         
         // Función para cerrar sesión
-        async function cerrarSesion() {
-            try {
-                const response = await fetch('php/login_seguridad/logout.php', {
-                    method: 'POST',
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                });
+        let cierrandoSesion = false; // Bandera para evitar múltiples clics
+        async function cerrarSesion(e) {
+        if (e && e.preventDefault) e.preventDefault();
+        if (cierrandoSesion) return; // Evitar múltiples clics
+        cierrandoSesion = true;
+        
+        try {
+        const response = await fetch('php/login_seguridad/logout.php', {
+        method: 'POST',
+            credentials: 'same-origin',
+                     headers: {
+                         'Content-Type': 'application/x-www-form-urlencoded'
+                     }
+                 });
                 
                 if (response.ok) {
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        usuarioLogueado = false;
-                        rememberedIdentifier = null; // Limpiar el identificador recordado al cerrar sesión
-                        mostrarInterfazNoLogueada();
-                        // Opcional: mostrar mensaje de confirmación
-                        console.log(data.message);
-                    } else {
-                        console.error('Error cerrando sesión:', data.message);
-                        // Aún así, intentar cerrar la sesión localmente
-                        usuarioLogueado = false;
-                        rememberedIdentifier = null;
-                        mostrarInterfazNoLogueada();
-                    }
+                const data = await response.json();
+                
+                if (data.success) {
+                usuarioLogueado = false;
+                rememberedIdentifier = null; // Limpiar el identificador recordado al cerrar sesión
+                mostrarInterfazNoLogueada();
+                // Opcional: mostrar mensaje de confirmación
+                console.log(data.message);
                 } else {
-                    // Si la respuesta no es OK, cerrar sesión localmente
-                    usuarioLogueado = false;
-                    rememberedIdentifier = null;
-                    mostrarInterfazNoLogueada();
+                console.error('Error cerrando sesión:', data.message);
+                // Aún así, intentar cerrar la sesión localmente
+                usuarioLogueado = false;
+                rememberedIdentifier = null;
+                mostrarInterfazNoLogueada();
                 }
-            } catch (error) {
+                } else {
+                // Si la respuesta no es OK, cerrar sesión localmente
+                usuarioLogueado = false;
+                rememberedIdentifier = null;
+                mostrarInterfazNoLogueada();
+                }
+                } catch (error) {
                 // Error de red o conexión - cerrar sesión localmente de todas formas
                 console.error('Error cerrando sesión:', error);
                 usuarioLogueado = false;
                 rememberedIdentifier = null;
                 mostrarInterfazNoLogueada();
-            }
-        }
+                } finally {
+                        cierrandoSesion = false; // Siempre resetear la bandera
+             }
+         }
         
        
         

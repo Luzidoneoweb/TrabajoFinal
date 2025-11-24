@@ -51,7 +51,7 @@ function set_remember_cookie($selector, $validator, $expires_at) {
         'expires' => strtotime($expires_at),
         'path' => '/',
         'domain' => '', // Deja vacío para el dominio actual o especifica tu dominio
-        'secure' => true, // Solo enviar a través de HTTPS
+        'secure' => false, // false en desarrollo (HTTP), true en producción (HTTPS)
         'httponly' => true, // No accesible por JavaScript
         'samesite' => 'Lax' // Protección CSRF
     ]);
@@ -63,7 +63,7 @@ function delete_remember_cookie() {
         'expires' => time() - 3600, // Expira en el pasado
         'path' => '/',
         'domain' => '',
-        'secure' => true,
+        'secure' => false, // false en desarrollo (HTTP), true en producción (HTTPS)
         'httponly' => true,
         'samesite' => 'Lax'
     ]);

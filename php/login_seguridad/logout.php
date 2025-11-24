@@ -1,5 +1,5 @@
 <?php
-require_once 'seguridad.php'; // Incluir funciones de seguridad
+require_once 'seguridad.php'; // Incluir funciones de seguridad (ya incluye session_start)
 header('Content-Type: application/json; charset=utf-8');
 
 // Limpiar todas las variables de sesión

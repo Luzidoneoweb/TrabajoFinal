@@ -110,10 +110,7 @@ async function mostrarInterfazLogueada() {
     }
 }
 
-async function cerrarSesion() {
-    await fetch('php/login_seguridad/logout.php', { method: 'POST', credentials: 'include' });
-    location.reload(); // Recarga y vuelve al modo no logueado
-}
+
 
 
 // Resto del código que quitaste de global.js
@@ -141,6 +138,17 @@ function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
     }, duracion);
 }
  // Función para cambiar entre pestañas (disponible globalmente)
+        // Función auxiliar para cargar scripts y devolver una Promise
+        function loadScriptPromise(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = () => resolve(script);
+                script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+                document.body.appendChild(script);
+            });
+        }
+
         window.cambiarPestana = async function cambiarPestana(nombrePestana) {
             // Solo mostrar loading al entrar en lectura directamente
             // Las demás pestañas no muestran loading
@@ -218,32 +226,23 @@ function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
 
                     // Cargar scripts de lectura si aún no están cargados
                     if (!window.scriptLecturasCargados) {
-                    // Cargar dependencias en orden
-                        const scriptElectronVoice = document.createElement('script');
-                    scriptElectronVoice.src = 'lector/electron-voice-integration.js';
-                    document.body.appendChild(scriptElectronVoice);
-
-                        const scriptReadingEngine = document.createElement('script');
-                    scriptReadingEngine.src = 'lector/reading-engine.js';
-                    document.body.appendChild(scriptReadingEngine);
-
-                        const scriptTextManagement = document.createElement('script');
-                    scriptTextManagement.src = 'traducion_api/palabras/text-management.js';
-                    document.body.appendChild(scriptTextManagement);
-
-                        const scriptMultiWordSelection = document.createElement('script');
-                    scriptMultiWordSelection.src = 'traducion_api/palabras/multi-word-selection.js';
-                    document.body.appendChild(scriptMultiWordSelection);
-
-                        const scriptLectura = document.createElement('script');
-                    scriptLectura.src = 'pestanas/js/lectura.js';
-                    document.body.appendChild(scriptLectura);
-
-                    const scriptModalFinalizacion = document.createElement('script');
-                    scriptModalFinalizacion.src = 'pestanas/js/modalFinalizacion.js';
-                    document.body.appendChild(scriptModalFinalizacion);
-
-                    window.scriptLecturasCargados = true;
+                        try {
+                            // Cargar dependencias en orden usando Promises
+                            await loadScriptPromise('lector/electron-voice-integration.js');
+                            await loadScriptPromise('lector/reading-engine.js');
+                            await loadScriptPromise('traducion_api/palabras/text-management.js');
+                            await loadScriptPromise('traducion_api/palabras/multi-word-selection.js');
+                            await loadScriptPromise('pestanas/js/lectura.js');
+                            await loadScriptPromise('pestanas/js/modalFinalizacion.js');
+                            window.scriptLecturasCargados = true;
+                            console.log('[global.js] Todos los scripts de lectura cargados exitosamente.');
+                        } catch (error) {
+                            console.error('[global.js] Error al cargar scripts de lectura:', error);
+                            if (window.hideLoadingMessage) {
+                                window.hideLoadingMessage();
+                            }
+                            return; // Salir si hay un error en la carga de scripts
+                        }
                     }
                     
                     // Mostrar loading cuando se entra a lectura
@@ -251,22 +250,15 @@ function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
                         window.showLoadingMessage();
                     }
                     
-                    // Esperar a que cargarContenidoLectura esté disponible (máximo 5 segundos)
-                    let intentosRestantes = 100; // 100 intentos * 50ms = 5000ms
-                    const intentarCargarContenido = () => {
-                        if (typeof window.cargarContenidoLectura === 'function') {
-                            window.cargarContenidoLectura();
-                        } else if (intentosRestantes > 0) {
-                            intentosRestantes--;
-                            setTimeout(intentarCargarContenido, 50);
-                        } else {
-                            console.error('[global.js] cargarContenidoLectura no disponible después de 5s');
-                            if (window.hideLoadingMessage) {
-                                window.hideLoadingMessage();
-                            }
+                    // Llamar a cargarContenidoLectura directamente, ya que los scripts están garantizados de estar cargados
+                    if (typeof window.cargarContenidoLectura === 'function') {
+                        window.cargarContenidoLectura();
+                    } else {
+                        console.error('[global.js] cargarContenidoLectura no disponible después de la carga de scripts.');
+                        if (window.hideLoadingMessage) {
+                            window.hideLoadingMessage();
                         }
-                    };
-                    intentarCargarContenido();
+                    }
                 }
             } else {
                 console.warn(`Panel de pestaña con ID "panel${nombrePestana.charAt(0).toUpperCase() + nombrePestana.slice(1)}" no encontrado.`);
