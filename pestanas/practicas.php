@@ -1,28 +1,52 @@
 <div class="contenedor-principal-practicas">
-    
-    <div class="tarjeta-practicar-vocabulario">
-        <h2 class="titulo-practicar-vocabulario">Practicar</h2>
-
-        <div class="grupo-botones-modo">
-            <button class="boton-modo" data-modo="seleccion">Selección múltiple</button>
-            <button class="boton-modo" data-modo="escritura">Escribir palabra</button>
-            <button class="boton-modo" data-modo="frases">Escribir frases</button>
+    <div id="practice-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding:22px; margin-top: -2px;">
+        <h3>🎯 Practicar Vocabulario</h3>
+    </div>
+   
+</div>
+       
+        <div class="mode-selector">
+            <button class="mode-btn active" onclick="setPracticeMode('selection')">📝 Selección múltiple</button>
+            <button class="mode-btn" onclick="setPracticeMode('writing')">✍️ Escribir palabra</button>
+            <button class="mode-btn" onclick="setPracticeMode('sentences')">📖 Escribir frases</button>
         </div>
 
-        <h3 class="subtitulo-elegir-texto">Elige un texto para practicar:</h3>
+        <div class="progress">
+            <div class="progress-bar" id="practice-progress-bar" style="width: 0%"></div>
+        </div>
 
-        <div class="selector-texto-practica">
-            <select id="selectorTextosPractica" class="select-estilizado">
-                <option value="">Selecciona un texto...</option>
-                <!-- Opciones de textos se cargarán aquí dinámicamente -->
+       <div class="exercise-card" id="practice-exercise-card">
+        <div class="text-selector-container">
+            <h3>📝 Elige un texto para practicar palabras:</h3>
+            <select id="text-selector" class="text-select" onchange="startSentencePractice()">
+                <option value="">Selecciona un texto...</option><optgroup label="📚 Mis textos"><option value="191">Success comes from</option></optgroup>
             </select>
-        </div>
-
-        <div class="info-textos-practica">
-            <p>Mis textos: Subidos por ti</p>
-            <p>Textos públicos: Leídos y con palabras guardadas</p>
+            <div class="text-selector-info">
+                <p>💡 <strong>Mis textos:</strong> Textos que has subido tú</p>
+                <p>💡 <strong>Textos públicos:</strong> Textos de otros usuarios que has leído y guardado palabras</p>
+            </div>
         </div>
     </div>
-</div>
 
-<script src="pestanas/js/practicas.js"></script>
+        <div class="practice-stats">
+            <div class="stat-item">
+                <div class="stat-number" id="practice-current-question">0</div>
+                <div class="stat-label">Pregunta</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="practice-total-questions">0</div>
+                <div class="stat-label">Total</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="practice-correct-count">0</div>
+                <div class="stat-label">Correctas</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="practice-incorrect-count">0</div>
+                <div class="stat-label">Incorrectas</div>
+            </div>
+        </div>
+    
+
+<script src="../practica/js/practice-functions.js"></script>
