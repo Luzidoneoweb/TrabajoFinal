@@ -34,7 +34,7 @@ window.saveTranslatedWord = async function(word, translation, sentence = '') {
             formData.append('text_id', textId);
         }
         
-        const response = await fetch('traducion_api/palabras/save_translated_word.php', {
+        const response = await fetch('pestanas/php/save_translated_word.php', {
             method: 'POST',
             body: formData
         });

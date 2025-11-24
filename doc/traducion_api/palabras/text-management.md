@@ -1,4 +1,4 @@
-# Documentación del archivo `traducion_api/palabras/text-management.js`
+# Documentación del archivo `pestanas/php/text-management.js`
 
 ## Descripción
 El archivo `text-management.js` contiene funciones JavaScript que gestionan la interacción del usuario con el texto, específicamente para guardar palabras traducidas y controlar la visibilidad y el estado de los botones flotantes de lectura. También incluye funciones de utilidad para contar palabras y letras en un texto.
@@ -16,7 +16,7 @@ El archivo `text-management.js` contiene funciones JavaScript que gestionan la i
 *   **Funcionamiento:**
     *   Intenta obtener el `textId` del texto actual, priorizando `window.currentTextId`, luego `window.AppState.currentTextId`, y finalmente buscando en el DOM.
     *   Crea un objeto `FormData` con la palabra, su traducción, el contexto (frase) y el `textId`.
-    *   Realiza una petición `fetch` (POST) a `traducion_api/palabras/save_translated_word.php`.
+    *   Realiza una petición `fetch` (POST) a `pestanas/php/save_translated_word.php`.
     *   Registra la respuesta del servidor y devuelve `true` si la operación fue exitosa, `false` en caso contrario.
     *   Incluye manejo de errores.
 
@@ -64,7 +64,7 @@ El archivo `text-management.js` contiene funciones JavaScript que gestionan la i
 ## Archivos relacionados
 *   `pestanas/lectura.php`: Incluye este script.
 *   `pestanas/js/lectura.js`: Interactúa con las variables globales de estado de lectura y las funciones de control de lectura.
-*   `traducion_api/palabras/save_translated_word.php`: Endpoint PHP para guardar palabras traducidas.
+*   `pestanas/php/save_translated_word.php`: Endpoint PHP para guardar palabras traducidas.
 *   `pestanas/js/subir_texto.js`: Se espera que defina `showUploadForm()`.
 *   `pestanas/js/texto.js`: Se espera que defina `loadUserTexts()`.
 *   `css/floating-menu.css`: Proporciona los estilos para los botones flotantes.

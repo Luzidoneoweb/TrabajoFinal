@@ -35,9 +35,9 @@ El archivo se organiza en un contenedor principal (`.lectura`) que incluye:
 *   `lector/reading-engine.js`: Motor de lectura que gestiona la reproducción de voz.
 *   `traducion_api/lectura-translation-functions.js`: Funciones relacionadas con la traducción de texto durante la lectura.
 *   `pestanas/js/text-utils.js`: Utilidades para el manejo de texto.
-*   `traducion_api/palabras/text-management.js`: Gestión de palabras guardadas.
+*   `pestanas/php/text-management.js`: Gestión de palabras guardadas.
 *   `pestanas/js/lectura.js`: **Script principal que maneja la lógica de la interfaz de lectura**, incluyendo la carga del texto, paginación, interacción con palabras para traducción, y la integración con el motor de voz.
-*   `traducion_api/palabras/multi-word-selection.js`: Lógica para la selección de múltiples palabras.
+*   `pestanas/php/multi-word-selection.js`: Lógica para la selección de múltiples palabras.
 *   `pestanas/js/modalFinalizacion.js`: Script para un modal que aparece al finalizar la lectura.
 
 ## Archivos PHP relacionados

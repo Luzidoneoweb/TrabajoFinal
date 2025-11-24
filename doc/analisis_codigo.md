@@ -61,7 +61,7 @@ Muchas funciones ya están expuestas globalmente (`window.nombreFuncion`), lo qu
     *   `window.MotorLectura`: Objeto con toda la lógica del motor de lectura.
     *   `window.iniciarLectura()`, `window.iniciarLecturaDesdeIndice()`, `window.pausarVoz()`, `window.reanudarVoz()`, `window.detenerLectura()`: Funciones de control del motor de lectura.
 
-*   **`traducion_api/palabras/text-management.js`:**
+*   **`pestanas/php/text-management.js`:**
     *   `window.saveTranslatedWord(...)`: Para guardar palabras traducidas.
     *   `window.showFloatingButton()`, `window.hideFloatingButton()`, `window.updateFloatingButton()`: Para gestionar botones flotantes.
     *   `window.continueFromLastParagraph()`: Para reanudar lectura.
@@ -118,11 +118,11 @@ Basado en la estructura de archivos proporcionada y las inclusiones/referencias 
 *   **`traducion_api/content_functions.php`:** No se encontró ninguna inclusión o referencia a este script.
 *   **`traducion_api/diccionario.php`:** No se encontró ninguna inclusión o referencia a este script.
 *   **`traducion_api/get_test_text_data.php`:** No se encontró ninguna inclusión o referencia a este script. Parece ser un archivo de prueba.
-*   **`traducion_api/translate.php`:** Es un endpoint PHP utilizado por `traducion_api/lectura-translation-functions.js` y `traducion_api/palabras/multi-word-selection.js`. No es "no utilizado", sino una API.
-*   **`traducion_api/palabras/datosartraducion.md` y `traducion_api/palabras/marcadoPalabra.md`:** Archivos de documentación, no código ejecutable.
-*   **`traducion_api/palabras/ajax_saved_words_content.php`:** No se encontró ninguna llamada `fetch` explícita a este archivo en los scripts JavaScript analizados. `pestanas/js/palabras.js` podría necesitarlo para recargar la lista de palabras.
-*   **`traducion_api/palabras/save_translated_word.php` y `traducion_api/palabras/save_word.php`:** Son endpoints PHP a los que `traducion_api/palabras/text-management.js` hace peticiones `fetch`. No son "no utilizados", sino APIs.
-*   **`traducion_api/palabras/saved_words.php`:** No se encontró ninguna inclusión o referencia a este script. Podría ser un archivo de prueba o un endpoint no utilizado.
+*   **`traducion_api/translate.php`:** Es un endpoint PHP utilizado por `traducion_api/lectura-translation-functions.js` y `pestanas/php/multi-word-selection.js`. No es "no utilizado", sino una API.
+*   **`pestanas/php/datosartraducion.md` y `pestanas/php/marcadoPalabra.md`:** Archivos de documentación, no código ejecutable.
+*   **`pestanas/php/ajax_saved_words_content.php`:** No se encontró ninguna llamada `fetch` explícita a este archivo en los scripts JavaScript analizados. `pestanas/js/palabras.js` podría necesitarlo para recargar la lista de palabras.
+*   **`pestanas/php/save_translated_word.php` y `pestanas/php/save_word.php`:** Son endpoints PHP a los que `pestanas/php/text-management.js` hace peticiones `fetch`. No son "no utilizados", sino APIs.
+*   **`pestanas/php/saved_words.php`:** No se encontró ninguna inclusión o referencia a este script. Podría ser un archivo de prueba o un endpoint no utilizado.
 
 **Nota:** La identificación de "archivos no utilizados" se basa en la ausencia de referencias directas en los archivos JavaScript y PHP analizados. Es posible que algunos de estos archivos sean endpoints de API a los que se accede indirectamente o que se utilicen en otras partes de la aplicación no cubiertas por esta documentación.
 

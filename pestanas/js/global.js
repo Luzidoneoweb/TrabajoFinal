@@ -230,8 +230,8 @@ function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
                             // Cargar dependencias en orden usando Promises
                             await loadScriptPromise('lector/electron-voice-integration.js');
                             await loadScriptPromise('lector/reading-engine.js');
-                            await loadScriptPromise('traducion_api/palabras/text-management.js');
-                            await loadScriptPromise('traducion_api/palabras/multi-word-selection.js');
+                            await loadScriptPromise('pestanas/js/text-management.js');
+                            await loadScriptPromise('pestanas/js/multi-word-selection.js');
                             await loadScriptPromise('pestanas/js/lectura.js');
                             await loadScriptPromise('pestanas/js/modalFinalizacion.js');
                             window.scriptLecturasCargados = true;

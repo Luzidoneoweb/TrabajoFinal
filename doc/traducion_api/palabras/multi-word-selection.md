@@ -1,4 +1,4 @@
-# Documentación del archivo `traducion_api/palabras/multi-word-selection.js`
+# Documentación del archivo `pestanas/php/multi-word-selection.js`
 
 ## Descripción
 El archivo `multi-word-selection.js` implementa la funcionalidad de selección de múltiples palabras en el texto, similar a la característica de Readlang. Permite a los usuarios arrastrar el cursor sobre varias palabras para seleccionarlas, resaltarlas y obtener una traducción combinada. También gestiona la visualización de un tooltip con la traducción y la persistencia de las palabras traducidas.
@@ -130,5 +130,5 @@ El archivo `multi-word-selection.js` implementa la funcionalidad de selección d
 *   `pestanas/lectura.php`: Incluye este script.
 *   `pestanas/js/lectura.js`: Llama a `window.initializeMultiWordSelector()` para activar la selección de palabras.
 *   `traducion_api/translate.php`: Endpoint PHP para realizar traducciones.
-*   `traducion_api/palabras/save_translated_word.php`: Endpoint PHP para guardar palabras traducidas.
+*   `pestanas/php/save_translated_word.php`: Endpoint PHP para guardar palabras traducidas.
 *   `css/floating-menu.css`: Podría contener estilos adicionales para el tooltip.

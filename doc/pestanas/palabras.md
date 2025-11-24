@@ -47,5 +47,5 @@ El archivo se organiza en un contenedor principal (`.contenedor-palabras`) que i
 ## Archivos PHP relacionados
 *   `php/conten_logueado.php`: Incluye este archivo para mostrar el contenido de la pestaña "Palabras".
 *   `db/conexion.php`: Proporciona la conexión a la base de datos.
-*   `traducion_api/palabras/save_word.php` y `traducion_api/palabras/save_translated_word.php`: Probablemente son los endpoints que se usan para guardar las palabras que se muestran aquí.
-*   `traducion_api/palabras/ajax_saved_words_content.php`: Podría ser un endpoint para recargar la lista de palabras dinámicamente.
+*   `pestanas/php/save_word.php` y `pestanas/php/save_translated_word.php`: Probablemente son los endpoints que se usan para guardar las palabras que se muestran aquí.
+*   `pestanas/php/ajax_saved_words_content.php`: Podría ser un endpoint para recargar la lista de palabras dinámicamente.
