@@ -277,6 +277,24 @@ function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
                 } else {
                     console.error('[global.js] inicializarSubirTexto no disponible después de la carga del script.');
                 }
+            } else if (panelElemento.id === 'panelPracticas') { // Lógica para la pestaña Prácticas
+                // Cargar el script de practicas.js si aún no está cargado
+                if (!window.scriptPracticasCargado) {
+                    try {
+                        await loadScriptPromise('pestanas/js/practicas.js');
+                        window.scriptPracticasCargado = true;
+                        console.log('[global.js] Script de practicas.js cargado exitosamente.');
+                    } catch (error) {
+                        console.error('[global.js] Error al cargar script de practicas.js:', error);
+                        return;
+                    }
+                }
+                // Inicializar la lógica de practicas.js
+                if (typeof window.inicializarPracticas === 'function') {
+                    window.inicializarPracticas();
+                } else {
+                    console.error('[global.js] inicializarPracticas no disponible después de la carga del script.');
+                }
             }
             } else {
                 console.warn(`Panel de pestaña con ID "panel${nombrePestana.charAt(0).toUpperCase() + nombrePestana.slice(1)}" no encontrado.`);
