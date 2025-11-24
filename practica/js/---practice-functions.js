@@ -394,35 +394,7 @@ window.loadPracticeQuestion = function() {
         });
         window._delegacionAltavozPractica = true;
     }
-    // Configurar funcionalidad del icono del ojo
-    setTimeout(function() {
-        var eye = document.getElementById('always-visible-eye');
-        if(eye) {
-            eye.onclick = function() {
-                window.practiceAlwaysShowTranslation = !window.practiceAlwaysShowTranslation;
-                if(window.practiceAlwaysShowTranslation) {
-                    eye.style.color = '#0ea900';
-                    if(typeof showPracticeTranslation === 'function') showPracticeTranslation();
-                } else {
-                    eye.style.color = '#2563eb';
-                    var div = document.getElementById('spanish-translation');
-                    if(div && div.classList && !div.classList.contains('hidden')) {
-                        div.classList.add('hidden');
-                    }
-                    var btn = document.getElementById('show-translation-btn');
-                    if(btn) btn.style.display = '';
-                }
-            };
-            // Estado inicial
-            if(window.practiceAlwaysShowTranslation) {
-                eye.style.color = '#0ea900';
-            } else {
-                eye.style.color = '#2563eb';
-            }
-        }
-    }, 0);
-}
-
+    
 // Funciones para botones onclick
 // (showPracticeTranslation se define más abajo)
 

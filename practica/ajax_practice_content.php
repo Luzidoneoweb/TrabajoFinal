@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../db/connection.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/db/conexion.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['error' => 'No autorizado']);
@@ -8,11 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-$conn->close();
 ?>
-
-
-
 
 <script>
 // Inicializar práctica inmediatamente
@@ -65,45 +61,7 @@ function loadBasicPractice() {
         });
 }
 
-function showPracticeModeSelector() {
-    document.getElementById('practice-content').innerHTML = `
-        <div style="max-width: 600px; margin: 0 auto;">
-            <div style="text-align: center; margin-bottom: 30px;">
-                <h3 style="margin-bottom: 10px;">Elige tu modo de práctica</h3>
-                <p style="color: #6b7280;">Selecciona cómo quieres practicar tu vocabulario</p>
-            </div>
-            
-            <div style="display: grid; gap: 20px; margin-bottom: 30px;">
-                <div class="practice-mode-card" onclick="startPracticeMode('selection')" style="cursor: pointer; padding: 20px; border: 2px solid #e5e7eb; border-radius: 12px; text-align: center; transition: all 0.2s;">
-                    <div style="font-size: 2rem; margin-bottom: 10px;">🔤</div>
-                    <h4 style="margin-bottom: 8px;">Selección múltiple</h4>
-                    <p style="color: #6b7280; font-size: 14px;">Elige la traducción correcta de entre 4 opciones</p>
-                </div>
-                
-                <div class="practice-mode-card" onclick="startPracticeMode('writing')" style="cursor: pointer; padding: 20px; border: 2px solid #e5e7eb; border-radius: 12px; text-align: center; transition: all 0.2s;">
-                    <div style="font-size: 2rem; margin-bottom: 10px;">✍️</div>
-                    <h4 style="margin-bottom: 8px;">Escribir palabra</h4>
-                    <p style="color: #6b7280; font-size: 14px;">Completa la frase escribiendo la palabra correcta</p>
-                </div>
-                
-                <div class="practice-mode-card" onclick="startPracticeMode('sentences')" style="cursor: pointer; padding: 20px; border: 2px solid #e5e7eb; border-radius: 12px; text-align: center; transition: all 0.2s;">
-                    <div style="font-size: 2rem; margin-bottom: 10px;">📝</div>
-                    <h4 style="margin-bottom: 8px;">Traducir frases</h4>
-                    <p style="color: #6b7280; font-size: 14px;">Traduce frases completas del español al inglés</p>
-                </div>
-            </div>
-        </div>
-        
-        <style>
-        .practice-mode-card:hover {
-            border-color: #3b82f6 !important;
-            background-color: #f8fafc !important;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-        }
-        </style>
-    `;
-}
+
 
 function startPracticeMode(mode) {
     document.getElementById('practice-content').innerHTML = `

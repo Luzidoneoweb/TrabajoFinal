@@ -159,32 +159,6 @@ window.cargarPregunta = function() {
         }
     }, 10);
     
-    // Configurar funcionalidad del icono del ojo
-    setTimeout(function() {
-        var ojo = document.getElementById('always-visible-eye');
-        if(ojo) {
-            ojo.onclick = function() {
-                window.mostrarTraduccionSiempre = !window.mostrarTraduccionSiempre;
-                if(window.mostrarTraduccionSiempre) {
-                    ojo.style.color = '#0ea900';
-                    if(typeof window.mostrarTraduccion === 'function') window.mostrarTraduccion();
-                } else {
-                    ojo.style.color = '#2563eb';
-                    var div = document.getElementById('spanish-translation');
-                    if(div && div.classList && !div.classList.contains('hidden')) {
-                        div.classList.add('hidden');
-                    }
-                    var btn = document.getElementById('show-translation-btn');
-                    if(btn) btn.style.display = '';
-                }
-            };
-            if(window.mostrarTraduccionSiempre) {
-                ojo.style.color = '#0ea900';
-            } else {
-                ojo.style.color = '#2563eb';
-            }
-        }
-    }, 0);
     
     // Mostrar traducción si está activo
     if (window.mostrarTraduccionSiempre) {
@@ -275,16 +249,17 @@ window.siguientePregunta = function() {
 }
 
 // Actualizar estadísticas
-function actualizarEstadisticas() {
+window.actualizarEstadisticas = function() {
     const totalPalabras = window.palabras.length;
     const completadas = window.respuestasCorrectas;
     document.getElementById('practice-current-question').textContent = completadas;
     document.getElementById('practice-correct-count').textContent = window.respuestasCorrectas;
     document.getElementById('practice-incorrect-count').textContent = window.respuestasIncorrectas;
+    document.getElementById('practice-total-questions').textContent = totalPalabras;
     const progreso = (completadas / totalPalabras) * 100;
     document.getElementById('practice-progress-bar').style.width = progreso + '%';
-}
-window.actualizarEstadisticas = actualizarEstadisticas;
+};
+
 
 // Mostrar resultados
 function mostrarResultados() {
@@ -294,23 +269,6 @@ function mostrarResultados() {
         header.style.display = '';
     }
     
-    window.guardarProgreso(
-        'selection',
-        window.palabras.length,
-        window.respuestasCorrectas,
-        window.respuestasIncorrectas
-    );
-    
-    window.tiempoFin = Date.now();
-    window.duracion = Math.floor((window.tiempoFin - window.tiempoInicio) / 1000);
-    
-    if (window.duracion && window.duracion > 0) {
-        fetch('save_practice_time.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'duration=' + window.duracion + '&mode=selection'
-        });
-    }
     
     const htmlResultados = `
         <div class="practice-results">
@@ -566,4 +524,4 @@ function guardarProgreso(modo, totalPalabras, correctas, incorrectas) {
         // Error silencioso
     });
 }
-window.guardarProgreso = guardarProgreso;
+

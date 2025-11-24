@@ -278,6 +278,17 @@ function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
                     console.error('[global.js] inicializarSubirTexto no disponible después de la carga del script.');
                 }
             } else if (panelElemento.id === 'panelPracticas') { // Lógica para la pestaña Prácticas
+                // Cargar el script de seleccionMultiple.js primero (dependencia)
+                if (!window.scriptSeleccionMultipleCargado) {
+                    try {
+                        await loadScriptPromise('practica/js/seleccionMultiple.js');
+                        window.scriptSeleccionMultipleCargado = true;
+                        console.log('[global.js] Script de seleccionMultiple.js cargado exitosamente.');
+                    } catch (error) {
+                        console.error('[global.js] Error al cargar script de seleccionMultiple.js:', error);
+                        return;
+                    }
+                }
                 // Cargar el script de practicas.js si aún no está cargado
                 if (!window.scriptPracticasCargado) {
                     try {

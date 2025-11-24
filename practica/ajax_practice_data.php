@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../db/connection.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/db/conexion.php';
 
 header('Content-Type: application/json');
 
@@ -15,27 +15,32 @@ $user_id = $_SESSION['user_id'];
 if (isset($_GET['get_word_count']) && isset($_GET['text_id'])) {
     $text_id = intval($_GET['text_id']);
     
-    $stmt = $conn->prepare("SELECT COUNT(*) as word_count FROM saved_words WHERE user_id = ? AND text_id = ?");
-    $stmt->bind_param("ii", $user_id, $text_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $data = $result->fetch_assoc();
-    
-    echo json_encode(['word_count' => $data['word_count']]);
-    $stmt->close();
-    $conn->close();
-    exit();
+    try {
+        $stmt = $pdo->prepare("SELECT COUNT(*) as word_count FROM saved_words WHERE user_id = :user_id AND text_id = :text_id");
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':text_id', $text_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        echo json_encode(['word_count' => $data['word_count']]);
+        exit();
+    } catch (PDOException $e) {
+        error_log("Error: " . $e->getMessage());
+        echo json_encode(['error' => 'Error en la base de datos']);
+        exit();
+    }
 }
 
 // Obtener palabras guardadas del usuario para práctica
-$stmt = $conn->prepare("SELECT word, translation, context FROM saved_words WHERE user_id = ? ORDER BY RAND()");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$words = $result->fetch_all(MYSQLI_ASSOC);
-
-echo json_encode(['words' => $words]);
-
-$stmt->close();
-$conn->close();
+try {
+    $stmt = $pdo->prepare("SELECT word, translation, context FROM saved_words WHERE user_id = :user_id ORDER BY RAND()");
+    $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt->execute();
+    $words = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    echo json_encode(['words' => $words]);
+} catch (PDOException $e) {
+    error_log("Error: " . $e->getMessage());
+    echo json_encode(['error' => 'Error en la base de datos']);
+}
 ?>

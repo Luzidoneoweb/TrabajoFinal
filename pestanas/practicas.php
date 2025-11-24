@@ -17,17 +17,17 @@
         </div>
 
        <div class="exercise-card" id="practice-exercise-card">
-        <div class="text-selector-container">
-            <h3>📝 Elige un texto para practicar palabras:</h3>
-            <select id="text-selector" class="text-select" onchange="startSentencePractice()">
-                <option value="">Selecciona un texto...</option><optgroup label="📚 Mis textos"><option value="191">Success comes from</option></optgroup>
-            </select>
-            <div class="text-selector-info">
-                <p>💡 <strong>Mis textos:</strong> Textos que has subido tú</p>
-                <p>💡 <strong>Textos públicos:</strong> Textos de otros usuarios que has leído y guardado palabras</p>
-            </div>
-        </div>
-    </div>
+       <div class="text-selector-container">
+       <h3>📝 Elige un texto para practicar palabras:</h3>
+       <select id="selectorTextosPractica" class="text-select" onchange="startSentencePractice()">
+       <option value="">Selecciona un texto...</option>
+       </select>
+       <div class="text-selector-info">
+       <p>💡 <strong>Mis textos:</strong> Textos que has subido tú</p>
+       <p>💡 <strong>Textos públicos:</strong> Textos de otros usuarios que has leído y guardado palabras</p>
+       </div>
+       </div>
+       </div>
 
         <div class="practice-stats">
             <div class="stat-item">
@@ -49,4 +49,14 @@
         </div>
     
 
-<script src="../practica/js/practice-functions.js"></script>
+<!-- Scripts cargados dinámicamente desde global.js -->
+<!-- <script src="../practica/js/seleccionMultiple.js"></script> -->
+<!-- <script src="js/practicas.js"></script> -->
+<script>
+// Cargar textos cuando se carga la pestaña
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof window.iniciarPracticaUI === 'function') {
+        window.iniciarPracticaUI();
+    }
+});
+</script>
