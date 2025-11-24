@@ -1,14 +1,15 @@
 // Función de inicialización para la pestaña "Prácticas"
-function inicializarPracticas() {
-    console.log('inicializarPracticas() ejecutado.');
+function iniciarPracticaUI() {
+    console.log('iniciarPracticaUI() ejecutado.');
 
-    const selectorTextosPractica = document.getElementById('selectorTextosPractica');
-    const botonesModo = document.querySelectorAll('.boton-modo');
+    const tituloPractica = document.querySelector('.titulo-practicar-vocabulario');
+    const selectorTextos = document.getElementById('selectorTextosPractica');
+    const botonesModoPractica = document.querySelectorAll('.boton-modo');
 
     // Función para cargar textos en el selector de prácticas
-    async function cargarTextosPractica() {
+    async function cargarTextosParaPractica() {
         console.log('Intentando cargar textos para práctica...');
-        if (!selectorTextosPractica) {
+        if (!selectorTextos) {
             console.error('Elemento "selectorTextosPractica" no encontrado.');
             return;
         }
@@ -19,22 +20,28 @@ function inicializarPracticas() {
                 window.showLoadingMessage();
             }
 
-            const response = await fetch('pestanas/php/get_textos.php', { credentials: 'include' });
+            console.log('Haciendo fetch a practica/ajax_user_texts.php con accion=listar');
+            const response = await fetch('practica/ajax_user_texts.php', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, 
+                body: 'accion=listar' 
+            });
+            console.log('Respuesta HTTP:', response.status, response.statusText);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            console.log('Datos recibidos de get_textos.php:', data);
+            console.log('Datos recibidos de practica/ajax_user_texts.php:', data);
 
             // Limpiar opciones existentes (excepto la primera)
-            selectorTextosPractica.innerHTML = '<option value="">Selecciona un texto...</option>';
+            selectorTextos.innerHTML = '<option value="">Selecciona un texto...</option>';
             
-            if (data.success && data.data && data.data.length > 0) {
-                data.data.forEach(texto => {
+            if (data.success && data.textos && data.textos.length > 0) {
+                data.textos.forEach(texto => {
                     const option = document.createElement('option');
                     option.value = texto.id;
                     option.textContent = texto.title;
-                    selectorTextosPractica.appendChild(option);
+                    selectorTextos.appendChild(option);
                 });
             } else {
                 console.log('No se encontraron textos para practicar.');
@@ -50,37 +57,44 @@ function inicializarPracticas() {
     }
 
     // Establecer "Selección múltiple" como modo por defecto
-    function establecerModoPorDefecto() {
-        const botonSeleccionMultiple = document.querySelector('.boton-modo[data-modo="seleccion-multiple"]');
-        if (botonSeleccionMultiple) {
-            botonSeleccionMultiple.classList.add('activo'); // Asumimos una clase 'activo' para el modo seleccionado
+    function establecerModoInicial() {
+        const botonSeleccion = document.querySelector('.boton-modo[data-modo="seleccion"]');
+        if (botonSeleccion) {
+            botonSeleccion.classList.add('activo'); // Asumimos una clase 'activo' para el modo seleccionado
             console.log('Modo "Selección múltiple" establecido por defecto.');
         }
     }
 
     // Event listeners para los botones de modo
-    botonesModo.forEach(boton => {
+    botonesModoPractica.forEach(boton => {
         boton.addEventListener('click', function() {
-            botonesModo.forEach(btn => btn.classList.remove('activo'));
+            botonesModoPractica.forEach(btn => btn.classList.remove('activo'));
             this.classList.add('activo');
             const modoSeleccionado = this.dataset.modo;
             console.log('Modo de práctica seleccionado:', modoSeleccionado);
+
+            // Actualizar el título según el modo seleccionado
+            if (tituloPractica) {
+                if (modoSeleccionado === 'seleccion') {
+                    tituloPractica.textContent = 'Practicar';
+                } else if (modoSeleccionado === 'escritura') {
+                    tituloPractica.textContent = 'Escribir palabra';
+                } else if (modoSeleccionado === 'frases') {
+                    tituloPractica.textContent = 'Escribir frases';
+                }
+            }
             // Aquí se podría añadir lógica para cargar el ejercicio correspondiente al modo
         });
     });
 
     // Cargar textos y establecer modo por defecto al inicializar
-    cargarTextosPractica();
-    establecerModoPorDefecto();
+    cargarTextosParaPractica();
+    establecerModoInicial();
 }
 
 // Exportar la función para que pueda ser llamada globalmente
-window.inicializarPracticas = inicializarPracticas;
+window.iniciarPracticaUI = iniciarPracticaUI;
 
-// Si el script se carga de forma tradicional (no AJAX), ejecutar en DOMContentLoaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Solo ejecutar si no estamos en un entorno donde se llama explícitamente
-    if (document.getElementById('panelPracticas') && document.getElementById('panelPracticas').classList.contains('activo')) {
-        inicializarPracticas();
-    }
-});
+// Ejecutar automáticamente cuando el script se carga
+// El script se carga dinámicamente cuando se hace clic en la pestaña de prácticas
+iniciarPracticaUI();

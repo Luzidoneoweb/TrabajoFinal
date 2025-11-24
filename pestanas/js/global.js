@@ -290,10 +290,12 @@ function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
                     }
                 }
                 // Inicializar la lógica de practicas.js
-                if (typeof window.inicializarPracticas === 'function') {
-                    window.inicializarPracticas();
+                // Nota: La función se ejecuta automáticamente al cargar el script
+                console.log('[global.js] practicas.js cargado y ejecutado.');
+                if (typeof window.iniciarPracticaUI === 'function') {
+                    console.log('[global.js] iniciarPracticaUI ya fue ejecutada automáticamente.');
                 } else {
-                    console.error('[global.js] inicializarPracticas no disponible después de la carga del script.');
+                    console.error('[global.js] iniciarPracticaUI no disponible después de la carga del script.');
                 }
             }
             } else {
