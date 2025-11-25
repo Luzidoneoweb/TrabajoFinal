@@ -1,4 +1,4 @@
-        // Variables globales
+// Variables globales
         let usuarioLogueado = false;
         let rememberedIdentifier = null; // Variable para almacenar el identificador recordado
         const encabezadoPrincipal = document.querySelector('.encabezado-principal');
@@ -86,42 +86,6 @@
             }
          });
         
-        // Función para cargar el contenido de usuario logueado
-        async function cargarContenidoLogueado() {
-            if (contenidoAplicacion) {
-                try {
-                    showLoadingMessage(); // Mostrar mensaje de carga
-                    const response = await fetch('php/conten_logueado.php', { credentials: 'same-origin' });
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const html = await response.text();
-                    contenidoAplicacion.innerHTML = html;
-                    hideLoadingMessage(); // Ocultar mensaje de carga
-                    // Aquí puedes inicializar cualquier JS específico del contenido logueado si es necesario
-                    // Aquí puedes inicializar cualquier JS específico del contenido logueado si es necesario
-                    // Por ejemplo, si pestanas/js/global.js tiene una función de inicialización:
-                    if (typeof inicializarPestanasGlobal === 'function') {
-                        inicializarPestanasGlobal();
-                    }
-                    // Cargar el script de práctica si la pestaña actual es 'practice'
-                    const currentTab = new URLSearchParams(window.location.search).get('tab');
-                    if (currentTab === 'practice' && typeof window.iniciarPracticaUI === 'function') {
-                        window.iniciarPracticaUI();
-                    }
-                    // Eliminar la referencia a seleccionMultiple.js si existe
-                    const oldScript = document.querySelector('script[src="../practica/js/seleccionMultiple.js"]');
-                    if (oldScript) {
-                        oldScript.remove();
-                    }
-                } catch (error) {
-                    console.error('Error cargando contenido logueado:', error);
-                    contenidoAplicacion.innerHTML = '<p>Error al cargar el contenido. Por favor, recargue la página.</p>';
-                    hideLoadingMessage(); // Ocultar mensaje de carga incluso si hay error
-                }
-            }
-        }
-
         // Función para mostrar interfaz de usuario logueado
         function mostrarInterfazLogueada() {
         console.log('[mostrarInterfazLogueada] Iniciando...');
@@ -146,8 +110,12 @@
                  contenedorBotonCerrarSesion.classList.remove('oculto');
                  console.log('✓ contenedorBotonCerrarSesion mostrada');
              }
-             console.log('[mostrarInterfazLogueada] Llamando a cargarContenidoLogueado()');
-             cargarContenidoLogueado(); // Cargar el contenido dinámicamente
+             console.log('[mostrarInterfazLogueada] Llamando a inicializarInterfazLogueadaPestanas()');
+             if (typeof window.inicializarInterfazLogueadaPestanas === 'function') {
+                 window.inicializarInterfazLogueadaPestanas(); // Cargar el contenido dinámicamente y scripts de pestañas
+             } else {
+                 console.error('La función inicializarInterfazLogueadaPestanas no está definida.');
+             }
              // La manipulación de navegacionUsuario se hará en pestanas/js/global.js después de cargar el contenido dinámico
          }
         

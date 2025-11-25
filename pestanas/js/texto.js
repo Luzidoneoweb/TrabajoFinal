@@ -213,9 +213,47 @@ function cargarTextos() {
 // Se ejecuta inmediatamente cuando el script se carga
 document.addEventListener('click', function(e) {
     if (e.target && e.target.id === 'btn-eliminar-textos') {
-        console.log('[texto.js] Botón eliminar clickeado');
         e.preventDefault();
         manejarEliminacionTextos();
+    }
+    
+    // Manejo del botón "Textos públicos" - FUERA de DOMContentLoaded
+    if (e.target && e.target.id === 'btn-textos-publicos') {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Cambiar a la pestaña Biblioteca
+        if (typeof window.cambiarPestana === 'function') {
+            window.cambiarPestana('biblioteca');
+            
+            // Esperar y cargar biblioteca
+            setTimeout(function() {
+                const panelBiblioteca = document.getElementById('panelBiblioteca');
+                
+                if (panelBiblioteca && panelBiblioteca.classList.contains('activo')) {
+                    if (typeof window.cargarBiblioteca === 'function') {
+                        window.cargarBiblioteca();
+                    } else {
+                        // Intentar cargar el script si no está disponible
+                        const script = document.createElement('script');
+                        script.src = 'pestanas/js/cargar_biblioteca.js';
+                        script.onload = function() {
+                            if (typeof window.cargarBiblioteca === 'function') {
+                                window.cargarBiblioteca();
+                            }
+                        };
+                        document.body.appendChild(script);
+                    }
+                } else {
+                    // Reintentar si el panel no está activo aún
+                    setTimeout(function() {
+                        if (typeof window.cargarBiblioteca === 'function') {
+                            window.cargarBiblioteca();
+                        }
+                    }, 500);
+                }
+            }, 500);
+        }
     }
 });
 
@@ -244,6 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         observer.observe(panelTextos, { attributes: true });
     }
+
 });
 
 // Función para manejar la eliminación de textos

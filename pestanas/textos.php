@@ -11,7 +11,7 @@
         <p class="contador-textos">...textos encontrados</p>
         <div class="acciones-grupo">
             <button class="btn-publicos" id="btn-eliminar-textos">Eliminar</button>
-            <button class="btn-publicos">Textos públicos</button>
+            <button class="btn-publicos" id="btn-textos-publicos">Textos públicos</button>
         </div>
     </div>
 

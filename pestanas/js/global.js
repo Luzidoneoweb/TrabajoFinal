@@ -1,7 +1,7 @@
 // SOLO SE CARGA CUANDO USUARIO ESTÁ LOGUEADO
 let interfazLogueadaMostrada = false;
 
-async function mostrarInterfazLogueada() {
+window.inicializarInterfazLogueadaPestanas = async function inicializarInterfazLogueadaPestanas() {
     // Si ya se mostró antes, no mostrar loading de nuevo
     if (interfazLogueadaMostrada) return;
     
@@ -43,13 +43,13 @@ async function mostrarInterfazLogueada() {
             const scriptBiblioteca = document.createElement('script');
             scriptBiblioteca.src = 'pestanas/js/cargar_biblioteca.js';
             scriptBiblioteca.onload = function() {
-            if (typeof cargarBiblioteca === 'function') {
-            cargarBiblioteca();
-            }
+                if (typeof cargarBiblioteca === 'function') {
+                    cargarBiblioteca();
+                }
             };
             document.body.appendChild(scriptBiblioteca);
 
-             // Cargar scripts para textos
+            // Cargar scripts para textos
              const scriptTextUtils = document.createElement('script');
              scriptTextUtils.src = 'pestanas/js/text-utils.js';
              document.body.appendChild(scriptTextUtils);
@@ -86,19 +86,21 @@ async function mostrarInterfazLogueada() {
              
              // Activar la pestaña y ocultar loading después
              if (window.cambiarPestana) {
-             window.cambiarPestana(pestanaAActivar);
-                 // Ocultar loading después de que se active la pestaña
-                  setTimeout(() => {
-                          if (typeof window.hideLoadingMessage === 'function') {
-                          window.hideLoadingMessage();
-                      }
-                      }, 500);
-              } else {
-                  // Si no hay cambiarPestana, ocultar loading directamente
-              if (typeof window.hideLoadingMessage === 'function') {
-                      window.hideLoadingMessage();
-                      }
-              }
+                 setTimeout(() => {
+                     window.cambiarPestana(pestanaAActivar);
+                     // Ocultar loading después de que se active la pestaña
+                     setTimeout(() => {
+                         if (typeof window.hideLoadingMessage === 'function') {
+                             window.hideLoadingMessage();
+                         }
+                     }, 500);
+                 }, 100); // Pequeño retraso para asegurar que el DOM esté listo
+             } else {
+                 // Si no hay cambiarPestana, ocultar loading directamente
+                 if (typeof window.hideLoadingMessage === 'function') {
+                     window.hideLoadingMessage();
+                 }
+             }
 
          } catch (error) {
              console.error('Error al cargar el contenido logueado:', error);
