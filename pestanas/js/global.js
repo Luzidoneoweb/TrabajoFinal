@@ -114,8 +114,6 @@ window.inicializarInterfazLogueadaPestanas = async function inicializarInterfazL
 
 
 
-
-// Resto del código que quitaste de global.js
 // Función para mostrar notificaciones flotantes
 function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
     const notificacionFlotante = document.getElementById('notificacion-flotante');

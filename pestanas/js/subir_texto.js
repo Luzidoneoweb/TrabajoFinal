@@ -1,5 +1,5 @@
 // Función de inicialización para la pestaña "Subir Texto"
-function inicializarSubirTexto() {
+window.inicializarSubirTexto = function inicializarSubirTexto() {
     console.log('inicializarSubirTexto() ejecutado.'); // Log de inicialización
     const titulo = document.getElementById('titulo');
     const contenido = document.getElementById('contenido');
@@ -152,7 +152,7 @@ function inicializarSubirTexto() {
         })
         .catch(err => mostrarMensaje('Error al conectar con el servidor: ' + err, 'error'));
     });
-}
+};
 
 // Si el script se carga de forma tradicional (no AJAX), ejecutar en DOMContentLoaded
 document.addEventListener('DOMContentLoaded', function() {

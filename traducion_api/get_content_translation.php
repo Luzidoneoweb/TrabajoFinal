@@ -1,7 +1,6 @@
 <?php
 session_start();
-require_once '../db/conexion.php';
-require_once 'content_functions.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/db/conexion.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -35,27 +34,40 @@ try {
     exit();
 }
 
-// Obtener la traducción del contenido
-$translation = getContentTranslation($text_id);
-
-if ($translation) {
-    // El nuevo formato JSON siempre devuelve un array de traducciones
+// Obtener las traducciones desde texts.content_translation como JSON
+// Si no hay traducciones, devolver array vacío
+try {
+    $translation = [];
+    
+    $stmt = $pdo->prepare("SELECT content_translation FROM texts WHERE id = ?");
+    $stmt->execute([$text_id]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($result && !empty($result['content_translation'])) {
+        $contentTranslation = $result['content_translation'];
+        $decoded = json_decode($contentTranslation, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            $translation = $decoded;
+        }
+    }
+    
+    // Siempre devolver éxito con array de traducciones (puede estar vacío)
     echo json_encode([
         'success' => true,
         'text_id' => $text_id,
         'title' => $text_data['title'],
         'content' => $text_data['content'],
         'translation' => $translation,
-        'format' => 'json', // Siempre json con el nuevo getContentTranslation
-        'source' => 'database'
+        'needs_translation' => empty($translation)
     ]);
-} else {
+} catch (PDOException $e) {
+    // En caso de error, devolver respuesta JSON válida sin traducciones
     echo json_encode([
-        'success' => false,
+        'success' => true,
         'text_id' => $text_id,
         'title' => $text_data['title'],
         'content' => $text_data['content'],
-        'translation' => null,
+        'translation' => [],
         'needs_translation' => true
     ]);
 }

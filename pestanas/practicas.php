@@ -57,5 +57,6 @@
         // Si el script aún no está disponible, reintentar brevemente
         setTimeout(inicializarPracticasPanel, 100);
     }
-})();
+});
 </script>
+</div>

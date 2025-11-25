@@ -9,8 +9,6 @@ $es_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
 ?>
 
 <div class="contenedor-subir-texto">
-    <!-- Incluir el archivo JavaScript -->
-    <script src="pestanas/js/subir_texto.js"></script>
     <h2>Subir nuevo texto</h2>
 
     <div class="formulario-subir">
