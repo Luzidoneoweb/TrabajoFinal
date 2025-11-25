@@ -17,24 +17,18 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = (int)$_SESSION['user_id'];
 
 try {
-    // Obtener textos del usuario logueado que tienen palabras guardadas
-    $stmt = $pdo->prepare("
-        SELECT DISTINCT t.id, t.title, t.title_translation, t.content, t.content_translation, t.is_public, t.category_id, t.created_at
-        FROM texts t
-        JOIN saved_words sw ON t.id = sw.text_id
-        WHERE t.user_id = :user_id AND sw.user_id = :user_id_sw
-        ORDER BY t.created_at DESC
-    ");
+    // Asegurar que solo se obtienen textos del usuario logueado
+    $stmt = $pdo->prepare("SELECT id, title, title_translation, content, content_translation, is_public, category_id, created_at FROM texts WHERE user_id = :user_id ORDER BY created_at DESC");
     $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt->bindValue(':user_id_sw', $user_id, PDO::PARAM_INT); // Asegurar que las palabras guardadas también son del usuario
     $stmt->execute();
     $texts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $response['success'] = true;
     $response['data'] = $texts;
+    // $response['user_id'] = $user_id; // Para debugging - Eliminado para limpiar consola
 
 } catch (PDOException $e) {
-    $response['error'] = "Error al obtener los textos para práctica: " . $e->getMessage();
+$response['error'] = "Error al obtener los textos: " . $e->getMessage();
 }
 
 echo json_encode($response);

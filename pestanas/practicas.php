@@ -7,9 +7,9 @@
 </div>
        
         <div class="mode-selector">
-            <button class="mode-btn active" onclick="setPracticeMode('selection')">📝 Selección múltiple</button>
-            <button class="mode-btn" onclick="setPracticeMode('writing')">✍️ Escribir palabra</button>
-            <button class="mode-btn" onclick="setPracticeMode('sentences')">📖 Escribir frases</button>
+            <button class="mode-btn active" data-mode="selection">📝 Selección múltiple</button>
+            <button class="mode-btn" data-mode="writing">✍️ Escribir palabra</button>
+            <button class="mode-btn" data-mode="sentences">📖 Escribir frases</button>
         </div>
 
         <div class="progress">
@@ -49,14 +49,14 @@
         </div>
     
 
-<!-- Scripts cargados dinámicamente desde global.js -->
-<!-- <script src="../practica/js/seleccionMultiple.js"></script> -->
-<!-- <script src="js/practicas.js"></script> -->
+<script src="../practica/js/practice-functions.js"></script>
 <script>
-// Cargar textos cuando se carga la pestaña
-document.addEventListener('DOMContentLoaded', function() {
+(function inicializarPracticasPanel() {
     if (typeof window.iniciarPracticaUI === 'function') {
         window.iniciarPracticaUI();
+    } else {
+        // Si el script aún no está disponible, reintentar brevemente
+        setTimeout(inicializarPracticasPanel, 100);
     }
-});
+})();
 </script>

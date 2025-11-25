@@ -99,9 +99,20 @@
                     contenidoAplicacion.innerHTML = html;
                     hideLoadingMessage(); // Ocultar mensaje de carga
                     // Aquí puedes inicializar cualquier JS específico del contenido logueado si es necesario
+                    // Aquí puedes inicializar cualquier JS específico del contenido logueado si es necesario
                     // Por ejemplo, si pestanas/js/global.js tiene una función de inicialización:
                     if (typeof inicializarPestanasGlobal === 'function') {
                         inicializarPestanasGlobal();
+                    }
+                    // Cargar el script de práctica si la pestaña actual es 'practice'
+                    const currentTab = new URLSearchParams(window.location.search).get('tab');
+                    if (currentTab === 'practice' && typeof window.iniciarPracticaUI === 'function') {
+                        window.iniciarPracticaUI();
+                    }
+                    // Eliminar la referencia a seleccionMultiple.js si existe
+                    const oldScript = document.querySelector('script[src="../practica/js/seleccionMultiple.js"]');
+                    if (oldScript) {
+                        oldScript.remove();
                     }
                 } catch (error) {
                     console.error('Error cargando contenido logueado:', error);

@@ -281,32 +281,32 @@ function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
                 // Cargar el script de seleccionMultiple.js primero (dependencia)
                 if (!window.scriptSeleccionMultipleCargado) {
                     try {
-                        await loadScriptPromise('practica/js/seleccionMultiple.js');
+                        await loadScriptPromise('practica/js/practice-functions.js');
                         window.scriptSeleccionMultipleCargado = true;
                         console.log('[global.js] Script de seleccionMultiple.js cargado exitosamente.');
                     } catch (error) {
-                        console.error('[global.js] Error al cargar script de seleccionMultiple.js:', error);
+                        console.error('[global.js] Error al cargar script de practice-functions.js:', error);
                         return;
                     }
                 }
                 // Cargar el script de practicas.js si aún no está cargado
                 if (!window.scriptPracticasCargado) {
                     try {
-                        await loadScriptPromise('pestanas/js/practicas.js');
+                        await loadScriptPromise('practica/js/practice-functions.js');
                         window.scriptPracticasCargado = true;
-                        console.log('[global.js] Script de practicas.js cargado exitosamente.');
+                        console.log('[global.js] Script de practice-functions.js cargado exitosamente.');
                     } catch (error) {
-                        console.error('[global.js] Error al cargar script de practicas.js:', error);
+                        console.error('[global.js] Error al cargar script de practice-functions.js:', error);
                         return;
                     }
                 }
-                // Inicializar la lógica de practicas.js
-                // Nota: La función se ejecuta automáticamente al cargar el script
-                console.log('[global.js] practicas.js cargado y ejecutado.');
+                // Inicializar la lógica de practice-functions.js
+                console.log('[global.js] Inicializando pestaña de Prácticas...');
                 if (typeof window.iniciarPracticaUI === 'function') {
-                    console.log('[global.js] iniciarPracticaUI ya fue ejecutada automáticamente.');
+                    window.iniciarPracticaUI();
+                console.log('[global.js] iniciarPracticaUI ejecutada correctamente.');
                 } else {
-                    console.error('[global.js] iniciarPracticaUI no disponible después de la carga del script.');
+                console.error('[global.js] iniciarPracticaUI no disponible después de la carga del script.');
                 }
             }
             } else {
@@ -320,7 +320,7 @@ function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
             }
 
             // NO ocultar el mensaje de carga aquí automáticamente
-            // Cada pestaña (textos.js, practicas.js, lectura.js) es responsable de ocultar
+            // Cada pestaña (textos.js, practice-functions.js, lectura.js) es responsable de ocultar
             // el mensaje cuando su contenido esté completamente cargado
         }
         
