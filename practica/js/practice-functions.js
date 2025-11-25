@@ -11,7 +11,6 @@ window.practiceIncorrectAnswers = 0;
 window.practiceAnswered = false;
 window.practiceCurrentWordIndex = 0;
 window.practiceCurrentSentenceData = {};
-window.practiceAlwaysShowTranslation = false;
 window.practiceResultsActive = false;
 window.currentWordErrors = 0; // Para el modo escritura
 
@@ -47,6 +46,7 @@ async function cargarTextosParaPractica() {
     console.log('🔍 [cargarTextosParaPractica] Iniciando...');
     const selectorTextos = document.getElementById('selectorTextosPractica');
     console.log('🔍 [cargarTextosParaPractica] Selector encontrado:', !!selectorTextos);
+    console.log('🔍 [cargarTextosParaPractica] Estado actual del selector:', selectorTextos ? selectorTextos.innerHTML : 'Selector no encontrado');
     if (!selectorTextos) {
         console.error('❌ Elemento "selectorTextosPractica" no encontrado.');
         return;
@@ -68,6 +68,7 @@ async function cargarTextosParaPractica() {
         }
         const data = await response.json();
         console.log('🔍 [cargarTextosParaPractica] Datos recibidos:', data);
+        console.log('🔍 [cargarTextosParaPractica] Contenido de data.data:', data.data);
 
         // Limpiar opciones existentes (excepto la primera)
         selectorTextos.innerHTML = '<option value="">Selecciona un texto...</option>';
@@ -87,6 +88,7 @@ async function cargarTextosParaPractica() {
                 console.log(`✅ [cargarTextosParaPractica] Option agregada: ${titulo}`);
             });
             console.log('✅ [cargarTextosParaPractica] Textos cargados correctamente:', data.data.length);
+            console.log('🔍 [cargarTextosParaPractica] Contenido final del selector:', selectorTextos.innerHTML);
         } else {
             console.log('⚠️ [cargarTextosParaPractica] No se encontraron textos. Success:', data.success, 'Data:', data.data);
         }
@@ -140,7 +142,6 @@ function initializePractice(words) {
 
 // Establecer modo de práctica
 window.setPracticeMode = function(mode) {
-    window.practiceAlwaysShowTranslation = false;
     window.practiceCurrentMode = mode;
     document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
     // El botón ya se activa en iniciarPracticaUI, pero si se llama directamente, lo activamos
@@ -155,8 +156,8 @@ window.setPracticeMode = function(mode) {
     // Limpiar la tarjeta de ejercicio si no hay palabras cargadas
     const practiceCard = document.getElementById('practice-exercise-card');
     if (practiceCard) {
-        const modeText = mode === 'selection' || mode === 'writing' ? 'palabras' : 'frases';
-        const modeIcon = mode === 'selection' || mode === 'writing' ? '📝' : '📖';
+        const modeText = mode === 'selection' || mode === 'writing' ? 'palabras' : ''; // Eliminar 'frases'
+        const modeIcon = mode === 'selection' || mode === 'writing' ? '📝' : ''; // Eliminar '📖'
         practiceCard.innerHTML = `
             <div class="text-selector-container">
                 <h3>${modeIcon} Elige un texto para practicar ${modeText}:</h3>
@@ -187,58 +188,57 @@ window.loadPracticeQuestion = function() {
     window.practiceCurrentWordIndex = randomIndex;
     
     // Para palabras: usar el contexto completo CON HUECO
-    if (window.practiceCurrentMode === 'selection' || window.practiceCurrentMode === 'writing') {
-        // MODO PALABRAS: mostrar contexto completo con hueco donde va la palabra
+    // MODO PALABRAS: mostrar contexto completo con hueco donde va la palabra
+    
+    // Verificar si el contexto está vacío o no contiene la palabra
+    if (!currentWord.context || currentWord.context.trim() === '') {
+        window.practiceCurrentSentenceData = {
+            en: `The word "${currentWord.word}" is important.`,
+            es: `La palabra "${currentWord.word}" es importante.`
+        };
+    } else {
+        // Intentar crear el hueco con diferentes estrategias
+        let contextWithHole = currentWord.context;
         
-        // Verificar si el contexto está vacío o no contiene la palabra
-        if (!currentWord.context || currentWord.context.trim() === '') {
-            window.practiceCurrentSentenceData = {
-                en: `The word "${currentWord.word}" is important.`,
-                es: `La palabra "${currentWord.word}" es importante.`
-            };
+        // Limpiar la palabra de caracteres especiales para la búsqueda
+        const cleanWord = currentWord.word.replace(/[.,!?;:]/g, '').trim();
+        const originalWord = currentWord.word;
+        
+        // Estrategia 1: Buscar la palabra exacta (con caracteres especiales)
+        const regex1 = new RegExp(`\\b${originalWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+        if (regex1.test(currentWord.context)) {
+            contextWithHole = currentWord.context.replace(regex1, '____');
         } else {
-            // Intentar crear el hueco con diferentes estrategias
-            let contextWithHole = currentWord.context;
-            
-            // Limpiar la palabra de caracteres especiales para la búsqueda
-            const cleanWord = currentWord.word.replace(/[.,!?;:]/g, '').trim();
-            const originalWord = currentWord.word;
-            
-            // Estrategia 1: Buscar la palabra exacta (con caracteres especiales)
-            const regex1 = new RegExp(`\\b${originalWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
-            if (regex1.test(currentWord.context)) {
-                contextWithHole = currentWord.context.replace(regex1, '____');
+            // Estrategia 2: Buscar la palabra limpia con límites
+            const regex2 = new RegExp(`\\b${cleanWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+            if (regex2.test(currentWord.context)) {
+                contextWithHole = currentWord.context.replace(regex2, '____');
             } else {
-                // Estrategia 2: Buscar la palabra limpia con límites
-                const regex2 = new RegExp(`\\b${cleanWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
-                if (regex2.test(currentWord.context)) {
-                    contextWithHole = currentWord.context.replace(regex2, '____');
+                // Estrategia 3: Buscar la palabra sin límites
+                const regex3 = new RegExp(originalWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+                if (regex3.test(currentWord.context)) {
+                    contextWithHole = currentWord.context.replace(regex3, '____');
                 } else {
-                    // Estrategia 3: Buscar la palabra sin límites
-                    const regex3 = new RegExp(originalWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-                    if (regex3.test(currentWord.context)) {
-                        contextWithHole = currentWord.context.replace(regex3, '____');
+                    // Estrategia 4: Buscar la palabra limpia sin límites
+                    const regex4 = new RegExp(cleanWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+                    if (regex4.test(currentWord.context)) {
+                        contextWithHole = currentWord.context.replace(regex4, '____');
                     } else {
-                        // Estrategia 4: Buscar la palabra limpia sin límites
-                        const regex4 = new RegExp(cleanWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-                        if (regex4.test(currentWord.context)) {
-                            contextWithHole = currentWord.context.replace(regex4, '____');
+                        // Estrategia 5: Búsqueda manual más flexible
+                        const wordLower = cleanWord.toLowerCase();
+                        const contextLower = currentWord.context.toLowerCase();
+                        const index = contextLower.indexOf(wordLower);
+                        if (index !== -1) {
+                            const before = currentWord.context.substring(0, index);
+                            const after = currentWord.context.substring(index + cleanWord.length);
+                            contextWithHole = before + '____' + after;
                         } else {
-                            // Estrategia 5: Búsqueda manual más flexible
-                            const wordLower = cleanWord.toLowerCase();
-                            const contextLower = currentWord.context.toLowerCase();
-                            const index = contextLower.indexOf(wordLower);
-                            if (index !== -1) {
-                                const before = currentWord.context.substring(0, index);
-                                const after = currentWord.context.substring(index + cleanWord.length);
-                                contextWithHole = before + '____' + after;
-                            } else {
-                                contextWithHole = currentWord.context;
-                            }
+                            contextWithHole = currentWord.context;
                         }
                     }
                 }
             }
+        }
         window.practiceCurrentSentenceData = {
             en: contextWithHole,
             es: '', // Dejar vacío para que se traduzca con la API
@@ -247,11 +247,6 @@ window.loadPracticeQuestion = function() {
             word: currentWord.word, // Agregar la palabra para referencia
             needsTranslation: true // Indicar que necesita traducción
         };
-    }
-    } else {
-        // MODO FRASES: generar con hueco (esta lógica no está implementada en este archivo, se asume que vendrá de otro lado o se simplificará)
-        // Por ahora, usaremos una plantilla simple
-        window.practiceCurrentSentenceData = generatePracticeSentence(currentWord.word);
     }
     
     window.practiceAnswered = false;
@@ -283,24 +278,11 @@ window.loadPracticeQuestion = function() {
         </div>
         <div class="translation-help-container" style="position:relative; display:flex; align-items:center; justify-content:flex-end; width:100%; margin:8px 0 0 0; gap:6px;">
             <button class="translation-help-btn" id="show-translation-btn" onclick="showPracticeTranslation()" style="padding:1px 12px; font-size:0.80em; min-width:0; height:22px; display:inline-flex; align-items:center; white-space:nowrap;">📖 Ver traducción</button>
-            <div style="position:relative; display:inline-flex; align-items:center;">
-                <span id="always-visible-eye" style="font-size:1.25em; color:#2563eb; cursor:pointer; padding:2px 6px; border-radius:4px; transition:background 0.15s;" onmouseenter="(function(){var t=document.getElementById('always-visible-tooltip'); if(window.practiceAlwaysShowTranslation){t.textContent='Ocultar';}else{t.textContent='Dejar visible';} t.style.display='block';})()" onmouseleave="document.getElementById('always-visible-tooltip').style.display='none'">👁️</span>
-                <span id="always-visible-tooltip" style="display:none; position:absolute;  top:100%; transform:translateX(-50%); background:#222; color:#fff; padding:4px 10px; border-radius:6px; font-size:0.92em; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.13); z-index:30; opacity:0.93; max-width:180px; word-break:break-word; text-align:center;">Dejar visible</span>
-            </div>
         </div>
         <style>
         @media (max-width: 600px) {
             .translation-help-container { gap: 2px !important; }
             #show-translation-btn { font-size: 0.88em !important; padding: 1px 10px !important; height: 24px !important; white-space:nowrap !important; }
-            #always-visible-eye { font-size: 1.1em !important; padding: 2px 2px !important; }
-            #always-visible-tooltip {
-                font-size: 0.90em !important;
-                max-width: 96vw !important;
-                left: 50% !important;
-                transform: translateX(-50%) !important;
-                white-space:nowrap !important;
-                padding: 3px 6px !important;
-            }
         }
         </style>
     `;
@@ -335,16 +317,6 @@ window.loadPracticeQuestion = function() {
             <div id="word-hint" style="display: none; font-size: 12px; color: #999; opacity: 0.6; margin-top: 5px; text-align: center; font-style: italic;"></div>
             <div class="practice-controls">
                 <button class="option-btn hint-btn" onclick="showPracticeHint('${currentWord.word}')">💡 Pista</button>
-                <button class="option-btn next-btn" onclick="nextPracticeQuestion()" style="display:none;">Siguiente</button>
-            </div>
-        `;
-    } else { // Modo frases, por ahora simplificado
-        html += `
-            <input type="text" placeholder="Escribe la frase que falta..." style="width: 50%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 16px; margin: 15px auto; box-sizing: border-box; display: block; background: white;justify-content: center;
-     color: #333; outline: none;" data-practice-input="true" data-correct-word="${currentWord.context}">
-            <div id="word-hint" style="display: none; font-size: 12px; color: #999; opacity: 0.6; margin-top: 5px; text-align: center; font-style: italic;"></div>
-            <div class="practice-controls">
-                <button class="option-btn hint-btn" onclick="showPracticeHint('${currentWord.context}')">💡 Pista</button>
                 <button class="option-btn next-btn" onclick="nextPracticeQuestion()" style="display:none;">Siguiente</button>
             </div>
         `;
@@ -398,7 +370,7 @@ window.loadPracticeQuestion = function() {
         }
     }, 10);
     
-    if (window.practiceCurrentMode === 'writing' || window.practiceCurrentMode === 'sentences') {
+    if (window.practiceCurrentMode === 'writing') {
         const writeInput = document.querySelector('[data-practice-input="true"]');
         if (writeInput) {
             writeInput.focus();
@@ -432,14 +404,6 @@ window.loadPracticeQuestion = function() {
         }
     }, 100);
 
-    if (window.practiceAlwaysShowTranslation) {
-        setTimeout(() => {
-            showPracticeTranslation();
-            var btn = document.getElementById('show-translation-btn');
-            if(btn) btn.style.display = 'none';
-        }, 30);
-    }
-    
     if (!window._delegacionAltavozPractica) {
         document.addEventListener('click', async function(e) {
             if (e.target.closest && e.target.closest('#speak-sentence-btn')) {
@@ -500,10 +464,17 @@ window.loadPracticeQuestion = function() {
 
 window.restartPracticeExercise = function() {
     window.practiceRemainingWords = [...window.practiceWords];
+    
+    for (let i = window.practiceRemainingWords.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [window.practiceRemainingWords[i], window.practiceRemainingWords[j]] = [window.practiceRemainingWords[j], window.practiceRemainingWords[i]];
+    }
+    
     window.practiceCurrentQuestionIndex = 0;
     window.practiceCorrectAnswers = 0;
     window.practiceIncorrectAnswers = 0;
     window.practiceAnswered = false;
+    
     updatePracticeStats();
     loadPracticeQuestion();
 };
@@ -1019,7 +990,10 @@ window.showPracticeTranslation = function() {
             if (!highlightedTranslation.includes('highlighted-word')) {
                 highlightedTranslation += ` <span class=\"highlighted-word\">(${wordTranslation})</span>`;
             }
-            translationDiv.innerHTML = highlightedTranslation;
+            if (translationElement) {
+                translationElement.innerHTML = highlightedTranslation;
+                translationElement.classList.remove('hidden');
+            }
         } else {
             const originalContext = window.practiceRemainingWords[window.practiceCurrentWordIndex].context;
             const sentenceToTranslate = originalContext || window.practiceCurrentSentenceData.en.replace(/____+/g, currentWord);
@@ -1061,7 +1035,10 @@ function showTranslationAfterAnswer() {
             if (!highlightedTranslation.includes('highlighted-word')) {
                 highlightedTranslation += ` <span class=\"highlighted-word\">(${wordTranslation})</span>`;
             }
-            translationDiv.innerHTML = highlightedTranslation;
+            if (translationElement) {
+                translationElement.innerHTML = highlightedTranslation;
+                translationElement.classList.remove('hidden');
+            }
         } else {
             const originalContext = window.practiceRemainingWords[window.practiceCurrentWordIndex].context;
             const sentenceToTranslate = originalContext || window.practiceCurrentSentenceData.en.replace(/____+/g, currentWord);
@@ -1220,7 +1197,6 @@ function showPracticeResults() {
             window.location.href = 'index.php?tab=practice';
         };
     }
-    window.practiceAlwaysShowTranslation = false;
 }
 
 window.restartPracticeExercise = function() {
@@ -1338,7 +1314,6 @@ window.startPracticeFromSelector = async function() {
         }
         return;
     }
-    // Lógica para modo frases si se implementa en el futuro
 }
 
 // Exportar función para cargar desde index.php
@@ -1435,7 +1410,7 @@ function showPracticeTooltipWriting(element, word, translation) {
         z-index: 999999;
         pointer-events: none;
         font-family: inherit;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        box-shadow: 0 44px 12px rgba(0,0,0,0.3);
         max-width: 320px;
         word-wrap: break-word;
         transition: opacity 0.2s;

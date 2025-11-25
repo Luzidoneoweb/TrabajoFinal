@@ -9,7 +9,6 @@
         <div class="mode-selector">
             <button class="mode-btn active" data-mode="selection">📝 Selección múltiple</button>
             <button class="mode-btn" data-mode="writing">✍️ Escribir palabra</button>
-            <button class="mode-btn" data-mode="sentences">📖 Escribir frases</button>
         </div>
 
         <div class="progress">
@@ -19,7 +18,7 @@
        <div class="exercise-card" id="practice-exercise-card">
        <div class="text-selector-container">
        <h3>📝 Elige un texto para practicar palabras:</h3>
-       <select id="selectorTextosPractica" class="text-select" onchange="startSentencePractice()">
+       <select id="selectorTextosPractica" class="text-select" onchange="window.startPracticeFromSelector()">
        <option value="">Selecciona un texto...</option>
        </select>
        <div class="text-selector-info">
