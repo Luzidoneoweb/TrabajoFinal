@@ -140,6 +140,11 @@
     background-color: var(--gris-hover-fondo);
 }
 
+.item-texto.seleccionado {
+    background-color: rgba(255, 138, 0, 0.1); /* Fondo naranja tenue cuando está seleccionado */
+    border-left: 4px solid var(--color-primario); /* Borde naranja a la izquierda */
+}
+
 .chk-texto {
     margin-right: 1.5rem;
     width: 1.25rem;

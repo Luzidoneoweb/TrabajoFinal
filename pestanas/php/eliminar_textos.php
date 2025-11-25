@@ -29,7 +29,10 @@ try {
         throw new Exception('No se proporcionaron IDs de textos para eliminar.');
     }
 
-    $ids_a_eliminar = $data['ids'];
+    $ids_a_eliminar = array_map('intval', $data['ids']); // Convertir IDs a integers
+    
+    // Log para debugging
+    error_log('eliminar_textos.php - IDs a eliminar: ' . json_encode($ids_a_eliminar) . ', user_id: ' . $user_id);
 
     // Iniciar una transacción para asegurar la atomicidad
     $pdo->beginTransaction();

@@ -106,12 +106,45 @@ function cargarTextos() {
                             }
                         });
                     }
+                    // Agregar evento al checkbox para feedback visual
+                    const checkbox = itemTexto.querySelector('.chk-texto');
+                    if (checkbox) {
+                        checkbox.addEventListener('change', (e) => {
+                            console.log('[texto.js] Evento change en checkbox:', e.target.checked);
+                            // Agregar o remover clase visual cuando se selecciona/deselecciona
+                            if (e.target.checked) {
+                                itemTexto.classList.add('seleccionado');
+                            } else {
+                                itemTexto.classList.remove('seleccionado');
+                            }
+                            // Actualizar botón de eliminar
+                            const btnEliminarTextos = document.getElementById('btn-eliminar-textos');
+                            const seleccionados = document.querySelectorAll('.chk-texto:checked').length;
+                            console.log('[texto.js] Checkboxes seleccionados ahora:', seleccionados);
+                            if (btnEliminarTextos) {
+                                if (seleccionados > 0) {
+                                    btnEliminarTextos.textContent = `Eliminar (${seleccionados})`;
+                                    btnEliminarTextos.style.opacity = '1';
+                                    btnEliminarTextos.style.pointerEvents = 'auto';
+                                } else {
+                                    btnEliminarTextos.textContent = 'Eliminar';
+                                    btnEliminarTextos.style.opacity = '0.5';
+                                    btnEliminarTextos.style.pointerEvents = 'none';
+                                }
+                            }
+                        });
+                    }
+                    
                     // Mostrar contenido al hacer clic (excepto en checkbox y botón)
                     // Añadir evento de clic para cargar el texto en la pestaña de lectura
                     itemTexto.addEventListener('click', (e) => {
                         const target = e.target;
                         // Evitar que el clic en el checkbox o botón active la carga del texto
                         if (target && target.classList && (target.classList.contains('chk-texto') || target.classList.contains('btn-estado-publico'))) {
+                            return;
+                        }
+                        // También prevenir si el clic fue en el checkbox directamente
+                        if (target && target.tagName === 'INPUT' && target.type === 'checkbox') {
                             return;
                         }
                         // Guardar el ID del texto en localStorage
@@ -176,60 +209,73 @@ function cargarTextos() {
         });
 }
 
-// Cargar cuando el DOM esté listo
-    document.addEventListener('DOMContentLoaded', function() {
-        // Esperar un poco para que el panel esté visible
-        setTimeout(() => {
-            const panelTextos = document.getElementById('panelTextos');
-            if (panelTextos && panelTextos.classList.contains('activo')) {
-                cargarTextos();
-            }
-        }, 100);
-        
-        // Observar cambios en el panel para recargar cuando se active
-        const panelTextos = document.getElementById('panelTextos');
-        if (panelTextos) {
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                        if (panelTextos.classList.contains('activo')) {
-                            // console.log('Panel de textos activado, cargando...'); // Eliminado para limpiar consola
-                            cargarTextos();
-                        }
-                    }
-                });
-            });
-            observer.observe(panelTextos, { attributes: true });
-        }
+// Manejo del botón de eliminar textos - FUERA de DOMContentLoaded
+// Se ejecuta inmediatamente cuando el script se carga
+document.addEventListener('click', function(e) {
+    if (e.target && e.target.id === 'btn-eliminar-textos') {
+        console.log('[texto.js] Botón eliminar clickeado');
+        e.preventDefault();
+        manejarEliminacionTextos();
+    }
+});
 
-    // Manejo del botón de eliminar textos
-    const btnEliminarTextos = document.getElementById('btn-eliminar-textos');
-    if (btnEliminarTextos) {
-        btnEliminarTextos.addEventListener('click', function(e) {
-            e.preventDefault(); // Evitar que el enlace navegue
-            manejarEliminacionTextos();
+// Cargar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    // Esperar un poco para que el panel esté visible
+    setTimeout(() => {
+        const panelTextos = document.getElementById('panelTextos');
+        if (panelTextos && panelTextos.classList.contains('activo')) {
+            cargarTextos();
+        }
+    }, 100);
+    
+    // Observar cambios en el panel para recargar cuando se active
+    const panelTextos = document.getElementById('panelTextos');
+    if (panelTextos) {
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    if (panelTextos.classList.contains('activo')) {
+                        // console.log('Panel de textos activado, cargando...'); // Eliminado para limpiar consola
+                        cargarTextos();
+                    }
+                }
+            });
         });
+        observer.observe(panelTextos, { attributes: true });
     }
 });
 
 // Función para manejar la eliminación de textos
 function manejarEliminacionTextos() {
+    console.log('[texto.js] manejarEliminacionTextos ejecutada');
+    
     const checkboxesSeleccionados = document.querySelectorAll('.chk-texto:checked');
+    console.log('[texto.js] Checkboxes seleccionados:', checkboxesSeleccionados.length);
+    
     const idsTextosAEliminar = Array.from(checkboxesSeleccionados).map(checkbox => {
         // Asumiendo que el ID del texto se puede obtener de un atributo data-id en el item-texto padre
         // o que el checkbox tiene un atributo data-id
         const itemTexto = checkbox.closest('.item-texto');
-        return itemTexto ? itemTexto.dataset.id : null;
+        const id = itemTexto ? itemTexto.dataset.id : null;
+        console.log('[texto.js] ID encontrado:', id);
+        return id;
     }).filter(id => id !== null);
 
+    console.log('[texto.js] IDs a eliminar:', idsTextosAEliminar);
+
     if (idsTextosAEliminar.length === 0) {
+        console.warn('[texto.js] No hay textos seleccionados');
         mostrarNotificacion('Por favor, selecciona al menos un texto para eliminar.', 'error');
         return;
     }
 
     if (!confirm(`¿Estás seguro de que quieres eliminar ${idsTextosAEliminar.length} texto(s) seleccionado(s)?`)) {
+        console.log('[texto.js] Usuario canceló la eliminación');
         return; // El usuario canceló la eliminación
     }
+
+    console.log('[texto.js] Enviando solicitud de eliminación a pestanas/php/eliminar_textos.php');
 
     // Realizar la llamada fetch para eliminar los textos
     fetch('pestanas/php/eliminar_textos.php', {
@@ -241,14 +287,26 @@ function manejarEliminacionTextos() {
         credentials: 'include'
     })
     .then(response => {
+        console.log('[texto.js] Respuesta recibida, status:', response.status);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         return response.json();
     })
     .then(data => {
+        console.log('[texto.js] Datos JSON parseados:', data);
         if (data.success) {
+            console.log('[texto.js] Eliminación exitosa');
             mostrarNotificacion(data.message, 'exito');
+            
+            // Resetear botón de eliminar
+            const btnEliminarTextos = document.getElementById('btn-eliminar-textos');
+            if (btnEliminarTextos) {
+                btnEliminarTextos.textContent = 'Eliminar';
+                btnEliminarTextos.style.opacity = '0.5';
+                btnEliminarTextos.style.pointerEvents = 'none';
+            }
+            
             cargarTextos(); // Recargar la lista de textos para actualizar la UI
             // Actualizar la tarjeta de estadística en Progreso
             if (typeof window.cargarTextosSubidos === 'function') {
@@ -259,12 +317,13 @@ function manejarEliminacionTextos() {
                 window.cargarPalabras();
             }
         } else {
+            console.error('[texto.js] Error en respuesta del servidor:', data.error);
             // Si data.error no está definido, proporcionar un mensaje genérico
             mostrarNotificacion('Error al eliminar textos: ' + (data.error || 'Error desconocido en el servidor.'), 'error');
         }
     })
     .catch(error => {
-        console.error('Error en la petición fetch para eliminar textos:', error);
+        console.error('[texto.js] Error en la petición fetch para eliminar textos:', error);
         mostrarNotificacion('Error de conexión al intentar eliminar textos: ' + error.message, 'error');
     });
 }

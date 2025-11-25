@@ -24,7 +24,7 @@ window.saveTranslatedWord = async function(word, translation, sentence = '') {
             }
         }
         
-        console.log('saveTranslatedWord:', { word, translation, textId });
+        console.log('saveTranslatedWord:  en archi tex-managent.js', { word, translation, textId });
         
         const formData = new FormData();
         formData.append('word', word);

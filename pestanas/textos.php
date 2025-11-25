@@ -10,14 +10,7 @@
     <div class="encabezado-textos">
         <p class="contador-textos">...textos encontrados</p>
         <div class="acciones-grupo">
-            <div class="desplegable-acciones">
-                <button class="btn-desplegable">Acciones en lote <span class="icono-flecha">▼</span></button>
-                <div class="contenido-desplegable">
-                    <a href="#">Marcar como leído</a>
-                    <a href="#">Marcar como no leído</a>
-                    <a href="#" id="btn-eliminar-textos">Eliminar</a>
-                </div>
-            </div>
+            <button class="btn-publicos" id="btn-eliminar-textos">Eliminar</button>
             <button class="btn-publicos">Textos públicos</button>
         </div>
     </div>

@@ -53,30 +53,6 @@ if($row = $res->fetch_assoc()){
         $_SESSION['is_admin'] = (bool)$row['is_admin'];
         
 
-        // Si el usuario marcó "Recordarme"
-        $remember_me = isset($_POST['remember']) && $_POST['remember'] === 'on';
-        if ($remember_me) {
-            $token_pair = generate_remember_token_pair();
-            $selector = $token_pair['selector'];
-            $validator = bin2hex(random_bytes(24)); // 48 caracteres hexadecimales
-            $hashed_validator = hash_validator($validator);
-            $expires_at = date('Y-m-d H:i:s', strtotime('+30 days')); // Token válido por 30 días
-
-            // Eliminar tokens antiguos para este usuario (opcional, para limpiar)
-            $delete_old_tokens_stmt = $mysqli->prepare("DELETE FROM remember_tokens WHERE user_id = ?");
-            $delete_old_tokens_stmt->bind_param("i", $row['id']);
-            $delete_old_tokens_stmt->execute();
-            $delete_old_tokens_stmt->close();
-
-            // Guardar el nuevo token en la base de datos
-            $insert_token_stmt = $mysqli->prepare("INSERT INTO remember_tokens (user_id, selector, hashed_validator, expires_at) VALUES (?, ?, ?, ?)");
-            $insert_token_stmt->bind_param("isss", $row['id'], $selector, $hashed_validator, $expires_at);
-            $insert_token_stmt->execute();
-            $insert_token_stmt->close();
-
-            // Establecer la cookie de "recordarme"
-            set_remember_cookie($selector, $validator, $expires_at);
-        }
         ob_end_clean(); // Limpiar el búfer antes de enviar JSON
         echo json_encode([
             'success' => true,
