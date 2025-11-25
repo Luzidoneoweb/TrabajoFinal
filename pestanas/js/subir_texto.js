@@ -64,7 +64,7 @@ function inicializarSubirTexto() {
         // Verificar si el elemento existe antes de continuar
         if (!categoria) {
             console.log('Elemento "categoria" no encontrado. El usuario no es admin o hay un problema en el DOM.');
-            return; // No es admin, no cargar categorías
+            return; // No es administradorqgiq, no cargar categorías
         }
         console.log('Elemento "categoria" encontrado. Realizando fetch...');
 

@@ -1,5 +1,5 @@
 <?php
-session_start(); // Iniciar la sesión
+session_start();  // Iniciar la sesión
 require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/db/conexion.php';
 
 header('Content-Type: application/json');
