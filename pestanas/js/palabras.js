@@ -9,7 +9,7 @@ window.cargarPalabras = cargarPalabras;
 
 // Función para cargar palabras
 function cargarPalabras() {
-    fetch('/trabajoFinal/pestanas/php/ajax_saved_words_content.php?get_all_words=true', {
+    fetch('/trabajoFinal/pestanas/php/save_translated_word.php?get_all_words=true', {
         credentials: 'include'
     })
     .then(response => {
@@ -213,7 +213,7 @@ function eliminarPalabrasSeleccionadas() {
         formData.append('selected_words[]', checkbox.value);
     });
     
-    fetch('/trabajoFinal/pestanas/php/ajax_saved_words_content.php', {
+    fetch('/trabajoFinal/pestanas/php/save_translated_word.php', {
         method: 'POST',
         body: formData
     })
