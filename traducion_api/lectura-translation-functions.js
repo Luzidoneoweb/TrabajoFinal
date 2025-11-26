@@ -24,8 +24,9 @@ async function traducirFrase(fraseOriginal, textId) {
         // Traducir usando la API
         const formData = new URLSearchParams();
         formData.append('word', fraseOriginal);
+        const baseUrl = window.API_BASE_URL || '/trabajoFinal/';
 
-        const response = await fetch('traducion_api/translate.php', {
+        const response = await fetch(baseUrl + 'traducion_api/translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             credentials: 'include',
@@ -74,8 +75,9 @@ async function guardarTraduccionEnBD(textId, content, translation) {
         formData.append('text_id', textId);
         formData.append('content', content);
         formData.append('translation', translation);
+        const baseUrl = window.API_BASE_URL || '/trabajoFinal/';
 
-        await fetch('traducion_api/save_content_translation.php', {
+        await fetch(baseUrl + 'traducion_api/save_content_translation.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             credentials: 'include',
@@ -96,7 +98,8 @@ async function cargarCacheTraducciones(textId) {
     if (!textId) return;
 
     try {
-        const response = await fetch(`traducion_api/get_content_translation.php?text_id=${textId}`, {
+        const baseUrl = window.API_BASE_URL || '/trabajoFinal/';
+        const response = await fetch(baseUrl + `traducion_api/get_content_translation.php?text_id=${textId}`, {
             credentials: 'include'
         });
 
@@ -141,8 +144,9 @@ async function traducirTitulo(title, textId) {
         // Traducir usando la API
         const formData = new URLSearchParams();
         formData.append('word', title);
+        const baseUrl = window.API_BASE_URL || '/trabajoFinal/';
 
-        const response = await fetch('traducion_api/translate.php', {
+        const response = await fetch(baseUrl + 'traducion_api/translate.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             credentials: 'include',
@@ -185,8 +189,9 @@ async function guardarTraduccionTituloEnBD(textId, title, translation) {
         formData.append('text_id', textId);
         formData.append('title', title);
         formData.append('title_translation', translation);
+        const baseUrl = window.API_BASE_URL || '/trabajoFinal/';
 
-        const response = await fetch('traducion_api/save_title_translation.php', {
+        const response = await fetch(baseUrl + 'traducion_api/save_title_translation.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             credentials: 'include',
@@ -221,8 +226,9 @@ async function guardarTraduccionCompletaEnBD(textId, contentTranslation) {
         const formData = new URLSearchParams();
         formData.append('text_id', textId);
         formData.append('content_translation', contentTranslation);
+        const baseUrl = window.API_BASE_URL || '/trabajoFinal/';
 
-        const response = await fetch('traducion_api/save_complete_translation.php', {
+        const response = await fetch(baseUrl + 'traducion_api/save_complete_translation.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             credentials: 'include',

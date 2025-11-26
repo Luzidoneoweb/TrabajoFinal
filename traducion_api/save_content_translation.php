@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once '../db/conexion.php';
-require_once 'content_functions.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -29,24 +28,40 @@ if (empty($content) || empty($translation)) {
 global $pdo; // Asegúrate de que la conexión PDO esté disponible
 
 try {
-    $stmt = $pdo->prepare("SELECT id FROM texts WHERE id = ? AND (user_id = ? OR is_public = 1)");
+    $stmt = $pdo->prepare("SELECT id, content_translation FROM texts WHERE id = ? AND (user_id = ? OR is_public = 1)");
     $stmt->execute([$text_id, $user_id]);
+    $text_data = $stmt->fetch(PDO::FETCH_ASSOC);
     
-    if (!$stmt->fetch(PDO::FETCH_ASSOC)) {
+    if (!$text_data) {
         echo json_encode(['error' => 'Texto no encontrado o no autorizado']);
         exit();
     }
-} catch (PDOException $e) {
-    echo json_encode(['error' => 'Error verificando autorización: ' . $e->getMessage()]);
-    exit();
-}
-
-// Guardar la traducción del contenido
-$result = saveContentTranslation($text_id, $content, $translation);
-
-if ($result['success']) {
+    
+    // Cargar las traducciones existentes o crear un array vacío
+    $translations = [];
+    if (!empty($text_data['content_translation'])) {
+        $decoded = json_decode($text_data['content_translation'], true);
+        if (is_array($decoded)) {
+            $translations = $decoded;
+        }
+    }
+    
+    // Agregar o actualizar la traducción de esta frase
+    $translations[] = [
+        'content' => $content,
+        'translation' => $translation
+    ];
+    
+    // Guardar el array actualizado como JSON
+    $json_translations = json_encode($translations, JSON_UNESCAPED_UNICODE);
+    
+    $stmt = $pdo->prepare("UPDATE texts SET content_translation = ? WHERE id = ?");
+    $stmt->execute([$json_translations, $text_id]);
+    
     echo json_encode(['success' => true, 'message' => 'Traducción de contenido guardada correctamente']);
-} else {
-    echo json_encode(['error' => $result['error']]);
+    
+} catch (PDOException $e) {
+    echo json_encode(['error' => 'Error al guardar traducción: ' . $e->getMessage()]);
+    exit();
 }
 ?>

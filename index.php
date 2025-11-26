@@ -14,6 +14,10 @@
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         .oculto { display: none !important; }
     </style>
+    <script>
+        // Establecer URL base para todos los fetch en la aplicación
+        window.API_BASE_URL = '/trabajoFinal/';
+    </script>
 </head>
 <body>
     <?php require_once 'php/login_seguridad/seguridad.php'; ?>

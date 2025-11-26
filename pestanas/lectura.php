@@ -77,3 +77,12 @@
     </div>
 
 <script src="pestanas/js/loading_message.js" defer></script>
+<!-- Scripts del sistema de voz -->
+<script src="lector/electron-voice-integration.js"></script>
+<script src="lector/reading-engine.js"></script>
+<script src="pestanas/js/modalFinalizacion.js"></script>
+<!-- Script para la lógica de carga y visualización de la lectura -->
+<script src="pestanas/js/lectura.js"></script>
+<!-- Script de gestión de textos (para saveTranslatedWord) -->
+<script src="pestanas/js/text-management.js"></script>
+<!-- Script del modal de finalización (cargado después para no bloquear) -->

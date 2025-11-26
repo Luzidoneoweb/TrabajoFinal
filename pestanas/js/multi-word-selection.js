@@ -5,6 +5,7 @@
 
 class MultiWordSelector {
     constructor() {
+        console.log('DEBUG: MultiWordSelector constructor() llamado.'); // DEBUG
         this.isSelecting = false;
         this.selectedWords = [];
         this.startElement = null;
@@ -19,6 +20,7 @@ class MultiWordSelector {
     }
     
     init() {
+        console.log('DEBUG: MultiWordSelector init() llamado. Configurando event listeners.'); // DEBUG
         // Agregar estilos CSS para la selección
         this.addStyles();
         
@@ -48,6 +50,7 @@ class MultiWordSelector {
     }
     
     onMouseDown(event) {
+        console.log('DEBUG: onMouseDown() llamado. Target:', event.target, 'Clases:', event.target.classList); // DEBUG
         const target = event.target;
         
         // Ignorar completamente elementos de interfaz y formularios
@@ -59,6 +62,7 @@ class MultiWordSelector {
         if (!target.classList.contains('clickable-word') && 
             !target.classList.contains('practice-word') &&
             !target.closest('.reading-area, .text-example')) {
+            console.log('DEBUG: onMouseDown() - Target no es palabra clickeable o área de lectura. Retornando.'); // DEBUG
             return;
         }
         
@@ -74,6 +78,7 @@ class MultiWordSelector {
     }
     
     onMouseMove(event) {
+        console.log('DEBUG: onMouseMove() llamado. isSelecting:', this.isSelecting); // DEBUG
         if (!this.isSelecting) return;
         
         const target = event.target;
@@ -109,6 +114,7 @@ class MultiWordSelector {
     }
     
     onMouseUp(event) {
+        console.log('DEBUG: onMouseUp() llamado. isSelecting:', this.isSelecting); // DEBUG
         if (!this.isSelecting) return;
         
         const target = event.target;
@@ -130,6 +136,7 @@ class MultiWordSelector {
         
         // Si el usuario no arrastró, es un clic simple
         if (!this.hasDragged) {
+            console.log('DEBUG: onMouseUp() - Clic simple detectado.'); // DEBUG
             this.selectedWords = [target];
             this.highlightWord(target, 'single');
             this.translateSelection();
@@ -138,6 +145,7 @@ class MultiWordSelector {
         }
         
         // Si el usuario arrastró, es una selección múltiple
+        console.log('DEBUG: onMouseUp() - Arrastre detectado.'); // DEBUG
         this.updateSelection();
         this.translateSelection();
         
@@ -426,19 +434,20 @@ class MultiWordSelector {
     }
     
     translateSelection() {
-        const text = this.selectedWords.map(word => word.textContent.trim()).join(' ');
-        
-        if (!text || text.length < 2) {
-            console.warn('Texto muy corto para traducir:', text);
-            return;
-        }
-        
-        // Hacer petición de traducción
-        fetch('traducion_api/translate.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'text=' + encodeURIComponent(text)
-        })
+    const text = this.selectedWords.map(word => word.textContent.trim()).join(' ');
+    
+    if (!text || text.length < 2) {
+    console.warn('Texto muy corto para traducir:', text);
+    return;
+    }
+    
+    // Hacer petición de traducción
+    const baseUrl = window.API_BASE_URL || '/trabajoFinal/';
+    fetch(baseUrl + 'traducion_api/translate.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'text=' + encodeURIComponent(text)
+    })
         .then(res => {
             if (!res.ok) {
                 throw new Error(`HTTP error! status: ${res.status}`);
@@ -621,24 +630,16 @@ class MultiWordSelector {
 
 // Inicializar solo en páginas de lectura, no en práctica
 window.initializeMultiWordSelector = function initializeMultiWordSelector() {
-    // Solo inicializar si estamos en una página de lectura (no práctica)
-    const isPracticePage = window.location.href.includes('practice') || 
-                          document.querySelector('.practice-area') ||
-                          document.querySelector('#practice-container') ||
-                          document.querySelector('.text-selector-container') ||
-                          document.querySelector('#text-selector');
-    
-    // También verificar si estamos en la pestaña de práctica
-    const currentTab = document.querySelector('.tab-btn.active');
-    const isPracticeTab = currentTab && currentTab.textContent.includes('Práctica');
-    
-    // Verificar si existe el panel de lectura
-    const panelLectura = document.getElementById('panelLectura');
-    const hasReadingContent = panelLectura && panelLectura.querySelector('.clickable-word');
-    
-    if (!isPracticePage && !isPracticeTab && !window.multiWordSelector) {
-        window.multiWordSelector = new MultiWordSelector();
+    // Destruir la instancia anterior si existe para evitar duplicación de event listeners
+    if (window.multiWordSelector) {
+        window.multiWordSelector.destroy();
+        window.multiWordSelector = null; // Asegurarse de que la referencia se limpie
     }
+
+    // Crear siempre una nueva instancia de MultiWordSelector cuando se llama a esta función
+    // La lógica de si es una página de práctica o no se manejará en el punto de llamada si es necesario,
+    // pero aquí nos aseguramos de que la clase se inicialice.
+    window.multiWordSelector = new MultiWordSelector();
 }
 
 // Inicializar cuando el DOM esté listo
