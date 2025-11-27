@@ -100,3 +100,5 @@ foreach ($words as $word) {
         <?php endif; ?>
     </div>
 </div>
+
+<script src="pestanas/js/palabras.js"></script>

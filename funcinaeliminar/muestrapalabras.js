@@ -1,24 +1,15 @@
-// Función de inicialización
-function inicializarPalabras() {
+document.addEventListener('DOMContentLoaded', function() {
     // Cargar palabras al inicio
     cargarPalabras();
     vincularEventos(); // Vincular eventos después de cargar las palabras
-}
-
-// Ejecutar cuando el DOM esté listo O cuando el script se carga después del DOM
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', inicializarPalabras);
-} else {
-    // DOM ya está listo, ejecutar inmediatamente
-    inicializarPalabras();
-}
+});
 
 // Hacer la función cargarPalabras global
 window.cargarPalabras = cargarPalabras;
 
 // Función para cargar palabras
 function cargarPalabras() {
-    fetch('pestanas/php/save_translated_word.php?get_all_words=true', {
+    fetch('/trabajoFinal/traducion_api/palabras/ajax_saved_words_content.php?get_all_words=true', {
         credentials: 'include'
     })
     .then(response => {
@@ -222,9 +213,8 @@ function eliminarPalabrasSeleccionadas() {
         formData.append('selected_words[]', checkbox.value);
     });
     
-    fetch('pestanas/php/save_translated_word.php', {
+    fetch('/trabajoFinal/traducion_api/palabras/ajax_saved_words_content.php', {
         method: 'POST',
-        credentials: 'include',
         body: formData
     })
     .then(response => response.json())

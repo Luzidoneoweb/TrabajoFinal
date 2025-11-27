@@ -67,6 +67,11 @@ window.inicializarInterfazLogueadaPestanas = async function inicializarInterfazL
              };
              document.body.appendChild(scriptTexto);
 
+             // Cargar script de palabras después de que el contenido esté en el DOM
+             const scriptPalabras = document.createElement('script');
+             scriptPalabras.src = 'pestanas/js/palabras.js';
+             document.body.appendChild(scriptPalabras);
+
              // Después de que el contenido se haya cargado, inicializamos los event listeners de las pestañas
              inicializarPestanas();
             
