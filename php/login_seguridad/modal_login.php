@@ -21,6 +21,7 @@
             <i class="material-icons visibility-icon hidden">visibility</i>
           </button>
         </div>
+        <div class="field"><label><input type="checkbox" name="remember"> Recordarme</label></div>
         <div id="loginMsg" class="auth-msg" aria-live="polite"></div>
         <button type="submit" class="auth-btn">Entrar</button>
       </form>
