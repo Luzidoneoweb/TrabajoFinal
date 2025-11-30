@@ -9,19 +9,32 @@ window.contentTranslationsCache = window.contentTranslationsCache || {};
 
 /**
  * Traduce una frase usando la API de traducción
- * Verifica caché primero, luego traduce y guarda en caché y BD
+ * Verifica caché primero, luego BD, luego traduce y guarda en caché y BD
  * @param {string} fraseOriginal - La frase original a traducir
  * @param {number} textId - ID del texto al que pertenece la frase
  * @returns {Promise<string>} - La traducción de la frase
  */
 async function traducirFrase(fraseOriginal, textId) {
-    // Verificar caché local primero
+    // 1. Verificar caché local primero
     if (window.contentTranslationsCache && window.contentTranslationsCache[fraseOriginal]) {
         return window.contentTranslationsCache[fraseOriginal];
     }
 
     try {
-        // Traducir usando la API
+        // 2. Si no está en caché, buscar en BD antes de llamar API
+        if (textId) {
+            const translationFromDB = await obtenerTraduccionDesBD(fraseOriginal, textId);
+            if (translationFromDB) {
+                // Guardar en caché local
+                if (!window.contentTranslationsCache) {
+                    window.contentTranslationsCache = {};
+                }
+                window.contentTranslationsCache[fraseOriginal] = translationFromDB;
+                return translationFromDB;
+            }
+        }
+
+        // 3. Si no está en BD, traducir usando la API
         const formData = new URLSearchParams();
         formData.append('word', fraseOriginal);
         const baseUrl = window.API_BASE_URL || '/trabajoFinal/';
@@ -126,6 +139,42 @@ async function cargarCacheTraducciones(textId) {
         }
     } catch (error) {
         console.error('Error al cargar caché de traducciones:', error);
+    }
+}
+
+/**
+ * Obtiene una traducción específica de la base de datos
+ * @param {string} fraseOriginal - La frase a traducir
+ * @param {number} textId - ID del texto
+ * @returns {Promise<string|null>} - La traducción si existe, null en caso contrario
+ */
+async function obtenerTraduccionDesBD(fraseOriginal, textId) {
+    if (!fraseOriginal || !textId) return null;
+
+    try {
+        const baseUrl = window.API_BASE_URL || '/trabajoFinal/';
+        const response = await fetch(baseUrl + `traducion_api/get_content_translation.php?text_id=${textId}`, {
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            return null;
+        }
+
+        const data = await response.json();
+
+        if (data.success && data.translation && Array.isArray(data.translation)) {
+            // Buscar la traducción específica
+            const item = data.translation.find(t => t.content === fraseOriginal);
+            if (item && item.translation) {
+                return item.translation;
+            }
+        }
+
+        return null;
+    } catch (error) {
+        console.warn('Error al obtener traducción de BD:', error);
+        return null;
     }
 }
 
@@ -264,6 +313,7 @@ function construirTextoCompletoTraducido(frasesTraduccion) {
 window.traducirFrase = traducirFrase;
 window.guardarTraduccionEnBD = guardarTraduccionEnBD;
 window.cargarCacheTraducciones = cargarCacheTraducciones;
+window.obtenerTraduccionDesBD = obtenerTraduccionDesBD;
 window.traducirTitulo = traducirTitulo;
 window.guardarTraduccionTituloEnBD = guardarTraduccionTituloEnBD;
 window.guardarTraduccionCompletaEnBD = guardarTraduccionCompletaEnBD;

@@ -124,13 +124,14 @@
 }
 
 .text-item {
-    display: flex;
-    align-items: flex-start; /* Alineación al inicio para el contexto */
-    padding: 15px 20px;
-    border-bottom: 1px solid #f1f3f4;
-    gap: 15px;
-    transition: all 0.2s ease;
-    flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
+   display: flex;
+align-items: flex-start;
+padding: 15px 20px;
+border-bottom: 1px solid #f1f3f4;
+gap: 15px;
+transition: all 0.2s ease;
+flex-wrap: nowrap; /* cambiar de wrap a nowrap */
+
 }
 
 .text-item:last-child {
