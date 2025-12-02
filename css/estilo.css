@@ -142,9 +142,9 @@ button:hover {
 
 .enlace-menu {
     text-decoration: none;
-    color: #6b7280;
+    color: #ffffff;
     font-weight: 500;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.5rem;
     border-radius: 6px;
     transition: all 0.2s ease;
 }
@@ -152,7 +152,7 @@ button:hover {
 .enlace-menu:hover {
    --color-primario: var(--color-acento);
 ;
-    background-color: #f0fdf4;
+    background-color: #7095ac;
 }
 
 .boton-login:hover {
