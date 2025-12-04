@@ -1,11 +1,11 @@
 <?php
-// Inicializar sesión y conexión si es necesario
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+// // Inicializar sesión y conexión si es necesario
+// if (session_status() === PHP_SESSION_NONE) {
+//     session_start();
+// }
 
-// Obtener total de palabras guardadas
-require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/db/conexion.php';
+// // Obtener total de palabras guardadas
+// require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/db/conexion.php';
 
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];

@@ -1,6 +1,6 @@
 <?php
-session_start();
-require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/db/conexion.php';
+
+require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/pestanas/php/conexionLogin.php';
 
 header('Content-Type: application/json');
 

@@ -7,9 +7,10 @@ ini_set('display_errors', 0); // Desactivar la visualización de errores para no
 header('Content-Type: application/json');
 
 // Incluir el archivo de seguridad para verificar la sesión (ya inicia session_start())
-require_once '../../php/login_seguridad/seguridad.php';
+// require_once '../../php/login_seguridad/seguridad.php';
 // Incluir el archivo de conexión a la base de datos
-require_once '../../db/conexion.php'; 
+// require_once '../../db/conexion.php'; 
+require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/pestanas/php/conexionLogin.php';
 
 $response = ['success' => false, 'error' => 'Un error desconocido ha ocurrido.'];
 

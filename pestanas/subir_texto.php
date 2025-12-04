@@ -1,8 +1,8 @@
 <?php
-// Verificar sesión
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+// // Verificar sesión
+// if (session_status() === PHP_SESSION_NONE) {
+//     session_start();
+// }
 
 // Validar si es admin
 $es_admin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;

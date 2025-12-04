@@ -1,4 +1,14 @@
  <!-- Contenido de la aplicación - visible cuando está logueado -->
+  <?php // Inicializar sesión y conexión si es necesario
+// if (session_status() === PHP_SESSION_NONE) {
+//     session_start();
+// }
+
+// Obtener total de palabras guardadas
+require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/pestanas/php/conexionLogin.php';
+
+     ?>
+
     <script src="pestanas/js/loading_message.js" ></script> 
   <?php include 'menu_logueado.php'; ?>
         <section class="contenido-aplicacion" id="contenidoAplicacion">
