@@ -68,7 +68,7 @@ function cargarPalabrasGuardadas() {
         return;
     }
 
-    fetch('/trabajoFinal/pestanas/php/get_total_words.php', {
+    fetch('/trabajoFinal/pestanas/php/guardarPalabras.php', {
         credentials: 'include',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'

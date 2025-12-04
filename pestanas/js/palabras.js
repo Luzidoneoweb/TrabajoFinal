@@ -18,7 +18,7 @@ window.cargarPalabras = cargarPalabras;
 
 // Función para cargar palabras
 function cargarPalabras() {
-    fetch('pestanas/php/save_translated_word.php?get_all_words=true', {
+    fetch('pestanas/php/guardarPalabras.php?get_all_words=true', {
         credentials: 'include'
     })
     .then(response => {
@@ -222,7 +222,7 @@ function eliminarPalabrasSeleccionadas() {
         formData.append('selected_words[]', checkbox.value);
     });
     
-    fetch('pestanas/php/save_translated_word.php', {
+    fetch('pestanas/php/guardarPalabras.php', {
         method: 'POST',
         credentials: 'include',
         body: formData
