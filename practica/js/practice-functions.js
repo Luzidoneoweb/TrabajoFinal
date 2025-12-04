@@ -12,7 +12,7 @@ window.practiceAnswered = false;
 window.practiceCurrentWordIndex = 0;
 window.practiceCurrentSentenceData = {};
 window.practiceResultsActive = false;
-window.currentWordErrors = 0; // Para el modo escritura
+window.currentWordErrors = 0; // Reintroducir para el modo escritura
 
 // Función global para configurar voz en inglés offline (mantenida para compatibilidad con fallback)
 window.configureEnglishVoice = function(utterance) {
@@ -27,14 +27,18 @@ window.iniciarPracticaUI = function() {
 
     // Cargar textos y establecer modo por defecto al inicializar
     cargarTextosParaPractica();
-    establecerModoInicial();
+    window.practiceCurrentMode = 'selection'; // Establecer "Selección múltiple" como modo por defecto
+    const botonSeleccion = document.querySelector('.mode-btn[data-mode="selection"]');
+    if (botonSeleccion) {
+        botonSeleccion.classList.add('active');
+    }
 
     // Event listeners para los botones de modo
     botonesModoPractica.forEach(boton => {
         boton.addEventListener('click', function() {
             botonesModoPractica.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
-            const modoSeleccionado = this.dataset.mode; // Usar dataset.mode
+            const modoSeleccionado = this.dataset.mode;
             console.log('Modo de práctica seleccionado:', modoSeleccionado);
             window.setPracticeMode(modoSeleccionado);
         });
@@ -45,39 +49,32 @@ window.iniciarPracticaUI = function() {
 async function cargarTextosParaPractica() {
     console.log('🔍 [cargarTextosParaPractica] Iniciando...');
     const selectorTextos = document.getElementById('selectorTextosPractica');
-    console.log('🔍 [cargarTextosParaPractica] Selector encontrado:', !!selectorTextos);
-    console.log('🔍 [cargarTextosParaPractica] Estado actual del selector:', selectorTextos ? selectorTextos.innerHTML : 'Selector no encontrado');
     if (!selectorTextos) {
         console.error('❌ Elemento "selectorTextosPractica" no encontrado.');
         return;
     }
 
     try {
-        // Mostrar mensaje de carga
         if (typeof window.showLoadingMessage === 'function') {
             window.showLoadingMessage();
         }
 
-        console.log('🔍 [cargarTextosParaPractica] Haciendo fetch a: /trabajoFinal/pestanas/php/get_textos.php');
-        const response = await fetch('/trabajoFinal/pestanas/php/get_textos.php', {
+        console.log('🔍 [cargarTextosParaPractica] Haciendo fetch a: practica/ajax_user_texts.php');
+        const response = await fetch('practica/ajax_user_texts.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'action=list',
             credentials: 'include'
         });
-        console.log('🔍 [cargarTextosParaPractica] Response:', response.status, response.statusText);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log('🔍 [cargarTextosParaPractica] Datos recibidos:', data);
-        console.log('🔍 [cargarTextosParaPractica] Contenido de data.data:', data.data);
 
-        // Limpiar opciones existentes (excepto la primera)
         selectorTextos.innerHTML = '<option value="">Selecciona un texto...</option>';
         
-        if (data.success && data.data && data.data.length > 0) {
-            console.log('🔍 [cargarTextosParaPractica] Total de textos:', data.data.length);
-            // Agregar todos los textos del usuario (todos son "own" porque get_textos.php solo devuelve textos del usuario)
-            data.data.forEach((text, index) => {
-                console.log(`🔍 [cargarTextosParaPractica] Procesando texto ${index}:`, text.title, text.id);
+        if (data.success && data.texts && data.texts.length > 0) {
+            data.texts.forEach(text => {
                 const option = document.createElement('option');
                 option.value = text.id;
                 const titulo = text.title_translation ? 
@@ -85,41 +82,15 @@ async function cargarTextosParaPractica() {
                     text.title;
                 option.textContent = titulo;
                 selectorTextos.appendChild(option);
-                console.log(`✅ [cargarTextosParaPractica] Option agregada: ${titulo}`);
             });
-            console.log('✅ [cargarTextosParaPractica] Textos cargados correctamente:', data.data.length);
-            console.log('🔍 [cargarTextosParaPractica] Contenido final del selector:', selectorTextos.innerHTML);
         } else {
-            console.log('⚠️ [cargarTextosParaPractica] No se encontraron textos. Success:', data.success, 'Data:', data.data);
+            console.log('⚠️ [cargarTextosParaPractica] No se encontraron textos.');
         }
     } catch (error) {
         console.error('Error al cargar textos de práctica:', error);
     } finally {
-        // Ocultar mensaje de carga
         if (typeof window.hideLoadingMessage === 'function') {
             window.hideLoadingMessage();
-        }
-    }
-}
-
-// Establecer "Selección múltiple" como modo por defecto
-function establecerModoInicial() {
-    const botonSeleccion = document.querySelector('.mode-btn[data-mode="selection"]'); // Usar data-mode
-    if (botonSeleccion) {
-        botonSeleccion.classList.add('active');
-        window.practiceCurrentMode = 'selection'; // Asegurar que el modo global esté configurado
-        console.log('Modo "Selección múltiple" establecido por defecto.');
-    }
-}
-
-// Cargar modo práctica - mostrar selector de texto primero
-window.loadPracticeMode = async function() {
-    // La UI ya se carga con iniciarPracticaUI, solo necesitamos asegurar que el selector esté visible
-    const practiceCard = document.getElementById('practice-exercise-card');
-    if (practiceCard) {
-        // Asegurarse de que el selector de texto esté visible si no hay un ejercicio activo
-        if (!window.practiceWords || window.practiceWords.length === 0 || window.practiceResultsActive) {
-            cargarTextosParaPractica(); // Recargar el selector si es necesario
         }
     }
 }
@@ -144,20 +115,16 @@ function initializePractice(words) {
 window.setPracticeMode = function(mode) {
     window.practiceCurrentMode = mode;
     document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-    // El botón ya se activa en iniciarPracticaUI, pero si se llama directamente, lo activamos
-    const targetBtn = document.querySelector(`.mode-btn[data-mode="${mode}"]`); // Usar data-mode
+    const targetBtn = document.querySelector(`.mode-btn[data-mode="${mode}"]`);
     if (targetBtn) {
         targetBtn.classList.add('active');
     }
     
-    // Recargar el selector de textos para el nuevo modo
-    cargarTextosParaPractica();
-    
-    // Limpiar la tarjeta de ejercicio si no hay palabras cargadas
+    // Limpiar la tarjeta de ejercicio y recargar el selector de textos para el nuevo modo
     const practiceCard = document.getElementById('practice-exercise-card');
     if (practiceCard) {
-        const modeText = mode === 'selection' || mode === 'writing' ? 'palabras' : ''; // Eliminar 'frases'
-        const modeIcon = mode === 'selection' || mode === 'writing' ? '📝' : ''; // Eliminar '📖'
+        const modeText = mode === 'selection' || mode === 'writing' ? 'palabras' : '';
+        const modeIcon = mode === 'selection' || mode === 'writing' ? '📝' : '';
         practiceCard.innerHTML = `
             <div class="text-selector-container">
                 <h3>${modeIcon} Elige un texto para practicar ${modeText}:</h3>
@@ -1219,8 +1186,6 @@ window.restartPracticeExercise = function() {
 window.showPracticeHint = function(word) {
     const practiceWord = window.practiceWords.find(w => w.word === word);
     if (practiceWord) {
-        const writeInput = document.querySelector('[data-practice-input="true"]');
-        
         const hint = word.substring(0, 2);
         
         const englishSentence = document.getElementById('english-sentence');
