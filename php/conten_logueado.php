@@ -1,10 +1,20 @@
  <!-- Contenido de la aplicación - visible cuando está logueado -->
   <?php // Inicializar sesión y conexión
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
 // Inicializar conexión para los archivos incluidos
-require_once dirname(__FILE__) . '/../pestanas/php/conexionLogin.php';
+try {
+    require_once dirname(__FILE__) . '/../pestanas/php/conexionLogin.php';
+} catch (Exception $e) {
+    header('Content-Type: application/json', true, 500);
+    echo json_encode(['error' => 'Conexión fallida: ' . $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine()]);
+    exit;
+}
 
      ?>
 
