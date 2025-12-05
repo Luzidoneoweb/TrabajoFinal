@@ -1,10 +1,10 @@
  <!-- Contenido de la aplicación - visible cuando está logueado -->
-  <?php // Inicializar sesión si es necesario
+  <?php // Inicializar sesión y conexión
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-// Nota: Las conexiones a BD se hacen en los archivos específicos (progreso.php, textos.php, etc.)
-// No incluirlas aquí para evitar errores de credenciales innecesarias
+// Inicializar conexión para los archivos incluidos
+require_once dirname(__FILE__) . '/../pestanas/php/conexionLogin.php';
 
      ?>
 
