@@ -1,7 +1,9 @@
 // SOLO SE CARGA CUANDO USUARIO ESTÁ LOGUEADO
+console.log('[pestanas/js/global.js] Script cargado');
 let interfazLogueadaMostrada = false;
 
 window.inicializarInterfazLogueadaPestanas = async function inicializarInterfazLogueadaPestanas() {
+    console.log('[inicializarInterfazLogueadaPestanas] Función ejecutada');
     // Si ya se mostró antes, no mostrar loading de nuevo
     if (interfazLogueadaMostrada) return;
     

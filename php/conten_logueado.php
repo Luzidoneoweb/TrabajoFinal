@@ -1,11 +1,10 @@
  <!-- Contenido de la aplicación - visible cuando está logueado -->
-  <?php // Inicializar sesión y conexión si es necesario
+  <?php // Inicializar sesión si es necesario
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
-// Obtener total de palabras guardadas
-require_once dirname(__FILE__) . '/../pestanas/php/conexionLogin.php';
+// Nota: Las conexiones a BD se hacen en los archivos específicos (progreso.php, textos.php, etc.)
+// No incluirlas aquí para evitar errores de credenciales innecesarias
 
      ?>
 
