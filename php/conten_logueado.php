@@ -10,7 +10,7 @@ require_once dirname(__FILE__) . '/../pestanas/php/conexionLogin.php';
      ?>
 
     <script src="pestanas/js/loading_message.js" ></script> 
-  <?php include 'menu_logueado.php'; ?>
+  <?php include dirname(__FILE__) . '/menu_logueado.php'; ?>
         <section class="contenido-aplicacion" id="contenidoAplicacion">
              
         <!-- Pestaña: Progreso -->

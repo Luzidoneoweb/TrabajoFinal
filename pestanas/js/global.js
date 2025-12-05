@@ -26,11 +26,17 @@ window.inicializarInterfazLogueadaPestanas = async function inicializarInterfazL
     const contenidoLogueadoDiv = document.getElementById('contenidoLogueado');
     if (contenidoLogueadoDiv) {
         try {
-            const response = await fetch('php/conten_logueado.php');
+            console.log('[inicializarInterfazLogueadaPestanas] Intentando cargar php/conten_logueado.php');
+            const response = await fetch(window.API_BASE_URL + 'php/conten_logueado.php', {
+                credentials: 'same-origin',
+                method: 'GET'
+            });
+            console.log('[inicializarInterfazLogueadaPestanas] Response status:', response.status, 'ok:', response.ok);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const htmlContent = await response.text();
+            console.log('[inicializarInterfazLogueadaPestanas] Contenido cargado, longitud:', htmlContent.length);
             contenidoLogueadoDiv.innerHTML = htmlContent;
 
             // Mostrar el contenido logueado solo después de que se haya cargado
@@ -108,7 +114,9 @@ window.inicializarInterfazLogueadaPestanas = async function inicializarInterfazL
              }
 
          } catch (error) {
-             console.error('Error al cargar el contenido logueado:', error);
+             console.error('[inicializarInterfazLogueadaPestanas] Error al cargar el contenido logueado:', error);
+             console.error('[inicializarInterfazLogueadaPestanas] Error message:', error.message);
+             console.error('[inicializarInterfazLogueadaPestanas] Error stack:', error.stack);
              // Ocultar loading en caso de error
              if (typeof window.hideLoadingMessage === 'function') {
                  window.hideLoadingMessage();
