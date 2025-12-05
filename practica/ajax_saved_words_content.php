@@ -4,7 +4,7 @@ if (ob_get_level() > 0) {
     ob_end_clean();
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/pestanas/php/conexionLogin.php';
+require_once dirname(__FILE__) . '/../pestanas/php/conexionLogin.php';
 
 
 // Headers ANTES de cualquier output

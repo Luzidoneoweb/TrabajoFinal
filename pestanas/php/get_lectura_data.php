@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/pestanas/php/conexionLogin.php';
+require_once dirname(__FILE__) . '/conexionLogin.php';
 
 header('Content-Type: application/json');
 

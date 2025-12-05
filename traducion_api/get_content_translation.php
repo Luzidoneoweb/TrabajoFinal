@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/db/conexion.php';
+require_once dirname(__FILE__) . '/../db/conexion.php';
 
 header('Content-Type: application/json; charset=utf-8');
 

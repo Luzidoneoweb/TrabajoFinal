@@ -10,7 +10,7 @@ header('Content-Type: application/json');
 // require_once '../../php/login_seguridad/seguridad.php';
 // Incluir el archivo de conexión a la base de datos
 // require_once '../../db/conexion.php'; 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/trabajoFinal/pestanas/php/conexionLogin.php';
+require_once dirname(__FILE__) . '/conexionLogin.php';
 
 $response = ['success' => false, 'error' => 'Un error desconocido ha ocurrido.'];
 
